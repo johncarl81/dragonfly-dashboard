@@ -6,10 +6,6 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
-import com.esri.arcgisruntime.mapping.ArcGISScene;
-import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
-import com.esri.arcgisruntime.mapping.Basemap;
-import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -30,6 +26,8 @@ import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
 import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStep;
+import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.*;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -56,10 +54,15 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
 import ros.tools.MessageUnpacker;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,7 +91,7 @@ public class DashboardController {
     private static final Random RAND = new Random(System.currentTimeMillis());
 
     @FXML
-    private SceneView sceneView;
+    private StackPane mapPlaceholder;
     @FXML
     private Button add;
     @FXML
@@ -148,6 +151,7 @@ public class DashboardController {
     private final List<Point> boundaryPoints = new ArrayList<>();
     private CoordianteSelectionMode mode = CoordianteSelectionMode.CLEAR;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
+    SceneView sceneView;
 
     private enum CoordianteSelectionMode {
         SELECT("Finished"),
@@ -184,85 +188,26 @@ public class DashboardController {
 
 
     public void initialize() {
-        // create a scene and add a basemap to it
-        ArcGISScene scene = new ArcGISScene();
-        scene.setBasemap(Basemap.createImagery());
+        sceneView = new SceneView();
+        // load a mobile scene package
+        final String mspkPath = new File("/home/john/dev/dragonfly-dashboard/map.mspk").getAbsolutePath();
+        MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
 
-        sceneView.setArcGISScene(scene);
+        mobileScenePackage.loadAsync();
+        mobileScenePackage.addDoneLoadingListener(() -> {
 
-        sceneView.getGraphicsOverlays().add(droneOverlay);
-        droneOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
-        sceneView.getGraphicsOverlays().add(droneShadowOverlay);
-        droneShadowOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
-        sceneView.getGraphicsOverlays().add(boundaryOverlay);
-        boundaryOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
-        sceneView.getGraphicsOverlays().add(pathOverlay);
-        pathOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
-        sceneView.getGraphicsOverlays().add(waypointOverlay);
-        waypointOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
+            if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && mobileScenePackage.getScenes().size() > 0) {
+                // set the first scene from the package to the scene view
+                sceneView.setArcGISScene(mobileScenePackage.getScenes().get(0));
 
-        sceneView.setOnMouseMoved(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Point2D point2D = new Point2D(event.getX(), event.getY());
-
-                // get the scene location from the screen position
-                ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
-                pointFuture.addDoneListener(() -> {
-                    try {
-                        Point point = pointFuture.get();
-                        coordinates.setText("Lat: " + point.getY() + " Lon: " + point.getX());
-
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                });
+                initalizeScene();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load the mobile scene package");
+                alert.show();
             }
         });
 
-        sceneView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(mode == CoordianteSelectionMode.SELECT) {
-                    Point2D point2D = new Point2D(event.getX(), event.getY());
-
-                    // get the scene location from the screen position
-                    ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
-                    pointFuture.addDoneListener(() -> {
-                        try {
-                            Point point = pointFuture.get();
-
-                            boundaryPoints.add(point);
-
-                            drawBoundaries();
-
-
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } else if (event.isControlDown()) {
-                    Point2D point2D = new Point2D(event.getX(), event.getY());
-
-                    ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
-                    pointFuture.addDoneListener(() -> {
-                        try {
-                            Point point = pointFuture.get();
-
-                            AddWaypointDialogFactory.create(point, new AddWaypointDialogFactory.AddWaypointCallback() {
-                                @Override
-                                public void call(String name, double latitude, double longitude, double altitude, float distanceThreshold) {
-                                    waypoints.put(name, new NavigateWaypoint(new Waypoint(longitude, latitude, altitude), distanceThreshold));
-                                    updateWaypointOverlay();
-                                }
-                            });
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            }
-        });
+        mapPlaceholder.getChildren().add(sceneView);
 
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -283,9 +228,9 @@ public class DashboardController {
         });
 
         // add base surface for elevation data
-        Surface surface = new Surface();
-        surface.getElevationSources().add(new ArcGISTiledElevationSource(ELEVATION_IMAGE_SERVICE));
-        scene.setBaseSurface(surface);
+//        Surface surface = new Surface();
+//        surface.getElevationSources().add(new ArcGISTiledElevationSource(ELEVATION_IMAGE_SERVICE));
+//        scene.setBaseSurface(surface);
 
         drones.setItems(droneList);
         log.setItems(logList);
@@ -667,6 +612,81 @@ public class DashboardController {
         }
     }
 
+    private void initalizeScene() {
+        sceneView.getGraphicsOverlays().add(droneOverlay);
+        droneOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
+        sceneView.getGraphicsOverlays().add(droneShadowOverlay);
+        droneShadowOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
+        sceneView.getGraphicsOverlays().add(boundaryOverlay);
+        boundaryOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
+        sceneView.getGraphicsOverlays().add(pathOverlay);
+        pathOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
+        sceneView.getGraphicsOverlays().add(waypointOverlay);
+        waypointOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
+
+        sceneView.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Point2D point2D = new Point2D(event.getX(), event.getY());
+
+                // get the scene location from the screen position
+                ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
+                pointFuture.addDoneListener(() -> {
+                    try {
+                        Point point = pointFuture.get();
+                        coordinates.setText("Lat: " + point.getY() + " Lon: " + point.getX());
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+
+        sceneView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(mode == CoordianteSelectionMode.SELECT) {
+                    Point2D point2D = new Point2D(event.getX(), event.getY());
+
+                    // get the scene location from the screen position
+                    ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
+                    pointFuture.addDoneListener(() -> {
+                        try {
+                            Point point = pointFuture.get();
+
+                            boundaryPoints.add(point);
+
+                            drawBoundaries();
+
+
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } else if (event.isControlDown()) {
+                    Point2D point2D = new Point2D(event.getX(), event.getY());
+
+                    ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
+                    pointFuture.addDoneListener(() -> {
+                        try {
+                            Point point = pointFuture.get();
+
+                            AddWaypointDialogFactory.create(point, new AddWaypointDialogFactory.AddWaypointCallback() {
+                                @Override
+                                public void call(String name, double latitude, double longitude, double altitude, float distanceThreshold) {
+                                    waypoints.put(name, new NavigateWaypoint(new Waypoint(longitude, latitude, altitude), distanceThreshold));
+                                    updateWaypointOverlay();
+                                }
+                            });
+                        } catch (InterruptedException | ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            }
+        });
+    }
 
     private boolean inside(Point randomPoint, List<Point> boundaryPoints) {
         for(int i = 0; i < boundaryPoints.size() - 1; i++){

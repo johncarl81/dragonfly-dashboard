@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.FlowPane?>
 <StackPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.unm.dragonfly.DashboardController">
-    <SceneView fx:id="sceneView"/>
+    <StackPane fx:id="mapPlaceholder"/>
     <BorderPane pickOnBounds="false">
         <left>
             <VBox prefWidth="300.0">
