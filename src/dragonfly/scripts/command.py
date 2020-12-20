@@ -24,6 +24,8 @@ from actions.FlockingAction import FlockingAction
 from actions.LandAction import LandAction
 from actions.WaitForDisarmAction import WaitForDisarmAction
 from actions.SetPositionAction import SetPositionAction
+from actions.CircumnavigateAction import CircumnavigateAction
+from actions.RollercoasterAction import RollercoasterAction
 
 class DragonflyCommand:
 
@@ -103,8 +105,8 @@ class DragonflyCommand:
 
         return EmptyResponse()
 
-    def build_ddsa_waypoints(self, walk, stacks, loops, radius, steplength, altitude):
-        ddsaWaypoints = build3DDDSAWaypoints(Span(walk), stacks, 1, 0, loops, radius, steplength)
+    def build_ddsa_waypoints(self, walk, stacks, swarm_size, swarm_index, loops, radius, steplength, altitude):
+        ddsaWaypoints = build3DDDSAWaypoints(Span(walk), stacks, swarm_size, swarm_index, loops, radius, steplength)
 
         localWaypoints = []
         for localwaypoint in ddsaWaypoints:
@@ -114,7 +116,7 @@ class DragonflyCommand:
 
 
     def build_ddsa(self, operation):
-        ddsaWaypoints = self.build_ddsa_waypoints(operation.walk, operation.stacks, operation.loops, operation.radius, operation.steplength, operation.altitude)
+        ddsaWaypoints = self.build_ddsa_waypoints(operation.walk, operation.stacks, operation.swarm_size, operation.swarm_index, operation.loops, operation.radius, operation.steplength, operation.altitude)
 
         waypoints = []
         for localwaypoint in ddsaWaypoints:
@@ -213,6 +215,20 @@ class DragonflyCommand:
 
         return FlockResponse(success=True, message="Flocking {} with {}.".format(self.id, flockCommand.leader))
 
+    def circumnavigate(self, circumnavigateCommand):
+
+        self.actionqueue.push(ModeAction(self.setmode_service, 'GUIDED')) \
+            .push(CircumnavigateAction(self.id, self.local_setvelocity_publisher, circumnavigateCommand.target, circumnavigateCommand.flock))
+
+        return CircumnavigateResponse(success=True, message="Circumnavigating {}.".format(circumnavigateCommand.target))
+
+    def rollercoaster(self, command):
+
+        self.actionqueue.push(ModeAction(self.setmode_service, 'GUIDED')) \
+            .push(RollercoasterAction(self.local_setvelocity_publisher))
+
+        return EmptyResponse()
+
     def position(self, data):
         # print data
         self.position = data
@@ -277,6 +293,8 @@ class DragonflyCommand:
         rospy.Service("/{}/command/lawnmower".format(self.id), Lawnmower, self.lawnmower)
         rospy.Service("/{}/command/navigate".format(self.id), Navigation, self.navigate)
         rospy.Service("/{}/command/flock".format(self.id), Flock, self.flock)
+        rospy.Service("/{}/command/circumnavigate".format(self.id), Circumnavigate, self.circumnavigate)
+        rospy.Service("/{}/command/rollercoaster".format(self.id), Empty, self.rollercoaster)
         rospy.Service("/{}/command/cancel".format(self.id), Empty, self.cancel)
         rospy.Service("/{}/command/hello".format(self.id), Empty, self.hello)
 

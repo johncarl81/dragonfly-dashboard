@@ -64,6 +64,7 @@ add_service_files(
    DDSAWaypoints.srv
    Flock.srv
    Navigation.srv
+   Circumnavigate.srv
 )
 
 ## Generate actions in the 'action' folder

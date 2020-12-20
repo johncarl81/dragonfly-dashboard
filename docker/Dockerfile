@@ -42,5 +42,3 @@ RUN source /opt/ros/melodic/setup.bash && \
 # Setup Entrypoint
 COPY ./docker/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["bash"]
