@@ -24,6 +24,9 @@ RUN apt-get -qq install oracle-java11-installer-local python-pip openjfx unzip
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
+# Install ROS Bridge
+RUN apt-get -qq install ros-melodic-rosbridge-server
+
 # Clear apt cache to save on space
 RUN rm -rf /var/lib/apt/lists/*
 

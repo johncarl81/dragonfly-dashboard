@@ -1,6 +1,7 @@
 package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.BehaviorSubject;
@@ -8,6 +9,12 @@ import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.SingleSubject;
 import io.reactivex.subjects.Subject;
 import jdk.javadoc.internal.doclets.formats.html.markup.Navigation;
+import org.reactivestreams.Subscriber;
+import ros.RosBridge;
+import ros.RosListenDelegate;
+import ros.SubscriptionRequestMsg;
+import ros.msgs.std_msgs.PrimitiveMsg;
+import ros.tools.MessageUnpacker;
 
 import javax.management.ServiceNotFoundException;
 import java.rmi.RemoteException;
@@ -18,16 +25,17 @@ import java.util.stream.Collectors;
 public class Drone {
 
     private final String name;
-//    private final ConnectedNode node;
+    private final RosBridge bridge;
 //    private Subscriber<NavSatFix> subscriber;
 //    private Subscriber<PoseStamped> localPositionSubscriber;
-//    private Subscriber<std_msgs.String> logSubscriber;
+    private Subscriber<String> logSubscriber;
 //    private final BehaviorSubject<NavSatFix> position = BehaviorSubject.create();
 //    private final BehaviorSubject<PoseStamped> localPosition = BehaviorSubject.create();
     private final PublishSubject<String> logSubject = PublishSubject.create();
     private final Observable<LatLonRelativeAltitude> relativeAltitudeObservable = BehaviorSubject.create();
 
-    public Drone(String name) {
+    public Drone(RosBridge bridge, String name) {
+        this.bridge = bridge;
         this.name = name;
 
 //        relativeAltitudeObservable = Observable.combineLatest(position, localPosition,
@@ -42,8 +50,16 @@ public class Drone {
 //        localPositionSubscriber = node.newSubscriber(name + "/mavros/local_position/pose", PoseStamped._TYPE);
 //        localPositionSubscriber.addMessageListener(localPosition::onNext);
 //
-//        logSubscriber = node.newSubscriber(name + "/log", std_msgs.String._TYPE);
-//        logSubscriber.addMessageListener(message -> logSubject.onNext(message.getData()));
+        bridge.subscribe(SubscriptionRequestMsg.generate(name + "/log")
+                .setType("std_msgs/String"), new RosListenDelegate() {
+            private final MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<>(PrimitiveMsg.class);
+            @Override
+            public void receive(JsonNode data, String stringRep) {
+
+                PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
+                logSubject.onNext(msg.data);
+            }
+        });
     }
 
     public void lawnmower(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waittime, float distanceThreshold) {

@@ -8,6 +8,7 @@ import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.*;
 import com.esri.arcgisruntime.symbology.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -29,12 +30,24 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import ros.RosBridge;
+import ros.RosListenDelegate;
+import ros.SubscriptionRequestMsg;
+import ros.msgs.std_msgs.PrimitiveMsg;
+import ros.tools.MessageUnpacker;
 
 import javax.inject.Inject;
-import javax.management.ServiceNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -75,6 +88,9 @@ public class DashboardController {
     private Button cancel;
     @FXML
     private Button waypoint;
+
+    @Inject
+    RosBridge bridge;
 
     private final ObservableList<Drone> droneList = FXCollections.observableArrayList();
     private final ObservableList<String> logList = FXCollections.observableArrayList();
@@ -176,25 +192,6 @@ public class DashboardController {
                         }
                     });
                 } else if (event.isControlDown()) {
-                    Point2D point2D = new Point2D(event.getX(), event.getY());
-
-                    ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
-                    pointFuture.addDoneListener(() -> {
-                        try {
-                            Point point = pointFuture.get();
-
-                            AddWaypointDialogFactory.create(point, new AddWaypointDialogFactory.AddWaypointCallback() {
-                                @Override
-                                public void call(String name, double latitude, double longitude, double altitude, float distanceThreshold) {
-                                    waypoints.put(name, new NavigateWaypoint(new Point(longitude, latitude, altitude, SpatialReferences.getWgs84()), distanceThreshold));
-                                    updateWaypointOverlay();
-                                }
-                            });
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } else if (event.isControlDown() && event.getButton() == MouseButton.PRIMARY) {
                     Point2D point2D = new Point2D(event.getX(), event.getY());
 
                     ListenableFuture<Point> pointFuture = sceneView.screenToLocationAsync(point2D);
@@ -480,13 +477,24 @@ public class DashboardController {
             }
         });
 
-//        Subscriber<std_msgs.String> nameBroadcastSubscriber = node.newSubscriber("/dragonfly/announce", std_msgs.String._TYPE);
+
         PublishSubject<String> nameSubject = PublishSubject.create();
-//        nameBroadcastSubscriber.addMessageListener(name -> nameSubject.onNext(name.getData()));
+        bridge.subscribe(SubscriptionRequestMsg.generate("/dragonfly/announce")
+                .setType("std_msgs/String"), new RosListenDelegate() {
+            private final MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<>(PrimitiveMsg.class);
+            @Override
+            public void receive(JsonNode data, String stringRep) {
+
+                PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
+                nameSubject.onNext(msg.data);
+            }
+        });
     
         nameSubject
                 .observeOn(JavaFxScheduler.platform())
-                .subscribe(name -> addDrone(name), error -> System.out.println("error while consuming announce: " + error.getMessage()));
+                .subscribe(
+                        name -> addDrone(name),
+                        error -> System.out.println("error while consuming announce: " + error.getMessage()));
 
         log("Dashboard Startup");
     }
@@ -551,73 +559,72 @@ public class DashboardController {
     }
 
     private void addDrone(String name) {
+        if(!exists(name)) {
+            Drone drone = new Drone(bridge, name);
+            drone.init();
 
-//        if(!exists(name)) {
-//            Drone drone = new Drone(node, name);
-//            drone.init();
-//
-//            drone.getLog()
-//                    .observeOn(JavaFxScheduler.platform())
-//                    .subscribe(message -> log(name + ": " + message));
-//
-//            drone.getPositions()
-//                    .observeOn(JavaFxScheduler.platform())
-//                    .subscribe(new Observer<Drone.LatLonRelativeAltitude>() {
-//                        private Graphic droneGraphic;
-//                        private Graphic droneShadowGraphic;
-//                        private SimpleMarkerSceneSymbol symbol;
-//                        private Disposable updateColorDisposable;
-//
-//                        @Override
-//                        public void onSubscribe(Disposable d) {
-//                        }
-//
-//                        @Override
-//                        public void onNext(Drone.LatLonRelativeAltitude navSatFix) {
-//                            Point point = new Point(navSatFix.getLongitude(), navSatFix.getLatitude(), navSatFix.getRelativeAltitude());
-//                            if (droneGraphic == null) {
-//                                symbol = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF0000, 1, 1, 1, SceneSymbol.AnchorPosition.CENTER);
-//                                TextSymbol nameText = new TextSymbol(10, name, 0xFFFFFFFF, TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.MIDDLE);
-//                                nameText.setOffsetX(25);
-//                                droneGraphic = new Graphic(point, new CompositeSymbol(Arrays.asList(symbol, nameText)));
-//                                droneOverlay.getGraphics().add(droneGraphic);
-//                                SimpleMarkerSymbol shadowSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0x99000000, 2.5f);
-//                                droneShadowGraphic = new Graphic(point, shadowSymbol);
-//                                droneShadowOverlay.getGraphics().add(droneShadowGraphic);
-//                            } else {
-//                                droneGraphic.setGeometry(point);
-//                                droneShadowGraphic.setGeometry(point);
-//                                symbol.setColor(0xFFFF0000);
-//                            }
-//                            if(updateColorDisposable != null) {
-//                                updateColorDisposable.dispose();
-//                            }
-//                            updateColorDisposable = Observable.timer(10, TimeUnit.SECONDS)
-//                                    .subscribe(time -> symbol.setColor(0xFFD3D3D3));
-//                        }
-//
-//                        @Override
-//                        public void onError(Throwable e) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onComplete() {
-//                            if (droneGraphic != null) {
-//                                droneOverlay.getGraphics().remove(droneGraphic);
-//                                droneShadowOverlay.getGraphics().remove(droneShadowGraphic);
-//                            }
-//                        }
-//                    });
-//
-//            droneList.add(drone);
-//
-//            log("Added " + name);
-//
-//            if(droneList.size() == 1) {
-//                centerDrone(drone);
-//            }
-//        }
+            drone.getLog()
+                    .observeOn(JavaFxScheduler.platform())
+                    .subscribe(message -> log(name + ": " + message));
+
+            drone.getPositions()
+                    .observeOn(JavaFxScheduler.platform())
+                    .subscribe(new Observer<Drone.LatLonRelativeAltitude>() {
+                        private Graphic droneGraphic;
+                        private Graphic droneShadowGraphic;
+                        private SimpleMarkerSceneSymbol symbol;
+                        private Disposable updateColorDisposable;
+
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+
+                        @Override
+                        public void onNext(Drone.LatLonRelativeAltitude navSatFix) {
+                            Point point = new Point(navSatFix.getLongitude(), navSatFix.getLatitude(), navSatFix.getRelativeAltitude());
+                            if (droneGraphic == null) {
+                                symbol = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF0000, 1, 1, 1, SceneSymbol.AnchorPosition.CENTER);
+                                TextSymbol nameText = new TextSymbol(10, name, 0xFFFFFFFF, TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.MIDDLE);
+                                nameText.setOffsetX(25);
+                                droneGraphic = new Graphic(point, new CompositeSymbol(Arrays.asList(symbol, nameText)));
+                                droneOverlay.getGraphics().add(droneGraphic);
+                                SimpleMarkerSymbol shadowSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0x99000000, 2.5f);
+                                droneShadowGraphic = new Graphic(point, shadowSymbol);
+                                droneShadowOverlay.getGraphics().add(droneShadowGraphic);
+                            } else {
+                                droneGraphic.setGeometry(point);
+                                droneShadowGraphic.setGeometry(point);
+                                symbol.setColor(0xFFFF0000);
+                            }
+                            if(updateColorDisposable != null) {
+                                updateColorDisposable.dispose();
+                            }
+                            updateColorDisposable = Observable.timer(10, TimeUnit.SECONDS)
+                                    .subscribe(time -> symbol.setColor(0xFFD3D3D3));
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            if (droneGraphic != null) {
+                                droneOverlay.getGraphics().remove(droneGraphic);
+                                droneShadowOverlay.getGraphics().remove(droneShadowGraphic);
+                            }
+                        }
+                    });
+
+            droneList.add(drone);
+
+            log("Added " + name);
+
+            if(droneList.size() == 1) {
+                centerDrone(drone);
+            }
+        }
     }
 
     private boolean exists(String name) {
