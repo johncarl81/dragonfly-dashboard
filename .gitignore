@@ -1,16 +1,8 @@
-logs/*.log
-
 .idea
 
 build
-devel
-.catkin_tools
-
-*.pyc
 
 .gradle
-src/dragonfly_dashboard/gradle
-src/dragonfly_dashboard/dashboard/out
 
 *~
 *.autosave

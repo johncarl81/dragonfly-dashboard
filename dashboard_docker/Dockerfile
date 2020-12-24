@@ -11,7 +11,7 @@ ENV WORKSPACE=/workspace
 # Install dependencies
 RUN apt-get -qq update && \
     apt-get -qq upgrade && \
-    apt-get -qq install apt-utils build-essential vim python-catkin-tools software-properties-common mesa-utils
+    apt-get -qq install apt-utils build-essential vim software-properties-common
 
 # Install Java
 RUN add-apt-repository ppa:linuxuprising/java && apt-get -qq update && \

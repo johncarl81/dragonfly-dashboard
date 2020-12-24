@@ -22,6 +22,4 @@ docker run -it \
     --privileged \
     --network ros-net \
     dragonfly-dashboard:latest \
-    glxgears
-#    /bin/bash
-#    rosrun dragonfly_dashboard dashboard edu.unm.dragonfly.Dashboard
+    /bin/sh -c 'cd /workspace; ./gradlew run'
