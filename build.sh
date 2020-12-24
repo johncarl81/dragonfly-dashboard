@@ -1,4 +1,4 @@
 #!/bin/bash
-docker build -t dragonfly-controller -f docker/Dockerfile .
+docker build -t dragonfly-dashboard -f docker/Dockerfile .
 
 
