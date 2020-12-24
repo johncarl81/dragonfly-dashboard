@@ -2,55 +2,64 @@ package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.unm.dragonfly.msgs.NavSatFix;
+import edu.unm.dragonfly.msgs.PoseStamped;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.SingleSubject;
-import io.reactivex.subjects.Subject;
-import jdk.javadoc.internal.doclets.formats.html.markup.Navigation;
-import org.reactivestreams.Subscriber;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
 import ros.tools.MessageUnpacker;
 
-import javax.management.ServiceNotFoundException;
-import java.rmi.RemoteException;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Drone {
 
     private final String name;
     private final RosBridge bridge;
-//    private Subscriber<NavSatFix> subscriber;
-//    private Subscriber<PoseStamped> localPositionSubscriber;
-    private Subscriber<String> logSubscriber;
-//    private final BehaviorSubject<NavSatFix> position = BehaviorSubject.create();
-//    private final BehaviorSubject<PoseStamped> localPosition = BehaviorSubject.create();
+    private final BehaviorSubject<NavSatFix> position = BehaviorSubject.create();
+    private final BehaviorSubject<PoseStamped> localPosition = BehaviorSubject.create();
     private final PublishSubject<String> logSubject = PublishSubject.create();
-    private final Observable<LatLonRelativeAltitude> relativeAltitudeObservable = BehaviorSubject.create();
+    private final Observable<LatLonRelativeAltitude> relativeAltitudeObservable;
 
     public Drone(RosBridge bridge, String name) {
         this.bridge = bridge;
         this.name = name;
 
-//        relativeAltitudeObservable = Observable.combineLatest(position, localPosition,
-//                (navSatFix, poseStamped) -> new LatLonRelativeAltitude(navSatFix.getLatitude(), navSatFix.getLongitude(), poseStamped.getPose().getPosition().getZ()));
+        relativeAltitudeObservable = Observable.combineLatest(position, localPosition,
+                (navSatFix, poseStamped) -> new LatLonRelativeAltitude(navSatFix.latitude, navSatFix.longitude, poseStamped.pose.position.z));
     }
 
     public void init() {
 
-//        subscriber = node.newSubscriber(name + "/mavros/global_position/global", NavSatFix._TYPE);
-//        subscriber.addMessageListener(position::onNext);
-//
-//        localPositionSubscriber = node.newSubscriber(name + "/mavros/local_position/pose", PoseStamped._TYPE);
-//        localPositionSubscriber.addMessageListener(localPosition::onNext);
-//
-        bridge.subscribe(SubscriptionRequestMsg.generate(name + "/log")
+        bridge.subscribe(SubscriptionRequestMsg.generate("/" + name + "/mavros/global_position/global")
+                .setType("geometry_msgs/PoseStamped"), new RosListenDelegate() {
+            private final MessageUnpacker<NavSatFix> unpacker = new MessageUnpacker<>(NavSatFix.class);
+            @Override
+            public void receive(JsonNode data, String stringRep) {
+                System.out.println(data);
+                System.out.println("String: " + stringRep);
+                NavSatFix msg = unpacker.unpackRosMessage(data);
+                position.onNext(msg);
+            }
+        });
+
+        bridge.subscribe(SubscriptionRequestMsg.generate("/" + name + "/mavros/local_position/pose")
+                .setType("geometry_msgs/PoseStamped"), new RosListenDelegate() {
+            private final MessageUnpacker<PoseStamped> unpacker = new MessageUnpacker<>(PoseStamped.class);
+            @Override
+            public void receive(JsonNode data, String stringRep) {
+                System.out.println(data);
+                System.out.println("String: " + stringRep);
+                PoseStamped msg = unpacker.unpackRosMessage(data);
+                localPosition.onNext(msg);
+            }
+        });
+
+        bridge.subscribe(SubscriptionRequestMsg.generate("/" + name + "/log")
                 .setType("std_msgs/String"), new RosListenDelegate() {
             private final MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<>(PrimitiveMsg.class);
             @Override
@@ -256,11 +265,9 @@ public class Drone {
     }
 
     public void shutdown() {
-//        subscriber.shutdown();
-//        localPositionSubscriber.shutdown();
-//        logSubscriber.shutdown();
-//        position.onComplete();
-//        localPosition.onComplete();
+        position.onComplete();
+        localPosition.onComplete();
+        logSubject.onComplete();
     }
 
     public static class LatLonRelativeAltitude {
