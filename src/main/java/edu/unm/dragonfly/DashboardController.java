@@ -29,11 +29,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import org.ros.exception.ServiceNotFoundException;
-import org.ros.node.ConnectedNode;
-import org.ros.node.topic.Subscriber;
 
 import javax.inject.Inject;
+import javax.management.ServiceNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -101,8 +99,6 @@ public class DashboardController {
         }
     }
 
-    @Inject
-    private ConnectedNode node;
 
     public void initialize() {
         // create a scene and add a basemap to it
@@ -282,11 +278,11 @@ public class DashboardController {
 
                     @Override
                     public void call(NavigateWaypoint waypoint) {
-                        try {
+//                        try {
                             selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
-                        } catch (ServiceNotFoundException e) {
-                            e.printStackTrace();
-                        }
+//                        } catch (ServiceNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                 });
 
@@ -307,11 +303,11 @@ public class DashboardController {
 
                     @Override
                     public void call(NavigateWaypoint waypoint) {
-                        try {
+//                        try {
                             selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
-                        } catch (ServiceNotFoundException e) {
-                            e.printStackTrace();
-                        }
+//                        } catch (ServiceNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                 });
 
@@ -340,15 +336,15 @@ public class DashboardController {
             public void handle(ActionEvent event) {
                 if(!boundaryPoints.isEmpty()) {
                         LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waittime, distanceThreshold) -> {
-                            try {
+//                            try {
                                 Drone selected = drones.getSelectionModel().getSelectedItem();
                                 selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime)
                                         .observeOn(JavaFxScheduler.platform())
                                         .subscribe(waypoints -> draw(waypoints));
                                 selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime, distanceThreshold);
-                            } catch (ServiceNotFoundException e) {
-                                e.printStackTrace();
-                            }
+//                            } catch (ServiceNotFoundException e) {
+//                                e.printStackTrace();
+//                            }
                         });
                 }
                 drones.getSelectionModel().clearSelection();
@@ -359,15 +355,15 @@ public class DashboardController {
             @Override
             public void handle(ActionEvent event) {
                 DDSADialogFactory.create((radius, stepLength, altitude, loops, stacks, walk, waittime, distanceThreshold) -> {
-                    try {
+//                    try {
                         Drone selected = drones.getSelectionModel().getSelectedItem();
                         selected.getDDSAWaypoints(radius, stepLength, altitude, loops, stacks, walk.id, waittime)
                                 .observeOn(JavaFxScheduler.platform())
                                 .subscribe(waypoints -> draw(waypoints));
                         selected.ddsa(radius, stepLength, altitude, loops, stacks, walk.id, waittime, distanceThreshold);
-                    } catch (ServiceNotFoundException e) {
-                        e.printStackTrace();
-                    }
+//                    } catch (ServiceNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
                 });
                 drones.getSelectionModel().clearSelection();
             }
@@ -445,11 +441,11 @@ public class DashboardController {
                                     List<Point> points = tour.getPoints().stream().map(ProjectedPoint::getOriginal).collect(Collectors.toList());
                                     draw(points);
 
-                                    try {
+//                                    try {
                                         selectedDrone.navigate(points, distanceThreshold);
-                                    } catch (ServiceNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
+//                                    } catch (ServiceNotFoundException e) {
+//                                        e.printStackTrace();
+//                                    }
                                 },
                                         throwable -> throwable.printStackTrace());
                     });
@@ -461,11 +457,11 @@ public class DashboardController {
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try {
+//                try {
                     drones.getSelectionModel().getSelectedItem().cancel();
-                } catch (ServiceNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                } catch (ServiceNotFoundException e) {
+//                    e.printStackTrace();
+//                }
                 drones.getSelectionModel().clearSelection();
             }
         });
@@ -484,9 +480,9 @@ public class DashboardController {
             }
         });
 
-        Subscriber<std_msgs.String> nameBroadcastSubscriber = node.newSubscriber("/dragonfly/announce", std_msgs.String._TYPE);
+//        Subscriber<std_msgs.String> nameBroadcastSubscriber = node.newSubscriber("/dragonfly/announce", std_msgs.String._TYPE);
         PublishSubject<String> nameSubject = PublishSubject.create();
-        nameBroadcastSubscriber.addMessageListener(name -> nameSubject.onNext(name.getData()));
+//        nameBroadcastSubscriber.addMessageListener(name -> nameSubject.onNext(name.getData()));
     
         nameSubject
                 .observeOn(JavaFxScheduler.platform())
@@ -556,72 +552,72 @@ public class DashboardController {
 
     private void addDrone(String name) {
 
-        if(!exists(name)) {
-            Drone drone = new Drone(node, name);
-            drone.init();
-
-            drone.getLog()
-                    .observeOn(JavaFxScheduler.platform())
-                    .subscribe(message -> log(name + ": " + message));
-
-            drone.getPositions()
-                    .observeOn(JavaFxScheduler.platform())
-                    .subscribe(new Observer<Drone.LatLonRelativeAltitude>() {
-                        private Graphic droneGraphic;
-                        private Graphic droneShadowGraphic;
-                        private SimpleMarkerSceneSymbol symbol;
-                        private Disposable updateColorDisposable;
-
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                        }
-
-                        @Override
-                        public void onNext(Drone.LatLonRelativeAltitude navSatFix) {
-                            Point point = new Point(navSatFix.getLongitude(), navSatFix.getLatitude(), navSatFix.getRelativeAltitude());
-                            if (droneGraphic == null) {
-                                symbol = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF0000, 1, 1, 1, SceneSymbol.AnchorPosition.CENTER);
-                                TextSymbol nameText = new TextSymbol(10, name, 0xFFFFFFFF, TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.MIDDLE);
-                                nameText.setOffsetX(25);
-                                droneGraphic = new Graphic(point, new CompositeSymbol(Arrays.asList(symbol, nameText)));
-                                droneOverlay.getGraphics().add(droneGraphic);
-                                SimpleMarkerSymbol shadowSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0x99000000, 2.5f);
-                                droneShadowGraphic = new Graphic(point, shadowSymbol);
-                                droneShadowOverlay.getGraphics().add(droneShadowGraphic);
-                            } else {
-                                droneGraphic.setGeometry(point);
-                                droneShadowGraphic.setGeometry(point);
-                                symbol.setColor(0xFFFF0000);
-                            }
-                            if(updateColorDisposable != null) {
-                                updateColorDisposable.dispose();
-                            }
-                            updateColorDisposable = Observable.timer(10, TimeUnit.SECONDS)
-                                    .subscribe(time -> symbol.setColor(0xFFD3D3D3));
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            if (droneGraphic != null) {
-                                droneOverlay.getGraphics().remove(droneGraphic);
-                                droneShadowOverlay.getGraphics().remove(droneShadowGraphic);
-                            }
-                        }
-                    });
-
-            droneList.add(drone);
-
-            log("Added " + name);
-
-            if(droneList.size() == 1) {
-                centerDrone(drone);
-            }
-        }
+//        if(!exists(name)) {
+//            Drone drone = new Drone(node, name);
+//            drone.init();
+//
+//            drone.getLog()
+//                    .observeOn(JavaFxScheduler.platform())
+//                    .subscribe(message -> log(name + ": " + message));
+//
+//            drone.getPositions()
+//                    .observeOn(JavaFxScheduler.platform())
+//                    .subscribe(new Observer<Drone.LatLonRelativeAltitude>() {
+//                        private Graphic droneGraphic;
+//                        private Graphic droneShadowGraphic;
+//                        private SimpleMarkerSceneSymbol symbol;
+//                        private Disposable updateColorDisposable;
+//
+//                        @Override
+//                        public void onSubscribe(Disposable d) {
+//                        }
+//
+//                        @Override
+//                        public void onNext(Drone.LatLonRelativeAltitude navSatFix) {
+//                            Point point = new Point(navSatFix.getLongitude(), navSatFix.getLatitude(), navSatFix.getRelativeAltitude());
+//                            if (droneGraphic == null) {
+//                                symbol = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFFFF0000, 1, 1, 1, SceneSymbol.AnchorPosition.CENTER);
+//                                TextSymbol nameText = new TextSymbol(10, name, 0xFFFFFFFF, TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.MIDDLE);
+//                                nameText.setOffsetX(25);
+//                                droneGraphic = new Graphic(point, new CompositeSymbol(Arrays.asList(symbol, nameText)));
+//                                droneOverlay.getGraphics().add(droneGraphic);
+//                                SimpleMarkerSymbol shadowSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, 0x99000000, 2.5f);
+//                                droneShadowGraphic = new Graphic(point, shadowSymbol);
+//                                droneShadowOverlay.getGraphics().add(droneShadowGraphic);
+//                            } else {
+//                                droneGraphic.setGeometry(point);
+//                                droneShadowGraphic.setGeometry(point);
+//                                symbol.setColor(0xFFFF0000);
+//                            }
+//                            if(updateColorDisposable != null) {
+//                                updateColorDisposable.dispose();
+//                            }
+//                            updateColorDisposable = Observable.timer(10, TimeUnit.SECONDS)
+//                                    .subscribe(time -> symbol.setColor(0xFFD3D3D3));
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//                            if (droneGraphic != null) {
+//                                droneOverlay.getGraphics().remove(droneGraphic);
+//                                droneShadowOverlay.getGraphics().remove(droneShadowGraphic);
+//                            }
+//                        }
+//                    });
+//
+//            droneList.add(drone);
+//
+//            log("Added " + name);
+//
+//            if(droneList.size() == 1) {
+//                centerDrone(drone);
+//            }
+//        }
     }
 
     private boolean exists(String name) {

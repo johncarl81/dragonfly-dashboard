@@ -3,6 +3,8 @@ plugins{
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
+mainClassName = 'edu.unm.dragonfly.DashboardApplication'
+
 group 'edu.unm.dragonfly'
 version '1.0.0-SNAPSHOT'
 

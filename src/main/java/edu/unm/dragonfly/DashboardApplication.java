@@ -16,7 +16,7 @@ public class DashboardApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        final Injector injector = Guice.createInjector(new DashboardModule());
+        final Injector injector = Guice.createInjector();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
         loader.setControllerFactory(injector::getInstance);
