@@ -22,6 +22,7 @@ compileJava.options.encoding = 'UTF-8'
 
 repositories {
     jcenter()
+    mavenLocal()
     maven {
         url 'https://esri.jfrog.io/artifactory/arcgis'
     }
@@ -46,7 +47,7 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.2.19'
     compile 'io.reactivex.rxjava2:rxjavafx:2.2.2'
 
-    compile 'edu.brown.cs.burlap:java_rosbridge:2.0.1'
+    compile 'edu.brown.cs.burlap:java_rosbridge:2.0.3-SNAPSHOT'
 }
 
 task copyNatives(type: Copy) {

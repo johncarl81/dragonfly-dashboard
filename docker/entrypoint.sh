@@ -2,6 +2,7 @@
 set -e
 
 source /opt/ros/melodic/setup.bash
+source /workspace/dragonfly/devel/setup.bash
 
 export ROS_MASTER_URI=http://172.18.0.2:11311
 

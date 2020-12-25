@@ -2,19 +2,31 @@ package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.unm.dragonfly.msgs.DDSARequest;
+import edu.unm.dragonfly.msgs.DDSAResponse;
+import edu.unm.dragonfly.msgs.DDSAWaypointsRequest;
+import edu.unm.dragonfly.msgs.LatLon;
+import edu.unm.dragonfly.msgs.LawnmowerRequest;
+import edu.unm.dragonfly.msgs.LawnmowerResponse;
+import edu.unm.dragonfly.msgs.LawnmowerWaypointsRequest;
+import edu.unm.dragonfly.msgs.LawnmowerWaypointsResponse;
 import edu.unm.dragonfly.msgs.NavSatFix;
+import edu.unm.dragonfly.msgs.NavigationRequest;
+import edu.unm.dragonfly.msgs.NavigationResponse;
 import edu.unm.dragonfly.msgs.PoseStamped;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.SingleSubject;
 import ros.RosBridge;
 import ros.RosListenDelegate;
-import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
 import ros.tools.MessageUnpacker;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Drone {
 
@@ -35,32 +47,28 @@ public class Drone {
 
     public void init() {
 
-        bridge.subscribe(SubscriptionRequestMsg.generate("/" + name + "/mavros/global_position/global")
-                .setType("geometry_msgs/PoseStamped"), new RosListenDelegate() {
+        bridge.subscribe("/" + name + "/mavros/global_position/global", "sensor_msgs/NavSatFix",
+                new RosListenDelegate() {
             private final MessageUnpacker<NavSatFix> unpacker = new MessageUnpacker<>(NavSatFix.class);
             @Override
             public void receive(JsonNode data, String stringRep) {
-                System.out.println(data);
-                System.out.println("String: " + stringRep);
                 NavSatFix msg = unpacker.unpackRosMessage(data);
                 position.onNext(msg);
             }
         });
 
-        bridge.subscribe(SubscriptionRequestMsg.generate("/" + name + "/mavros/local_position/pose")
-                .setType("geometry_msgs/PoseStamped"), new RosListenDelegate() {
+        bridge.subscribe("/" + name + "/mavros/local_position/pose", "geometry_msgs/PoseStamped",
+                new RosListenDelegate() {
             private final MessageUnpacker<PoseStamped> unpacker = new MessageUnpacker<>(PoseStamped.class);
             @Override
             public void receive(JsonNode data, String stringRep) {
-                System.out.println(data);
-                System.out.println("String: " + stringRep);
                 PoseStamped msg = unpacker.unpackRosMessage(data);
                 localPosition.onNext(msg);
             }
         });
 
-        bridge.subscribe(SubscriptionRequestMsg.generate("/" + name + "/log")
-                .setType("std_msgs/String"), new RosListenDelegate() {
+        bridge.subscribe("/" + name + "/log", "std_msgs/String",
+                new RosListenDelegate() {
             private final MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<>(PrimitiveMsg.class);
             @Override
             public void receive(JsonNode data, String stringRep) {
@@ -72,175 +80,148 @@ public class Drone {
     }
 
     public void lawnmower(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waittime, float distanceThreshold) {
-//        ServiceClient<LawnmowerRequest, LawnmowerResponse> client = node.newServiceClient(name + "/command/lawnmower", Lawnmower._TYPE);
-//        LawnmowerRequest request = client.newMessage();
-//
-//        NodeConfiguration config = NodeConfiguration.newPrivate();
-//
-//        request.setBoundary(boundaryPoints.stream().map(mapToLatLon(config)).collect(Collectors.toList()));
-//        request.setSteplength(stepLength);
-//        request.setWalkBoundary(walkBoundary);
-//        request.setStacks(stacks);
-//        request.setAltitude(altitude);
-//        request.setWalk(walk);
-//        request.setWaittime(waittime);
-//        request.setDistanceThreshold(distanceThreshold);
-//
-//        client.call(request, new ServiceResponseListener<LawnmowerResponse>() {
-//             @Override
-//             public void onSuccess(LawnmowerResponse lawnmowerResponse) {
-//                 System.out.println("Got: " + lawnmowerResponse.getMessage());
-//             }
-//
-//             @Override
-//             public void onFailure(RemoteException e) {
-//
-//             }
-//         });
+        LawnmowerRequest request = new LawnmowerRequest();
+
+        request.setBoundary(boundaryPoints.stream().map(mapToLatLon()).collect(Collectors.toList()));
+        request.setSteplength(stepLength);
+        request.setWalkBoundary(walkBoundary);
+        request.setStacks(stacks);
+        request.setAltitude(altitude);
+        request.setWalk(walk);
+        request.setWaittime(waittime);
+        request.setDistanceThreshold(distanceThreshold);
+
+        bridge.call("/" + name + "/command/lawnmower", "dragonfly_messages/Lawnmower", request,
+                new RosListenDelegate() {
+                    private final MessageUnpacker<LawnmowerResponse> unpacker = new MessageUnpacker<>(LawnmowerResponse.class);
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        LawnmowerResponse msg = unpacker.unpackRosMessage(data);
+                        System.out.println("Got: " + msg);
+                    }
+                });
     }
 
     public Single<List<Point>> getLawnmowerWaypoints(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waittime) {
-//        ServiceClient<LawnmowerWaypointsRequest, LawnmowerWaypointsResponse> client = node.newServiceClient(name + "/build/lawnmower", LawnmowerWaypoints._TYPE);
-//        LawnmowerWaypointsRequest request = client.newMessage();
-//
-//        NodeConfiguration config = NodeConfiguration.newPrivate();
-//
-//        request.setBoundary(boundaryPoints.stream().map(mapToLatLon(config)).collect(Collectors.toList())
-//        );
-//        request.setSteplength(stepLength);
-//        request.setWalkBoundary(walkBoundary);
-//        request.setStacks(stacks);
-//        request.setAltitude(altitude);
-//        request.setWalk(walk);
-//        request.setWaittime(waittime);
-//
-//        SingleSubject<List<Point>> result = SingleSubject.create();
-//
-//        client.call(request, new ServiceResponseListener<LawnmowerWaypointsResponse>() {
-//            @Override
-//            public void onSuccess(LawnmowerWaypointsResponse response) {
-//                result.onSuccess(response.getWaypoints().stream().map(mapToPoint()).collect(Collectors.toList()));
-//            }
-//
-//            @Override
-//            public void onFailure(RemoteException e) {
-//
-//            }
-//        });
-//
-//        return result;
-        return null;
+        LawnmowerWaypointsRequest request = new LawnmowerWaypointsRequest();
+
+        request.setBoundary(boundaryPoints.stream().map(mapToLatLon()).collect(Collectors.toList())
+        );
+        request.setSteplength(stepLength);
+        request.setWalkBoundary(walkBoundary);
+        request.setStacks(stacks);
+        request.setAltitude(altitude);
+        request.setWalk(walk);
+        request.setWaittime(waittime);
+
+        SingleSubject<List<Point>> result = SingleSubject.create();
+
+        bridge.call("/" + name + "/build/lawnmower", "dragonfly_messages/LawnmowerWaypoints", request,
+                new RosListenDelegate() {
+                    private final MessageUnpacker<LawnmowerWaypointsResponse> unpacker = new MessageUnpacker<>(LawnmowerWaypointsResponse.class);
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        LawnmowerWaypointsResponse response = unpacker.unpackRosMessage(data);
+                        result.onSuccess(response.getWaypoints().stream().map(mapToPoint()).collect(Collectors.toList()));
+                    }
+                });
+
+        return result;
     }
 
-//    private Function<Point, LatLon> mapToLatLon(NodeConfiguration config) {
-//        return input -> {
-//            LatLon position = config.getTopicMessageFactory().newFromType(LatLon._TYPE);
-//            position.setLatitude(input.getY());
-//            position.setLongitude(input.getX());
-//            position.setRelativeAltitude(input.getZ());
-//            return position;
-//        };
-//    }
-//
-//    private Function<LatLon, Point> mapToPoint() {
-//        return input -> {
-//            System.out.println(new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude()));
-//            return new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude());
-//        };
-//    }
+    private Function<Point, LatLon> mapToLatLon() {
+        return input -> {
+            LatLon position = new LatLon();
+            position.setLatitude(input.getY());
+            position.setLongitude(input.getX());
+            position.setRelativeAltitude(input.getZ());
+            return position;
+        };
+    }
+
+    private Function<LatLon, Point> mapToPoint() {
+        return input -> {
+            System.out.println(new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude()));
+            return new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude());
+        };
+    }
 
     public void ddsa(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waittime, float distanceThreshold) {
-//        ServiceClient<DDSARequest, DDSAResponse> client = node.newServiceClient(name + "/command/ddsa", DDSA._TYPE);
-//        DDSARequest request = client.newMessage();
-//        request.setRadius(radius);
-//        request.setSteplength(stepLength);
-//        request.setStacks(stacks);
-//        request.setAltitude(altitude);
-//        request.setWalk(walk);
-//        request.setWaittime(waittime);
-//        request.setLoops(loops);
-//        request.setDistanceThreshold(distanceThreshold);
-//
-//        client.call(request, new ServiceResponseListener<DDSAResponse>() {
-//            @Override
-//            public void onSuccess(DDSAResponse response) {
-//                System.out.println("Got: " + response.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(RemoteException e) {
-//
-//            }
-//        });
+        DDSARequest request = new DDSARequest();
+        request.setRadius(radius);
+        request.setSteplength(stepLength);
+        request.setStacks(stacks);
+        request.setAltitude(altitude);
+        request.setWalk(walk);
+        request.setWaittime(waittime);
+        request.setLoops(loops);
+        request.setDistanceThreshold(distanceThreshold);
+
+        bridge.call("/" + name + "/command/ddsa", "dragonfly_messages/DDSA", request,
+                new RosListenDelegate() {
+                    private final MessageUnpacker<DDSAResponse> unpacker = new MessageUnpacker<>(DDSAResponse.class);
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        DDSAResponse msg = unpacker.unpackRosMessage(data);
+                        System.out.println("Got: " + msg);
+                    }
+                });
 
     }
 
     public Single<List<Point>> getDDSAWaypoints(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waittime) {
-//        ServiceClient<DDSAWaypointsRequest, DDSAWaypointsResponse> client = node.newServiceClient(name + "/build/ddsa", DDSAWaypoints._TYPE);
-//        DDSAWaypointsRequest request = client.newMessage();
-//        request.setRadius(radius);
-//        request.setSteplength(stepLength);
-//        request.setStacks(stacks);
-//        request.setAltitude(altitude);
-//        request.setWalk(walk);
-//        request.setWaittime(waittime);
-//        request.setLoops(loops);
-//
-//        SingleSubject<List<Point>> result = SingleSubject.create();
-//
-//        client.call(request, new ServiceResponseListener<DDSAWaypointsResponse>() {
-//            @Override
-//            public void onSuccess(DDSAWaypointsResponse response) {
-//                result.onSuccess(response.getWaypoints().stream().map(mapToPoint()).collect(Collectors.toList()));
-//            }
-//
-//            @Override
-//            public void onFailure(RemoteException e) {
-//
-//            }
-//        });
-//
-//        return result;
-        return null;
+        DDSAWaypointsRequest request = new DDSAWaypointsRequest();
+        request.setRadius(radius);
+        request.setSteplength(stepLength);
+        request.setStacks(stacks);
+        request.setAltitude(altitude);
+        request.setWalk(walk);
+        request.setWaittime(waittime);
+        request.setLoops(loops);
+
+        SingleSubject<List<Point>> result = SingleSubject.create();
+
+        bridge.call("/" + name + "/build/ddsa", "dragonfly_messages/DDSAWaypoints", request,
+                new RosListenDelegate() {
+                    private final MessageUnpacker<LawnmowerWaypointsResponse> unpacker = new MessageUnpacker<>(LawnmowerWaypointsResponse.class);
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        LawnmowerWaypointsResponse response = unpacker.unpackRosMessage(data);
+                        result.onSuccess(response.getWaypoints().stream().map(mapToPoint()).collect(Collectors.toList()));
+                    }
+                });
+
+        return result;
     }
 
     public void navigate(List<Point> waypoints, float distanceThreshold) {
-//        ServiceClient<NavigationRequest, NavigationResponse> client = node.newServiceClient(name + "/command/navigate", Navigation._TYPE);
-//        NavigationRequest request = client.newMessage();
-//
-//        NodeConfiguration config = NodeConfiguration.newPrivate();
-//
-//        request.setWaypoints(waypoints.stream().map(mapToLatLon(config)).collect(Collectors.toList()));
-//        request.setWaittime(0);
-//        request.setDistanceThreshold(distanceThreshold);
-//
-//        client.call(request, new ServiceResponseListener<NavigationResponse>() {
-//            @Override
-//            public void onSuccess(NavigationResponse response) {
-//                System.out.println("Got: " + response.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(RemoteException e) {
-//
-//            }
-//        });
+        NavigationRequest request = new NavigationRequest();
+
+
+        request.setWaypoints(waypoints.stream().map(mapToLatLon()).collect(Collectors.toList()));
+        request.setWaittime(0);
+        request.setDistanceThreshold(distanceThreshold);
+
+        bridge.call("/" + name + "/command/navigate", "dragonfly_messages/Navigation", request,
+                new RosListenDelegate() {
+                    private final MessageUnpacker<NavigationResponse> unpacker = new MessageUnpacker<>(NavigationResponse.class);
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        NavigationResponse response = unpacker.unpackRosMessage(data);
+                        System.out.println("Got: " + response.toString());
+                    }
+                });
     }
 
     public void cancel() {
-//        ServiceClient<Object, EmptyResponse> client = node.newServiceClient(name + "/command/cancel", EmptyRequest._TYPE);
-//        Object request = client.newMessage();
-//        client.call(request, new ServiceResponseListener<EmptyResponse>() {
-//            @Override
-//            public void onSuccess(EmptyResponse response) {
-//                System.out.println("Got: " + response.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(RemoteException e) {
-//
-//            }
-//        });
+
+        bridge.call("/" + name + "/command/cancel", "std_msgs/Empty", null,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("Got: " + stringRep);
+                    }
+                });
     }
 
     @Override

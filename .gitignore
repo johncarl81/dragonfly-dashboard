@@ -40,3 +40,10 @@ Thumbs.db
 
 # qtcreator generated files
 *.pro.user*
+/docker/_remote.repositories
+/docker/java_rosbridge-2.0.3-SNAPSHOT.jar
+/docker/java_rosbridge-2.0.3-SNAPSHOT.pom
+/docker/java_rosbridge-2.0.3-SNAPSHOT-jar-with-dependencies.jar
+/docker/java_rosbridge-2.0.3-SNAPSHOT-javadoc.jar
+/docker/java_rosbridge-2.0.3-SNAPSHOT-sources.jar
+/docker/maven-metadata-local.xml
