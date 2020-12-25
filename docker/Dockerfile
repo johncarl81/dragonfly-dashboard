@@ -50,8 +50,14 @@ RUN mkdir -p /root/.m2/repository/$JAVA_ROSBRIDGE_DIR/$JAVA_ROSBRIDGE_VERSION/
 COPY ./docker/*.jar /root/.m2/repository/$JAVA_ROSBRIDGE_DIR/$JAVA_ROSBRIDGE_VERSION/
 COPY ./docker/*.pom /root/.m2/repository/$JAVA_ROSBRIDGE_DIR/$JAVA_ROSBRIDGE_VERSION/
 
+# Setup Gradle - hoping this aids performance
+RUN mkdir -p $WORKSPACE/gradle/wrapper
+ADD build.gradle $WORKSPACE
+ADD gradlew $WORKSPACE
+ADD gradle/wrapper/* $WORKSPACE/gradle/wrapper/
 
-RUN mkdir -p $WORKSPACE
+RUN cd $WORKSPACE && ./gradlew clean
+
 COPY . $WORKSPACE
 # Install dragonfly infrastructure
 RUN source /opt/ros/melodic/setup.bash && \
