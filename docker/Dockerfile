@@ -31,7 +31,7 @@ RUN apt-get -qq install ros-melodic-rosbridge-server
 RUN rm -rf /var/lib/apt/lists/*
 
 # Setup arcgis workspace
-ENV ARCGIS_VERSION=100.8.0
+ENV ARCGIS_VERSION=100.9.0
 RUN mkdir -p /root/.arcgis/$ARCGIS_VERSION/
 COPY ./docker/arcgis-java-jnilibs-$ARCGIS_VERSION.zip /tmp/
 
@@ -64,7 +64,7 @@ RUN source /opt/ros/melodic/setup.bash && \
 # Install dragonfly desktop
 
 RUN cd $WORKSPACE && \
-	./gradlew clean build
+	./gradlew build --parallel
 
 # Setup Entrypoint
 COPY ./docker/entrypoint.sh /
