@@ -88,6 +88,12 @@ public class DashboardController {
     private Button cancel;
     @FXML
     private Button waypoint;
+    @FXML
+    private Button takeoff;
+    @FXML
+    private Button land;
+    @FXML
+    private Button rtl;
 
     @Inject
     RosBridge bridge;
@@ -241,6 +247,9 @@ public class DashboardController {
         log.setItems(logList);
 
         delete.setDisable(true);
+        takeoff.setDisable(true);
+        land.setDisable(true);
+        rtl.setDisable(true);
         waypoint.setDisable(true);
         center.setDisable(true);
         lawnmower.setDisable(true);
@@ -259,6 +268,30 @@ public class DashboardController {
                     addDrone(output.get());
                     drones.getSelectionModel().clearSelection();
                 }
+            }
+        });
+
+        takeoff.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Drone selected = drones.getSelectionModel().getSelectedItem();
+                selected.takeoff();
+            }
+        });
+
+        land.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Drone selected = drones.getSelectionModel().getSelectedItem();
+                selected.land();
+            }
+        });
+
+        rtl.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Drone selected = drones.getSelectionModel().getSelectedItem();
+                selected.rtl();
             }
         });
 
@@ -467,6 +500,9 @@ public class DashboardController {
             @Override
             public void changed(ObservableValue observable, Drone oldValue, Drone newValue) {
                 boolean selected = newValue != null;
+                takeoff.setDisable(!selected);
+                land.setDisable(!selected);
+                rtl.setDisable(!selected);
                 delete.setDisable(!selected);
                 waypoint.setDisable(!selected);
                 center.setDisable(!selected);
@@ -543,13 +579,8 @@ public class DashboardController {
     private void centerDrone(Drone drone) {
          drone.getLatestPosition()
                  .observeOn(JavaFxScheduler.platform())
-                 .subscribe(new Consumer<Drone.LatLonRelativeAltitude>() {
-                     @Override
-                     public void accept(Drone.LatLonRelativeAltitude position) {
-                         Camera camera = new Camera(position.getLatitude(), position.getLongitude(), 10, 0, 0, 0);
-                         sceneView.setViewpointCameraAsync(camera);
-                     }
-                 });
+                 .map(position -> new Camera(position.getLatitude(), position.getLongitude(), 10, 0, 0, 0))
+                 .subscribe(camera -> sceneView.setViewpointCameraAsync(camera));
     }
 
     private void deleteDrone(Drone name) {

@@ -96,8 +96,6 @@ public class Drone {
                     private final MessageUnpacker<LawnmowerResponse> unpacker = new MessageUnpacker<>(LawnmowerResponse.class);
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        LawnmowerResponse msg = unpacker.unpackRosMessage(data);
-                        System.out.println("Got: " + msg);
                     }
                 });
     }
@@ -140,10 +138,7 @@ public class Drone {
     }
 
     private Function<LatLon, Point> mapToPoint() {
-        return input -> {
-            System.out.println(new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude()));
-            return new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude());
-        };
+        return input -> new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude());
     }
 
     public void ddsa(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waittime, float distanceThreshold) {
@@ -162,8 +157,6 @@ public class Drone {
                     private final MessageUnpacker<DDSAResponse> unpacker = new MessageUnpacker<>(DDSAResponse.class);
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        DDSAResponse msg = unpacker.unpackRosMessage(data);
-                        System.out.println("Got: " + msg);
                     }
                 });
 
@@ -207,8 +200,6 @@ public class Drone {
                     private final MessageUnpacker<NavigationResponse> unpacker = new MessageUnpacker<>(NavigationResponse.class);
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        NavigationResponse response = unpacker.unpackRosMessage(data);
-                        System.out.println("Got: " + response.toString());
                     }
                 });
     }
@@ -219,7 +210,7 @@ public class Drone {
                 new RosListenDelegate() {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        System.out.println("Got: " + stringRep);
+                        System.out.println("Cancel sent");
                     }
                 });
     }
@@ -249,6 +240,36 @@ public class Drone {
         position.onComplete();
         localPosition.onComplete();
         logSubject.onComplete();
+    }
+
+    public void takeoff() {
+        bridge.call("/" + name + "/command/takeoff", "std_msgs/Empty", null,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("Takeoff sent");
+                    }
+                });
+    }
+
+    public void land() {
+        bridge.call("/" + name + "/command/land", "std_msgs/Empty", null,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("Land sent");
+                    }
+                });
+    }
+
+    public void rtl() {
+        bridge.call("/" + name + "/command/rtl", "std_msgs/Empty", null,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("RTL sent");
+                    }
+                });
     }
 
     public static class LatLonRelativeAltitude {

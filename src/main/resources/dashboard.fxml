@@ -10,39 +10,46 @@
 
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.StackPane?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.unm.dragonfly.DashboardController">
-    <center>
-        <BorderPane>
-            <center>
-                <SceneView fx:id="sceneView"/>
-            </center>
-            <bottom>
-                <HBox>
-                    <Button fx:id="select" prefWidth="130.0" text="Select Bounds"/>
-                    <TextField fx:id="coordinates" prefWidth="400.0"/>
-                </HBox>
-            </bottom>
-        </BorderPane>
-    </center>
-    <right>
-        <VBox>
-            <TitledPane text="Drones">
-                <ListView fx:id="drones" />
-            </TitledPane>
-
-            <HBox spacing="2">
-                <Button fx:id="add" text="Add..." />
-                <Button fx:id="waypoint" text="Goto"/>
-                <Button fx:id="delete" text="Remove" />
-                <Button fx:id="center" text="Center"/>
-                <Button fx:id="lawnmower" text="Lawnmower"/>
-                <Button fx:id="ddsa" text="DDSA"/>
-                <Button fx:id="random" text="Random"/>
-                <Button fx:id="cancel" text="Cancel"/>
+<?import javafx.scene.layout.FlowPane?>
+<StackPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.unm.dragonfly.DashboardController">
+    <SceneView fx:id="sceneView"/>
+    <BorderPane pickOnBounds="false">
+        <left>
+            <VBox prefWidth="300.0">
+                <TitledPane collapsible="false" prefHeight="200" text="Drones">
+                    <ListView fx:id="drones"/>
+                </TitledPane>
+                <FlowPane vgap="2" hgap="2">
+                    <Button fx:id="add" text="Add..." />
+                    <Button fx:id="delete" text="Remove" />
+                    <Button fx:id="center" text="Center"/>
+                </FlowPane>
+                <FlowPane>
+                    <Button fx:id="takeoff" text="Takeoff" />
+                    <Button fx:id="land" text="Land" />
+                    <Button fx:id="rtl" text="RTL" />
+                </FlowPane>
+                <FlowPane>
+                    <Button fx:id="waypoint" text="Goto"/>
+                    <Button fx:id="lawnmower" text="Lawnmower"/>
+                    <Button fx:id="ddsa" text="DDSA"/>
+                    <Button fx:id="random" text="Random"/>
+                    <Button fx:id="cancel" text="Cancel"/>
+                </FlowPane>
+            </VBox>
+        </left>
+        <right>
+            <VBox prefWidth="300.0">
+                <TitledPane text="Log">
+                    <ListView fx:id="log" />
+                </TitledPane>
+            </VBox>
+        </right>
+        <bottom>
+            <HBox>
+                <Button fx:id="select" prefWidth="130.0" text="Select Bounds"/>
+                <TextField fx:id="coordinates" prefWidth="400.0"/>
             </HBox>
-            <TitledPane text="Log">
-                <ListView fx:id="log" />
-            </TitledPane>
-        </VBox>
-    </right>
-</BorderPane>
+        </bottom>
+    </BorderPane>
+</StackPane>
