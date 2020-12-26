@@ -35,6 +35,8 @@ ENV ARCGIS_VERSION=100.9.0
 RUN mkdir -p /root/.arcgis/$ARCGIS_VERSION/
 COPY ./docker/arcgis-java-jnilibs-$ARCGIS_VERSION.zip /tmp/
 
+RUN echo "Xft.dpi: 192" > ~/.Xdefaults
+
 RUN unzip /tmp/arcgis-java-jnilibs-$ARCGIS_VERSION.zip -d /root/.arcgis/$ARCGIS_VERSION/ \
     && rm /tmp/arcgis-java-jnilibs-$ARCGIS_VERSION.zip
 
@@ -62,8 +64,7 @@ COPY . $WORKSPACE
 # Install dragonfly infrastructure
 RUN source /opt/ros/melodic/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
-	rm -rf src/dragonfly_dashboard && \
-	rm -rf src/dragonfly_messages_java && \
+	rm -rf src/dragonfly_dashboard src/dragonfly_messages_java build devel && \
 	catkin_make && \
 	catkin_make install
 

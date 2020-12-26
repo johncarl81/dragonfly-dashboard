@@ -16,30 +16,46 @@
     <BorderPane pickOnBounds="false">
         <left>
             <VBox prefWidth="300.0">
-                <TitledPane collapsible="false" prefHeight="200" text="Drones">
-                    <ListView fx:id="drones"/>
+                <TitledPane text="Drones">
+                    <VBox>
+                        <ListView fx:id="drones"/>
+                        <FlowPane hgap="2">
+                            <Button fx:id="add" text="Add..." />
+                            <Button fx:id="delete" text="Remove" />
+                            <Button fx:id="center" text="Center"/>
+                        </FlowPane>
+                        <FlowPane hgap="2">
+                            <Button fx:id="takeoff" text="Takeoff" />
+                            <Button fx:id="land" text="Land" />
+                            <Button fx:id="rtl" text="RTL" />
+                        </FlowPane>
+                        <FlowPane hgap="2">
+                            <Button fx:id="waypoint" text="Goto"/>
+                            <Button fx:id="lawnmower" text="Lawnmower"/>
+                            <Button fx:id="ddsa" text="DDSA"/>
+                            <Button fx:id="random" text="Random"/>
+                            <Button fx:id="cancel" text="Cancel"/>
+                        </FlowPane>
+                    </VBox>
                 </TitledPane>
-                <FlowPane vgap="2" hgap="2">
-                    <Button fx:id="add" text="Add..." />
-                    <Button fx:id="delete" text="Remove" />
-                    <Button fx:id="center" text="Center"/>
-                </FlowPane>
-                <FlowPane>
-                    <Button fx:id="takeoff" text="Takeoff" />
-                    <Button fx:id="land" text="Land" />
-                    <Button fx:id="rtl" text="RTL" />
-                </FlowPane>
-                <FlowPane>
-                    <Button fx:id="waypoint" text="Goto"/>
-                    <Button fx:id="lawnmower" text="Lawnmower"/>
-                    <Button fx:id="ddsa" text="DDSA"/>
-                    <Button fx:id="random" text="Random"/>
-                    <Button fx:id="cancel" text="Cancel"/>
-                </FlowPane>
             </VBox>
         </left>
         <right>
             <VBox prefWidth="300.0">
+                <TitledPane text="Mission">
+                    <VBox>
+                        <ListView fx:id="mission"/>
+                        <FlowPane hgap="2">
+                            <Button fx:id="missionAdd" text="Add"/>
+                            <Button fx:id="missionLoad" text="Load"/>
+                            <Button fx:id="missionSave" text="Save"/>
+                        </FlowPane>
+                        <FlowPane hgap="2">
+                            <Button fx:id="missionUpload" text="Upload"/>
+                            <Button fx:id="missionStart" text="Start"/>
+                        </FlowPane>
+                    </VBox>
+                </TitledPane>
                 <TitledPane text="Log">
                     <ListView fx:id="log" />
                 </TitledPane>

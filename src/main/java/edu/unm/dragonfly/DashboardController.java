@@ -1,18 +1,33 @@
 package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.geometry.*;
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.PointCollection;
+import com.esri.arcgisruntime.geometry.Polygon;
+import com.esri.arcgisruntime.geometry.PolylineBuilder;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Surface;
-import com.esri.arcgisruntime.mapping.view.*;
-import com.esri.arcgisruntime.symbology.*;
+import com.esri.arcgisruntime.mapping.view.Camera;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
+import com.esri.arcgisruntime.mapping.view.LayerSceneProperties;
+import com.esri.arcgisruntime.mapping.view.SceneView;
+import com.esri.arcgisruntime.symbology.CompositeSymbol;
+import com.esri.arcgisruntime.symbology.SceneSymbol;
+import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
+import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
+import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.unm.dragonfly.mission.MissionStepDialogFactory;
+import edu.unm.dragonfly.mission.step.MissionStep;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
@@ -28,7 +43,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import ros.RosBridge;
 import ros.RosListenDelegate;
@@ -75,6 +89,8 @@ public class DashboardController {
     @FXML
     private ListView<String> log;
     @FXML
+    private ListView<MissionStep> mission;
+    @FXML
     private TextField coordinates;
     @FXML
     private Button select;
@@ -94,12 +110,23 @@ public class DashboardController {
     private Button land;
     @FXML
     private Button rtl;
+    @FXML
+    private Button missionAdd;
+    @FXML
+    private Button missionLoad;
+    @FXML
+    private Button missionSave;
+    @FXML
+    private Button missionUpload;
+    @FXML
+    private Button missionStart;
 
     @Inject
     RosBridge bridge;
 
     private final ObservableList<Drone> droneList = FXCollections.observableArrayList();
     private final ObservableList<String> logList = FXCollections.observableArrayList();
+    private final ObservableList<MissionStep> missionList = FXCollections.observableArrayList();
     private final GraphicsOverlay droneOverlay = new GraphicsOverlay();
     private final GraphicsOverlay droneShadowOverlay = new GraphicsOverlay();
     private final GraphicsOverlay boundaryOverlay = new GraphicsOverlay();
@@ -245,6 +272,7 @@ public class DashboardController {
 
         drones.setItems(droneList);
         log.setItems(logList);
+        mission.setItems(missionList);
 
         delete.setDisable(true);
         takeoff.setDisable(true);
@@ -308,11 +336,7 @@ public class DashboardController {
 
                     @Override
                     public void call(NavigateWaypoint waypoint) {
-//                        try {
-                            selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
-//                        } catch (ServiceNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
+                        selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
                     }
                 });
 
@@ -333,11 +357,7 @@ public class DashboardController {
 
                     @Override
                     public void call(NavigateWaypoint waypoint) {
-//                        try {
-                            selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
-//                        } catch (ServiceNotFoundException e) {
-//                            e.printStackTrace();
-//                        }
+                        selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
                     }
                 });
 
@@ -366,15 +386,11 @@ public class DashboardController {
             public void handle(ActionEvent event) {
                 if(!boundaryPoints.isEmpty()) {
                         LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waittime, distanceThreshold) -> {
-//                            try {
                                 Drone selected = drones.getSelectionModel().getSelectedItem();
-                                selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime)
-                                        .observeOn(JavaFxScheduler.platform())
-                                        .subscribe(waypoints -> draw(waypoints));
-                                selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime, distanceThreshold);
-//                            } catch (ServiceNotFoundException e) {
-//                                e.printStackTrace();
-//                            }
+                            selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime)
+                                    .observeOn(JavaFxScheduler.platform())
+                                    .subscribe(waypoints -> draw(waypoints));
+                            selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime, distanceThreshold);
                         });
                 }
                 drones.getSelectionModel().clearSelection();
@@ -385,15 +401,12 @@ public class DashboardController {
             @Override
             public void handle(ActionEvent event) {
                 DDSADialogFactory.create((radius, stepLength, altitude, loops, stacks, walk, waittime, distanceThreshold) -> {
-//                    try {
-                        Drone selected = drones.getSelectionModel().getSelectedItem();
-                        selected.getDDSAWaypoints(radius, stepLength, altitude, loops, stacks, walk.id, waittime)
-                                .observeOn(JavaFxScheduler.platform())
-                                .subscribe(waypoints -> draw(waypoints));
-                        selected.ddsa(radius, stepLength, altitude, loops, stacks, walk.id, waittime, distanceThreshold);
-//                    } catch (ServiceNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
+                    Drone selected = drones.getSelectionModel().getSelectedItem();
+                    selected.getDDSAWaypoints(radius, stepLength, altitude, loops, stacks, walk.id, waittime)
+                            .observeOn(JavaFxScheduler.platform())
+                            .subscribe(waypoints -> draw(waypoints));
+                    selected.ddsa(radius, stepLength, altitude, loops, stacks, walk.id, waittime, distanceThreshold);
+
                 });
                 drones.getSelectionModel().clearSelection();
             }
@@ -470,12 +483,7 @@ public class DashboardController {
                                 .subscribe(tour -> {
                                     List<Point> points = tour.getPoints().stream().map(ProjectedPoint::getOriginal).collect(Collectors.toList());
                                     draw(points);
-
-//                                    try {
-                                        selectedDrone.navigate(points, distanceThreshold);
-//                                    } catch (ServiceNotFoundException e) {
-//                                        e.printStackTrace();
-//                                    }
+                                    selectedDrone.navigate(points, distanceThreshold);
                                 },
                                         throwable -> throwable.printStackTrace());
                     });
@@ -487,14 +495,16 @@ public class DashboardController {
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-//                try {
-                    drones.getSelectionModel().getSelectedItem().cancel();
-//                } catch (ServiceNotFoundException e) {
-//                    e.printStackTrace();
-//                }
+                drones.getSelectionModel().getSelectedItem().cancel();
                 drones.getSelectionModel().clearSelection();
             }
         });
+
+        missionAdd.setOnAction(event -> addMissionStepDialog());
+        missionLoad.setOnAction(event -> loadMissionFromFile());
+        missionSave.setOnAction(event -> saveMissionToFile());
+        missionUpload.setOnAction(event -> uploadMissionToDrones());
+        missionSave.setOnAction(event -> startMission());
 
         drones.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Drone>() {
             @Override
@@ -534,6 +544,33 @@ public class DashboardController {
 
         log("Dashboard Startup");
     }
+
+    private void addMissionStepDialog() {
+        MissionStepDialogFactory.create(new MissionStepDialogFactory.CreateMissionStep() {
+            @Override
+            public void call(MissionStep step) {
+                missionList.add(step);
+            }
+        }, droneList.stream().map(Drone::getName).collect(Collectors.toList()),
+                new ArrayList<>(waypoints.keySet()));
+    }
+
+    private void loadMissionFromFile() {
+        //TODO:Implement
+    }
+
+    private void saveMissionToFile() {
+        //TODO:Implement
+    }
+
+    private void uploadMissionToDrones() {
+        //TODO:Implement
+    }
+
+    private void startMission() {
+        //TODO:Implement
+    }
+
 
     private boolean inside(Point randomPoint, List<Point> boundaryPoints) {
         for(int i = 0; i < boundaryPoints.size() - 1; i++){
