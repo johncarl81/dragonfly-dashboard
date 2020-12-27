@@ -1,19 +1,19 @@
 package edu.unm.dragonfly.mission.step;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
  * @author John Ericksen
  */
 public class MissionStepSleep implements MissionStep {
-    private List<String> drones;
-    private double duration;
+    private final List<String> drones;
+    private final double duration;
 
-    public MissionStepSleep() {
-        // Empty bean constructor
-    }
-
-    public MissionStepSleep(List<String> drones, double duration) {
+    @JsonCreator
+    public MissionStepSleep(@JsonProperty("drones") List<String> drones, @JsonProperty("duration") double duration) {
         this.drones = drones;
         this.duration = duration;
     }

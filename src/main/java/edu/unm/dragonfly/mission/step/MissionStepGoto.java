@@ -1,18 +1,18 @@
 package edu.unm.dragonfly.mission.step;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author John Ericksen
  */
 public class MissionStepGoto implements MissionStep {
 
-    private String drone;
-    private String waypoint;
+    private final String drone;
+    private final String waypoint;
 
-    public MissionStepGoto() {
-        // Empty Bean Constructor
-    }
-
-    public MissionStepGoto(String drone, String waypoint) {
+    @JsonCreator
+    public MissionStepGoto(@JsonProperty("drone") String drone, @JsonProperty("waypoint") String waypoint) {
         this.drone = drone;
         this.waypoint = waypoint;
     }

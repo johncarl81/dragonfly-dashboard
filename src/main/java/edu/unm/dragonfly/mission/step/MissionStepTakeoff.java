@@ -1,5 +1,8 @@
 package edu.unm.dragonfly.mission.step;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -7,14 +10,11 @@ import java.util.List;
  */
 public class MissionStepTakeoff implements MissionStep {
 
-    private List<String> drones;
-    private double altitude;
+    private final List<String> drones;
+    private final double altitude;
 
-    public MissionStepTakeoff() {
-        // Empty bean constructor
-    }
-
-    public MissionStepTakeoff(List<String> drones, double altitude) {
+    @JsonCreator
+    public MissionStepTakeoff(@JsonProperty("drones") List<String> drones, @JsonProperty("altitude") double altitude) {
         this.drones = drones;
         this.altitude = altitude;
     }

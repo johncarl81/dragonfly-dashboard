@@ -1,5 +1,7 @@
 package edu.unm.dragonfly.mission.step;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.unm.dragonfly.Walk;
 
 /**
@@ -7,21 +9,26 @@ import edu.unm.dragonfly.Walk;
  */
 public class MissionStepDDSA implements MissionStep{
 
-    private String drone;
-    private float radius;
-    private float stepLength;
-    private float altitude;
-    private int loops;
-    private int stacks;
-    private Walk walk;
-    private float waittime;
-    private float distanceThreshold;
+    private final String drone;
+    private final float radius;
+    private final float stepLength;
+    private final float altitude;
+    private final int loops;
+    private final int stacks;
+    private final Walk walk;
+    private final float waitTime;
+    private final float distanceThreshold;
 
-    public MissionStepDDSA() {
-        // Empty Bean Constructor
-    }
-
-    public MissionStepDDSA(String drone, float radius, float stepLength, float altitude, int loops, int stacks, Walk walk, float waittime, float distanceThreshold) {
+    @JsonCreator
+    public MissionStepDDSA(@JsonProperty("drone") String drone,
+                           @JsonProperty("radius") float radius,
+                           @JsonProperty("stepLength") float stepLength,
+                           @JsonProperty("altitude") float altitude,
+                           @JsonProperty("loops") int loops,
+                           @JsonProperty("stacks") int stacks,
+                           @JsonProperty("walk") Walk walk,
+                           @JsonProperty("waitTime") float waitTime,
+                           @JsonProperty("distanceThreshold") float distanceThreshold) {
         this.drone = drone;
         this.radius = radius;
         this.stepLength = stepLength;
@@ -29,7 +36,7 @@ public class MissionStepDDSA implements MissionStep{
         this.loops = loops;
         this.stacks = stacks;
         this.walk = walk;
-        this.waittime = waittime;
+        this.waitTime = waitTime;
         this.distanceThreshold = distanceThreshold;
     }
 
@@ -61,8 +68,8 @@ public class MissionStepDDSA implements MissionStep{
         return walk;
     }
 
-    public float getWaittime() {
-        return waittime;
+    public float getWaitTime() {
+        return waitTime;
     }
 
     public float getDistanceThreshold() {
@@ -81,7 +88,7 @@ public class MissionStepDDSA implements MissionStep{
         if (Float.compare(that.altitude, altitude) != 0) return false;
         if (loops != that.loops) return false;
         if (stacks != that.stacks) return false;
-        if (Float.compare(that.waittime, waittime) != 0) return false;
+        if (Float.compare(that.waitTime, waitTime) != 0) return false;
         if (Float.compare(that.distanceThreshold, distanceThreshold) != 0) return false;
         if (drone != null ? !drone.equals(that.drone) : that.drone != null) return false;
         return walk == that.walk;
@@ -96,7 +103,7 @@ public class MissionStepDDSA implements MissionStep{
         result = 31 * result + loops;
         result = 31 * result + stacks;
         result = 31 * result + (walk != null ? walk.hashCode() : 0);
-        result = 31 * result + (waittime != +0.0f ? Float.floatToIntBits(waittime) : 0);
+        result = 31 * result + (waitTime != +0.0f ? Float.floatToIntBits(waitTime) : 0);
         result = 31 * result + (distanceThreshold != +0.0f ? Float.floatToIntBits(distanceThreshold) : 0);
         return result;
     }
@@ -111,7 +118,7 @@ public class MissionStepDDSA implements MissionStep{
                 ", loops=" + loops +
                 ", stacks=" + stacks +
                 ", walk=" + walk +
-                ", waittime=" + waittime +
+                ", waittime=" + waitTime +
                 ", distanceThreshold=" + distanceThreshold +
                 '}';
     }

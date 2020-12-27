@@ -1,5 +1,8 @@
 package edu.unm.dragonfly.mission.step;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -7,13 +10,10 @@ import java.util.List;
  */
 public class MissionStepLand implements MissionStep {
 
-    private List<String> drones;
+    private final List<String> drones;
 
-    public MissionStepLand() {
-        // Empty Bean Constructor
-    }
-
-    public MissionStepLand(List<String> drones) {
+    @JsonCreator
+    public MissionStepLand(@JsonProperty("drones") List<String> drones) {
         this.drones = drones;
     }
 
