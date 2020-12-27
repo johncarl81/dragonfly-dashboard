@@ -23,6 +23,8 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import io.reactivex.Observable;
@@ -44,6 +46,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
@@ -51,6 +55,8 @@ import ros.msgs.std_msgs.PrimitiveMsg;
 import ros.tools.MessageUnpacker;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -122,7 +128,9 @@ public class DashboardController {
     private Button missionStart;
 
     @Inject
-    RosBridge bridge;
+    private RosBridge bridge;
+    @Inject
+    private Stage stage;
 
     private final ObservableList<Drone> droneList = FXCollections.observableArrayList();
     private final ObservableList<String> logList = FXCollections.observableArrayList();
@@ -504,7 +512,7 @@ public class DashboardController {
         missionLoad.setOnAction(event -> loadMissionFromFile());
         missionSave.setOnAction(event -> saveMissionToFile());
         missionUpload.setOnAction(event -> uploadMissionToDrones());
-        missionSave.setOnAction(event -> startMission());
+        missionStart.setOnAction(event -> startMission());
 
         drones.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Drone>() {
             @Override
@@ -556,11 +564,34 @@ public class DashboardController {
     }
 
     private void loadMissionFromFile() {
-        //TODO:Implement
+        FileChooser fileChooser = new FileChooser();
+        File openFile = fileChooser.showOpenDialog(stage);
+
+        if(openFile != null) {
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                MissionDataHolder holder = mapper.readValue(openFile, MissionDataHolder.class);
+                missionList.clear();
+                missionList.addAll(holder.getSteps());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void saveMissionToFile() {
-        //TODO:Implement
+        FileChooser fileChooser = new FileChooser();
+        File saveFile = fileChooser.showSaveDialog(stage);
+        if(saveFile != null) {
+            ObjectMapper mapper = new ObjectMapper();
+
+            try {
+                mapper.writeValue(saveFile, new MissionDataHolder(missionList));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void uploadMissionToDrones() {

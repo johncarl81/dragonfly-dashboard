@@ -51,6 +51,8 @@ dependencies {
     compile 'org.controlsfx:controlsfx:11.0.3'
 
     compile 'edu.brown.cs.burlap:java_rosbridge:2.0.3-SNAPSHOT'
+
+    testImplementation 'junit:junit:4.13'
 }
 
 task copyNatives(type: Copy) {
