@@ -1,8 +1,9 @@
 package edu.unm.dragonfly.mission.step;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 
@@ -22,4 +23,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
         @JsonSubTypes.Type(value = MissionStepLawnmower.class, name = "Lawnmower")
 })
 public interface MissionStep {
+    boolean appliesTo(String name);
+
+    ObjectNode toROSJson(ObjectMapper mapper);
 }

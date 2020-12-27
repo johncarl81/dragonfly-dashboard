@@ -2,6 +2,7 @@ package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.msgs.DDSARequest;
 import edu.unm.dragonfly.msgs.DDSAResponse;
 import edu.unm.dragonfly.msgs.DDSAWaypointsRequest;
@@ -210,7 +211,7 @@ public class Drone {
                 new RosListenDelegate() {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        System.out.println("Cancel sent");
+                        System.out.println("Cancel sent to " + name);
                     }
                 });
     }
@@ -247,7 +248,7 @@ public class Drone {
                 new RosListenDelegate() {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        System.out.println("Takeoff sent");
+                        System.out.println("Takeoff sent to " + name);
                     }
                 });
     }
@@ -257,7 +258,7 @@ public class Drone {
                 new RosListenDelegate() {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        System.out.println("Land sent");
+                        System.out.println("Land sent to " + name);
                     }
                 });
     }
@@ -267,7 +268,27 @@ public class Drone {
                 new RosListenDelegate() {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
-                        System.out.println("RTL sent");
+                        System.out.println("RTL sent to " + name);
+                    }
+                });
+    }
+
+    public void sendMission(ObjectNode missionDataHolder) {
+        bridge.call("/" + name + "/command/mission", "dragonfly_messages/Mission", missionDataHolder,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("Mission sent to " + name);
+                    }
+                });
+    }
+
+    public void startMission() {
+        bridge.call("/" + name + "/command/start_mission", "std_msgs/Empty", null,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("Start mission sent to " + name);
                     }
                 });
     }

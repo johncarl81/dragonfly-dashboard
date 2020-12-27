@@ -2,6 +2,8 @@ package edu.unm.dragonfly.mission.step;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 
@@ -25,6 +27,23 @@ public class MissionStepTakeoff implements MissionStep {
 
     public double getAltitude() {
         return altitude;
+    }
+
+    @Override
+    public boolean appliesTo(String name) {
+        return this.drones.contains(name);
+    }
+
+    @Override
+    public ObjectNode toROSJson(ObjectMapper mapper) {
+        ObjectNode takeoff = mapper.createObjectNode();
+
+        takeoff.put("msg_type", MissionStepType.TAKEOFF.getMission_type());
+        ObjectNode data = takeoff.putObject("takeoff");
+
+        data.put("altitude", altitude);
+
+        return takeoff;
     }
 
     @Override

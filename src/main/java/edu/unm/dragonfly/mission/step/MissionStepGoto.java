@@ -2,6 +2,8 @@ package edu.unm.dragonfly.mission.step;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author John Ericksen
@@ -15,6 +17,23 @@ public class MissionStepGoto implements MissionStep {
     public MissionStepGoto(@JsonProperty("drone") String drone, @JsonProperty("waypoint") String waypoint) {
         this.drone = drone;
         this.waypoint = waypoint;
+    }
+
+    @Override
+    public boolean appliesTo(String name) {
+        return this.drone.equals(name);
+    }
+
+    @Override
+    public ObjectNode toROSJson(ObjectMapper mapper) {
+        ObjectNode gotoWaypoint = mapper.createObjectNode();
+
+        gotoWaypoint.put("msg_type", MissionStepType.GOTO_WAYPOINT.getMission_type());
+        ObjectNode data = gotoWaypoint.putObject("goto");
+
+        data.put("waypoint", waypoint);
+
+        return gotoWaypoint;
     }
 
     public String getDrone() {

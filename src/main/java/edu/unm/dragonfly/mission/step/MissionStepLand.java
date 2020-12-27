@@ -2,6 +2,8 @@ package edu.unm.dragonfly.mission.step;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 
@@ -15,6 +17,20 @@ public class MissionStepLand implements MissionStep {
     @JsonCreator
     public MissionStepLand(@JsonProperty("drones") List<String> drones) {
         this.drones = drones;
+    }
+
+    @Override
+    public boolean appliesTo(String name) {
+        return this.drones.contains(name);
+    }
+
+    @Override
+    public ObjectNode toROSJson(ObjectMapper mapper) {
+        ObjectNode land = mapper.createObjectNode();
+
+        land.put("msg_type", MissionStepType.LAND.getMission_type());
+
+        return land;
     }
 
     public List<String> getDrones() {

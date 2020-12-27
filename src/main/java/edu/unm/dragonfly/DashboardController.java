@@ -24,6 +24,8 @@ import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
 import edu.unm.dragonfly.mission.step.MissionStep;
@@ -64,10 +66,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -595,11 +599,32 @@ public class DashboardController {
     }
 
     private void uploadMissionToDrones() {
-        //TODO:Implement
+        ObjectMapper mapper = new ObjectMapper();
+        final ObjectNode mission = mapper.createObjectNode();
+        for(Drone drone : droneList) {
+            ArrayNode missionSteps = mission.putArray("steps");
+            for(MissionStep step : missionList){
+                if(step.appliesTo(drone.getName())) {
+                    missionSteps.add(step.toROSJson(mapper));
+                }
+            }
+            drone.sendMission(mission);
+        }
     }
 
     private void startMission() {
-        //TODO:Implement
+        Set<Drone> includedDrones = new HashSet<>();
+        for(Drone drone : droneList) {
+            for(MissionStep step : missionList){
+                if(step.appliesTo(drone.getName())) {
+                    includedDrones.add(drone);
+                }
+            }
+        }
+
+        for(Drone drone : includedDrones) {
+            drone.startMission();
+        }
     }
 
 

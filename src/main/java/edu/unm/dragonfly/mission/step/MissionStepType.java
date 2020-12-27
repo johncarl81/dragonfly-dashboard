@@ -5,20 +5,26 @@ package edu.unm.dragonfly.mission.step;
  */
 public enum MissionStepType {
 
-    START("Start"),
-    TAKEOFF("Takeoff"),
-    SLEEP("Sleep"),
-    LAND("Land"),
-    GOTO_WAYPOINT("Goto Waypoint"),
-    SEMAPHORE("Semaphore"),
-    RTL("RTL"),
-    DDSA("DDSA"),
-    LAWNMOWER("Lawnmower");
+    START(0, "Start"),
+    TAKEOFF(1, "Takeoff"),
+    SLEEP(2, "Sleep"),
+    LAND(3, "Land"),
+    GOTO_WAYPOINT(4, "Goto Waypoint"),
+    SEMAPHORE(5, "Semaphore"),
+    RTL(6, "RTL"),
+    DDSA(7, "DDSA"),
+    LAWNMOWER(8, "Lawnmower");
 
+    private final int mission_type;
     private final String name;
 
-    MissionStepType(String name) {
+    MissionStepType(int mission_type, String name) {
+        this.mission_type = mission_type;
         this.name = name;
+    }
+
+    public int getMission_type() {
+        return mission_type;
     }
 
     public String getName() {

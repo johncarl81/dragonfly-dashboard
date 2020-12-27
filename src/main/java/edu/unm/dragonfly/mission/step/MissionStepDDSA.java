@@ -2,6 +2,8 @@ package edu.unm.dragonfly.mission.step;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.Walk;
 
 /**
@@ -74,6 +76,31 @@ public class MissionStepDDSA implements MissionStep{
 
     public float getDistanceThreshold() {
         return distanceThreshold;
+    }
+
+    @Override
+    public boolean appliesTo(String name) {
+        return this.drone.equals(name);
+    }
+
+    @Override
+    public ObjectNode toROSJson(ObjectMapper mapper) {
+        ObjectNode ddsa = mapper.createObjectNode();
+
+        ddsa.put("msg_type", MissionStepType.DDSA.getMission_type());
+
+        ObjectNode data = ddsa.putObject("ddsa");
+        data.put("radius", radius);
+        data.put("stepLength", stepLength);
+        data.put("walk", walk.id);
+        data.put("stacks", stacks);
+        data.put("loops", loops);
+        data.put("altitude", altitude);
+        data.put("waitTime", waitTime);
+        data.put("distanceThreshold", distanceThreshold);
+
+
+        return ddsa;
     }
 
     @Override

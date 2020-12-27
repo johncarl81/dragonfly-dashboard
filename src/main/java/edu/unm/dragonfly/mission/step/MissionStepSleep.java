@@ -2,6 +2,8 @@ package edu.unm.dragonfly.mission.step;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 
@@ -24,6 +26,23 @@ public class MissionStepSleep implements MissionStep {
 
     public double getDuration() {
         return duration;
+    }
+
+    @Override
+    public boolean appliesTo(String name) {
+        return this.drones.contains(name);
+    }
+
+    @Override
+    public ObjectNode toROSJson(ObjectMapper mapper) {
+        ObjectNode sleep = mapper.createObjectNode();
+
+        sleep.put("msg_type", MissionStepType.SLEEP.getMission_type());
+        ObjectNode data = sleep.putObject("sleep");
+
+        data.put("duration", duration);
+
+        return sleep;
     }
 
     @Override
