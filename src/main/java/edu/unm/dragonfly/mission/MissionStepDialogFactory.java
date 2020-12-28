@@ -35,7 +35,7 @@ public class MissionStepDialogFactory {
             put(MissionStepType.GOTO_WAYPOINT, new GotoCreator(drones, waypoints));
             put(MissionStepType.SEMAPHORE, new SemaphoreCreator(drones));
             put(MissionStepType.RTL, new RTLCreator(drones));
-            put(MissionStepType.DDSA, new DDSACreator(drones));
+            put(MissionStepType.DDSA, new DDSACreator(drones, waypoints));
             put(MissionStepType.LAWNMOWER, new LawnmowerCreator(drones));
         }};
 

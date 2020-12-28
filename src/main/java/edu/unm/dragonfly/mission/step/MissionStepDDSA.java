@@ -12,6 +12,7 @@ import edu.unm.dragonfly.Walk;
 public class MissionStepDDSA implements MissionStep{
 
     private final String drone;
+    private final String waypoint;
     private final float radius;
     private final float stepLength;
     private final float altitude;
@@ -23,6 +24,7 @@ public class MissionStepDDSA implements MissionStep{
 
     @JsonCreator
     public MissionStepDDSA(@JsonProperty("drone") String drone,
+                           @JsonProperty("waypoint") String waypoint,
                            @JsonProperty("radius") float radius,
                            @JsonProperty("stepLength") float stepLength,
                            @JsonProperty("altitude") float altitude,
@@ -32,6 +34,7 @@ public class MissionStepDDSA implements MissionStep{
                            @JsonProperty("waitTime") float waitTime,
                            @JsonProperty("distanceThreshold") float distanceThreshold) {
         this.drone = drone;
+        this.waypoint = waypoint;
         this.radius = radius;
         this.stepLength = stepLength;
         this.altitude = altitude;
@@ -44,6 +47,10 @@ public class MissionStepDDSA implements MissionStep{
 
     public String getDrone() {
         return drone;
+    }
+
+    public String getWaypoint() {
+        return waypoint;
     }
 
     public float getRadius() {
@@ -90,6 +97,7 @@ public class MissionStepDDSA implements MissionStep{
         ddsa.put("msg_type", MissionStepType.DDSA.getMission_type());
 
         ObjectNode data = ddsa.putObject("ddsa");
+        data.put("waypoint", waypoint);
         data.put("radius", radius);
         data.put("stepLength", stepLength);
         data.put("walk", walk.id);
@@ -118,12 +126,14 @@ public class MissionStepDDSA implements MissionStep{
         if (Float.compare(that.waitTime, waitTime) != 0) return false;
         if (Float.compare(that.distanceThreshold, distanceThreshold) != 0) return false;
         if (drone != null ? !drone.equals(that.drone) : that.drone != null) return false;
+        if (waypoint != null ? !waypoint.equals(that.waypoint) : that.waypoint != null) return false;
         return walk == that.walk;
     }
 
     @Override
     public int hashCode() {
         int result = drone != null ? drone.hashCode() : 0;
+        result = 31 * result + (waypoint != null ? waypoint.hashCode() : 0);
         result = 31 * result + (radius != +0.0f ? Float.floatToIntBits(radius) : 0);
         result = 31 * result + (stepLength != +0.0f ? Float.floatToIntBits(stepLength) : 0);
         result = 31 * result + (altitude != +0.0f ? Float.floatToIntBits(altitude) : 0);

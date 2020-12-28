@@ -17,6 +17,7 @@ import java.util.List;
 public class DDSACreator implements MissionStepCreator {
 
     private final ComboBox<String> droneSelection;
+    private final ComboBox<String> waypointSelection;
     private TextField radiusField;
     private TextField stepLengthField;
     private TextField loopsField;
@@ -26,8 +27,9 @@ public class DDSACreator implements MissionStepCreator {
     private TextField waitTimeField;
     private TextField distanceThreshold;
 
-    public DDSACreator(List<String> drones) {
+    public DDSACreator(List<String> drones, List<String> waypoints) {
         this.droneSelection = new ComboBox<>(FXCollections.observableList(drones));
+        this.waypointSelection = new ComboBox<>(FXCollections.observableList(waypoints));
     }
 
     @Override
@@ -55,27 +57,30 @@ public class DDSACreator implements MissionStepCreator {
 
         grid.add(new Label("Drone:"), 1, 2);
         grid.add(droneSelection, 2, 2);
-        grid.add(new Label("Radius: "), 1, 3);
-        grid.add(radiusField, 2, 3);
-        grid.add(new Label("Step Length: "), 1, 4);
-        grid.add(stepLengthField, 2, 4);
-        grid.add(new Label("Altitude: "), 1, 5);
-        grid.add(altitudeField, 2, 5);
-        grid.add(new Label("Loops: "), 1, 6);
-        grid.add(loopsField, 2, 6);
-        grid.add(new Label("Stacks: "), 1, 7);
-        grid.add(stacksField, 2, 7);
-        grid.add(new Label("Walk: "), 1, 8);
-        grid.add(walkComboBox, 2, 8);
-        grid.add(new Label("Wait Time: "), 1, 9);
-        grid.add(waitTimeField, 2, 9);
-        grid.add(new Label("Distance Threshold: "), 1, 10);
-        grid.add(distanceThreshold, 2, 10);
+        grid.add(new Label("Waypoint:"), 1, 3);
+        grid.add(waypointSelection, 2, 3);
+        grid.add(new Label("Radius: "), 1, 4);
+        grid.add(radiusField, 2, 4);
+        grid.add(new Label("Step Length: "), 1, 5);
+        grid.add(stepLengthField, 2, 5);
+        grid.add(new Label("Altitude: "), 1, 6);
+        grid.add(altitudeField, 2, 6);
+        grid.add(new Label("Loops: "), 1, 7);
+        grid.add(loopsField, 2, 7);
+        grid.add(new Label("Stacks: "), 1, 8);
+        grid.add(stacksField, 2, 8);
+        grid.add(new Label("Walk: "), 1, 9);
+        grid.add(walkComboBox, 2, 9);
+        grid.add(new Label("Wait Time: "), 1, 10);
+        grid.add(waitTimeField, 2, 10);
+        grid.add(new Label("Distance Threshold: "), 1, 11);
+        grid.add(distanceThreshold, 2, 11);
     }
 
     @Override
     public MissionStep build() {
         return new MissionStepDDSA(droneSelection.getSelectionModel().getSelectedItem(),
+                waypointSelection.getSelectionModel().getSelectedItem(),
                 Float.parseFloat(radiusField.getText()),
                 Float.parseFloat(stepLengthField.getText()),
                 Float.parseFloat(altitudeField.getText()),
