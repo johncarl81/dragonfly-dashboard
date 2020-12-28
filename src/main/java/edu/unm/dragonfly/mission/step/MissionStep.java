@@ -20,7 +20,8 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
         @JsonSubTypes.Type(value = MissionStepSemaphore.class, name = "Semaphore"),
         @JsonSubTypes.Type(value = MissionStepRTL.class, name = "RTL"),
         @JsonSubTypes.Type(value = MissionStepDDSA.class, name = "DDSA"),
-        @JsonSubTypes.Type(value = MissionStepLawnmower.class, name = "Lawnmower")
+        @JsonSubTypes.Type(value = MissionStepLawnmower.class, name = "Lawnmower"),
+        @JsonSubTypes.Type(value = MissionStepNavigation.class, name = "Navigation")
 })
 public interface MissionStep {
     boolean appliesTo(String name);

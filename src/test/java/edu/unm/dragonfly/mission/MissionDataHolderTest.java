@@ -9,6 +9,7 @@ import edu.unm.dragonfly.mission.step.MissionStepDDSA;
 import edu.unm.dragonfly.mission.step.MissionStepGoto;
 import edu.unm.dragonfly.mission.step.MissionStepLand;
 import edu.unm.dragonfly.mission.step.MissionStepLawnmower;
+import edu.unm.dragonfly.mission.step.MissionStepNavigation;
 import edu.unm.dragonfly.mission.step.MissionStepRTL;
 import edu.unm.dragonfly.mission.step.MissionStepSemaphore;
 import edu.unm.dragonfly.mission.step.MissionStepSleep;
@@ -45,6 +46,11 @@ public class MissionDataHolderTest {
         steps.add(new MissionStepSemaphore(Arrays.asList("one")));
         steps.add(new MissionStepDDSA("four", "test", 1, 2, 3, 4, 5, Walk.RANGE, 10, 20));
         steps.add(new MissionStepLawnmower("four", 5, 4, 3, true, 1, 5, 3));
+        List<Waypoint> navigationWaypoints = new ArrayList<>();
+        navigationWaypoints.add(new Waypoint(1, 2, 3));
+        navigationWaypoints.add(new Waypoint(1, 2, 4));
+        navigationWaypoints.add(new Waypoint(4, 2, 3));
+        steps.add(new MissionStepNavigation("five", navigationWaypoints, 2, 1));
 
         Map<String, NavigateWaypoint> waypoints = new HashMap<>();
 

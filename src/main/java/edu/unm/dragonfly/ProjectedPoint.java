@@ -1,6 +1,7 @@
 package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
+import edu.unm.dragonfly.mission.Waypoint;
 
 public class ProjectedPoint {
 
@@ -33,5 +34,9 @@ public class ProjectedPoint {
 
     public Point getOriginal() {
         return original;
+    }
+
+    public Waypoint toWaypoint() {
+        return new Waypoint(original.getX(), original.getY(), original.getZ());
     }
 }

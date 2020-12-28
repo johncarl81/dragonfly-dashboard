@@ -511,7 +511,7 @@ public class DashboardController {
                 missionList.add(step);
             }
         }, droneList.stream().map(Drone::getName).collect(Collectors.toList()),
-                new ArrayList<>(waypoints.keySet()));
+                new ArrayList<>(waypoints.keySet()), boundaryPoints);
     }
 
     private void loadMissionFromFile() {

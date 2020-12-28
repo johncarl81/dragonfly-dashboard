@@ -1,5 +1,6 @@
 package edu.unm.dragonfly.mission;
 
+import com.esri.arcgisruntime.geometry.Point;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepType;
 import javafx.beans.value.ChangeListener;
@@ -25,7 +26,7 @@ public class MissionStepDialogFactory {
         void call(MissionStep step);
     }
 
-    public static void create(CreateMissionStep callback, List<String> drones, List<String> waypoints) {
+    public static void create(CreateMissionStep callback, List<String> drones, List<String> waypoints, List<Point> boundary) {
 
         Map<MissionStepType, MissionStepCreator> creators = new EnumMap<MissionStepType, MissionStepCreator>(MissionStepType.class){{
             put(MissionStepType.START, new StartCreator());
@@ -37,6 +38,7 @@ public class MissionStepDialogFactory {
             put(MissionStepType.RTL, new RTLCreator(drones));
             put(MissionStepType.DDSA, new DDSACreator(drones, waypoints));
             put(MissionStepType.LAWNMOWER, new LawnmowerCreator(drones));
+            put(MissionStepType.NAVIGATION, new RandomPointCreator(drones, boundary));
         }};
 
         Dialog<ButtonType> dialog = new Dialog<>();

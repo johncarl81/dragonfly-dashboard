@@ -13,7 +13,8 @@ public enum MissionStepType {
     SEMAPHORE(5, "Semaphore"),
     RTL(6, "RTL"),
     DDSA(7, "DDSA"),
-    LAWNMOWER(8, "Lawnmower");
+    LAWNMOWER(8, "Lawnmower"),
+    NAVIGATION(9, "Navigation");
 
     private final int mission_type;
     private final String name;
