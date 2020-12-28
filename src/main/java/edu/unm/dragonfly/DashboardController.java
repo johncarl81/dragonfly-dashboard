@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
+import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -144,7 +145,7 @@ public class DashboardController {
     private final GraphicsOverlay boundaryOverlay = new GraphicsOverlay();
     private final GraphicsOverlay pathOverlay = new GraphicsOverlay();
     private final GraphicsOverlay waypointOverlay = new GraphicsOverlay();
-    private final List<Point> boundaryPoints = new ArrayList<Point>();
+    private final List<Point> boundaryPoints = new ArrayList<>();
     private CoordianteSelectionMode mode = CoordianteSelectionMode.CLEAR;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
 
@@ -158,6 +159,27 @@ public class DashboardController {
         CoordianteSelectionMode(String buttonLabel) {
             this.buttonLabel = buttonLabel;
         }
+    }
+
+    private void drawBoundaries() {
+        boundaryOverlay.getGraphics().clear();
+
+        Graphic boudaryGraphic;
+        if(boundaryPoints.size() == 1) {
+            SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, RED, 2);
+            boudaryGraphic = new Graphic(new Point(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY()), markerSymbol);
+        } else if(boundaryPoints.size() == 2) {
+            PolylineBuilder lineBuilder = new PolylineBuilder(SpatialReferences.getWgs84());
+            lineBuilder.addPoint(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY());
+            lineBuilder.addPoint(boundaryPoints.get(1).getX(), boundaryPoints.get(1).getY());
+            SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, 1);
+            boudaryGraphic = new Graphic(lineBuilder.toGeometry(), lineSymbol);
+        } else {
+            PointCollection polygonPoints = new PointCollection(boundaryPoints);
+            SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, ALPHA_RED, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, .3f));
+            boudaryGraphic = new Graphic(new Polygon(polygonPoints), polygonSymbol);
+        }
+        boundaryOverlay.getGraphics().add(boudaryGraphic);
     }
 
 
@@ -212,24 +234,7 @@ public class DashboardController {
 
                             boundaryPoints.add(point);
 
-                            boundaryOverlay.getGraphics().clear();
-
-                            Graphic boudaryGraphic;
-                            if(boundaryPoints.size() == 1) {
-                                SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, RED, 2);
-                                boudaryGraphic = new Graphic(new Point(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY()), markerSymbol);
-                            } else if(boundaryPoints.size() == 2) {
-                                PolylineBuilder lineBuilder = new PolylineBuilder(SpatialReferences.getWgs84());
-                                lineBuilder.addPoint(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY());
-                                lineBuilder.addPoint(boundaryPoints.get(1).getX(), boundaryPoints.get(1).getY());
-                                SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, 1);
-                                boudaryGraphic = new Graphic(lineBuilder.toGeometry(), lineSymbol);
-                            } else {
-                                PointCollection polygonPoints = new PointCollection(boundaryPoints);
-                                SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, ALPHA_RED, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, .3f));
-                                boudaryGraphic = new Graphic(new Polygon(polygonPoints), polygonSymbol);
-                            }
-                            boundaryOverlay.getGraphics().add(boudaryGraphic);
+                            drawBoundaries();
 
 
                         } catch (InterruptedException | ExecutionException e) {
@@ -247,7 +252,7 @@ public class DashboardController {
                             AddWaypointDialogFactory.create(point, new AddWaypointDialogFactory.AddWaypointCallback() {
                                 @Override
                                 public void call(String name, double latitude, double longitude, double altitude, float distanceThreshold) {
-                                    waypoints.put(name, new NavigateWaypoint(new Point(longitude, latitude, altitude, SpatialReferences.getWgs84()), distanceThreshold));
+                                    waypoints.put(name, new NavigateWaypoint(new Waypoint(longitude, latitude, altitude), distanceThreshold));
                                     updateWaypointOverlay();
                                 }
                             });
@@ -348,7 +353,7 @@ public class DashboardController {
 
                     @Override
                     public void call(NavigateWaypoint waypoint) {
-                        selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
+                        selected.navigate(Collections.singletonList(waypoint.toPoint()), waypoint.getDistanceThreshold());
                     }
                 });
 
@@ -369,7 +374,7 @@ public class DashboardController {
 
                     @Override
                     public void call(NavigateWaypoint waypoint) {
-                        selected.navigate(Collections.singletonList(waypoint.getPoint()), waypoint.getDistanceThreshold());
+                        selected.navigate(Collections.singletonList(waypoint.toPoint()), waypoint.getDistanceThreshold());
                     }
                 });
 
@@ -578,6 +583,18 @@ public class DashboardController {
                 MissionDataHolder holder = mapper.readValue(openFile, MissionDataHolder.class);
                 missionList.clear();
                 missionList.addAll(holder.getSteps());
+
+                waypoints.putAll(holder.getWaypoints());
+                updateWaypointOverlay();
+
+                if(holder.getBoundaries().containsKey("boundary")){
+                    boundaryPoints.clear();
+
+                    for(Waypoint waypoint : holder.getBoundaries().get("boundary")) {
+                        boundaryPoints.add(new Point(waypoint.getLongitude(), waypoint.getLatitude(), waypoint.getAltitude()));
+                    }
+                }
+                drawBoundaries();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -591,7 +608,13 @@ public class DashboardController {
             ObjectMapper mapper = new ObjectMapper();
 
             try {
-                mapper.writeValue(saveFile, new MissionDataHolder(missionList));
+                Map<String, List<Waypoint>> boundaries = new HashMap<>();
+                List<Waypoint> boundaryWaypoints = new ArrayList<>();
+                boundaries.put("boundary", boundaryWaypoints);
+                for(Point point : boundaryPoints) {
+                    boundaryWaypoints.add(new Waypoint(point.getX(), point.getY(), point.getZ()));
+                }
+                mapper.writeValue(saveFile, new MissionDataHolder(missionList, waypoints, boundaries));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -600,14 +623,31 @@ public class DashboardController {
 
     private void uploadMissionToDrones() {
         ObjectMapper mapper = new ObjectMapper();
-        final ObjectNode mission = mapper.createObjectNode();
         for(Drone drone : droneList) {
+            final ObjectNode mission = mapper.createObjectNode();
             ArrayNode missionSteps = mission.putArray("steps");
             for(MissionStep step : missionList){
                 if(step.appliesTo(drone.getName())) {
                     missionSteps.add(step.toROSJson(mapper));
                 }
             }
+            ArrayNode jsonWaypoints = mission.putArray("waypoints");
+            for(Map.Entry<String, NavigateWaypoint> entry : waypoints.entrySet()) {
+                final ObjectNode waypointNode = entry.getValue().toROSJson(mapper);
+                waypointNode.put("name", entry.getKey());
+                jsonWaypoints.add(waypointNode);
+            }
+            ArrayNode jsonBoundaries = mission.putArray("boundaries");
+            final ObjectNode boundaryNode = jsonBoundaries.addObject();
+            boundaryNode.put("name", "boundary");
+            ArrayNode pointNodes = boundaryNode.putArray("points");
+            for(Point point : boundaryPoints) {
+                ObjectNode pointNode = pointNodes.addObject();
+                pointNode.put("longitude", point.getX());
+                pointNode.put("latitude", point.getY());
+                pointNode.put("relativeAltitude", point.getZ());
+            }
+            jsonBoundaries.add(boundaryNode);
             drone.sendMission(mission);
         }
     }
@@ -650,7 +690,7 @@ public class DashboardController {
             SimpleMarkerSceneSymbol symbol = new SimpleMarkerSceneSymbol(SimpleMarkerSceneSymbol.Style.CYLINDER, 0xFF0000FF, 1, 1, 1, SceneSymbol.AnchorPosition.CENTER);
             TextSymbol nameText = new TextSymbol(10, entry.getKey(), 0xFFFFFFFF, TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.MIDDLE);
             nameText.setOffsetX(25);
-            Graphic waypointGraphic = new Graphic(entry.getValue().getPoint(), new CompositeSymbol(Arrays.asList(symbol, nameText)));
+            Graphic waypointGraphic = new Graphic(entry.getValue().toPoint(), new CompositeSymbol(Arrays.asList(symbol, nameText)));
             waypointOverlay.getGraphics().add(waypointGraphic);
         }
     }

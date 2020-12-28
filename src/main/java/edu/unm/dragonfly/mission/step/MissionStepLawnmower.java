@@ -82,7 +82,7 @@ public class MissionStepLawnmower implements MissionStep {
         lawnmower.put("msg_type", MissionStepType.LAWNMOWER.getMission_type());
         ObjectNode data = lawnmower.putObject("lawnmower");
 
-//      TODO: data.put("boundary", boundary);
+        data.put("boundary", "boundary");
         data.put("stepLength", stepLength);
         data.put("walkBoundary", walkBoundary);
         data.put("walk", walk);
