@@ -80,16 +80,16 @@ public class Drone {
         });
     }
 
-    public void lawnmower(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waittime, float distanceThreshold) {
+    public void lawnmower(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waitTime, float distanceThreshold) {
         LawnmowerRequest request = new LawnmowerRequest();
 
         request.setBoundary(boundaryPoints.stream().map(mapToLatLon()).collect(Collectors.toList()));
-        request.setSteplength(stepLength);
+        request.setStepLength(stepLength);
         request.setWalkBoundary(walkBoundary);
         request.setStacks(stacks);
         request.setAltitude(altitude);
         request.setWalk(walk);
-        request.setWaittime(waittime);
+        request.setWaitTime(waitTime);
         request.setDistanceThreshold(distanceThreshold);
 
         bridge.call("/" + name + "/command/lawnmower", "dragonfly_messages/Lawnmower", request,
@@ -101,17 +101,17 @@ public class Drone {
                 });
     }
 
-    public Single<List<Point>> getLawnmowerWaypoints(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waittime) {
+    public Single<List<Point>> getLawnmowerWaypoints(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waitTime) {
         LawnmowerWaypointsRequest request = new LawnmowerWaypointsRequest();
 
         request.setBoundary(boundaryPoints.stream().map(mapToLatLon()).collect(Collectors.toList())
         );
-        request.setSteplength(stepLength);
+        request.setStepLength(stepLength);
         request.setWalkBoundary(walkBoundary);
         request.setStacks(stacks);
         request.setAltitude(altitude);
         request.setWalk(walk);
-        request.setWaittime(waittime);
+        request.setWaitTime(waitTime);
 
         SingleSubject<List<Point>> result = SingleSubject.create();
 
@@ -142,14 +142,14 @@ public class Drone {
         return input -> new Point(input.getLongitude(), input.getLatitude(), input.getRelativeAltitude());
     }
 
-    public void ddsa(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waittime, float distanceThreshold) {
+    public void ddsa(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waitTime, float distanceThreshold) {
         DDSARequest request = new DDSARequest();
         request.setRadius(radius);
-        request.setSteplength(stepLength);
+        request.setStepLength(stepLength);
         request.setStacks(stacks);
         request.setAltitude(altitude);
         request.setWalk(walk);
-        request.setWaittime(waittime);
+        request.setWaitTime(waitTime);
         request.setLoops(loops);
         request.setDistanceThreshold(distanceThreshold);
 
@@ -163,14 +163,14 @@ public class Drone {
 
     }
 
-    public Single<List<Point>> getDDSAWaypoints(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waittime) {
+    public Single<List<Point>> getDDSAWaypoints(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waitTime) {
         DDSAWaypointsRequest request = new DDSAWaypointsRequest();
         request.setRadius(radius);
-        request.setSteplength(stepLength);
+        request.setStepLength(stepLength);
         request.setStacks(stacks);
         request.setAltitude(altitude);
         request.setWalk(walk);
-        request.setWaittime(waittime);
+        request.setWaitTime(waitTime);
         request.setLoops(loops);
 
         SingleSubject<List<Point>> result = SingleSubject.create();
@@ -193,7 +193,7 @@ public class Drone {
 
 
         request.setWaypoints(waypoints.stream().map(mapToLatLon()).collect(Collectors.toList()));
-        request.setWaittime(0);
+        request.setWaitTime(0);
         request.setDistanceThreshold(distanceThreshold);
 
         bridge.call("/" + name + "/command/navigate", "dragonfly_messages/Navigation", request,

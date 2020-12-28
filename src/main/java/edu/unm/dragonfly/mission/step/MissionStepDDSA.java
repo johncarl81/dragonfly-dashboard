@@ -145,7 +145,7 @@ public class MissionStepDDSA implements MissionStep{
                 ", loops=" + loops +
                 ", stacks=" + stacks +
                 ", walk=" + walk +
-                ", waittime=" + waitTime +
+                ", waitTime=" + waitTime +
                 ", distanceThreshold=" + distanceThreshold +
                 '}';
     }

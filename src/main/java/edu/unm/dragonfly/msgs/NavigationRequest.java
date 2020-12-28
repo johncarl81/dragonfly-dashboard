@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class NavigationRequest {
     public List<LatLon> waypoints;
-    public double waittime;
+    public double waitTime;
     public double distanceThreshold;
 
     public List<LatLon> getWaypoints() {
@@ -18,12 +18,12 @@ public class NavigationRequest {
         this.waypoints = waypoints;
     }
 
-    public double getWaittime() {
-        return waittime;
+    public double getWaitTime() {
+        return waitTime;
     }
 
-    public void setWaittime(double waittime) {
-        this.waittime = waittime;
+    public void setWaitTime(double waitTime) {
+        this.waitTime = waitTime;
     }
 
     public double getDistanceThreshold() {

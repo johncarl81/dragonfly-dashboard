@@ -1,18 +1,16 @@
 package edu.unm.dragonfly.msgs;
 
-import java.util.List;
-
 /**
  * @author John Ericksen
  */
 public class DDSARequest {
     public double radius;
-    public double steplength;
+    public double stepLength;
     public int walk;
     public int stacks;
     public int loops;
     public double altitude;
-    public double waittime;
+    public double waitTime;
     public double distanceThreshold;
 
     public double getRadius() {
@@ -23,12 +21,12 @@ public class DDSARequest {
         this.radius = radius;
     }
 
-    public double getSteplength() {
-        return steplength;
+    public double getStepLength() {
+        return stepLength;
     }
 
-    public void setSteplength(double steplength) {
-        this.steplength = steplength;
+    public void setStepLength(double stepLength) {
+        this.stepLength = stepLength;
     }
 
     public int getWalk() {
@@ -63,12 +61,12 @@ public class DDSARequest {
         this.altitude = altitude;
     }
 
-    public double getWaittime() {
-        return waittime;
+    public double getWaitTime() {
+        return waitTime;
     }
 
-    public void setWaittime(double waittime) {
-        this.waittime = waittime;
+    public void setWaitTime(double waitTime) {
+        this.waitTime = waitTime;
     }
 
     public double getDistanceThreshold() {

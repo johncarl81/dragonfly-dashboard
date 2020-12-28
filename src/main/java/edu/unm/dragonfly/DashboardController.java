@@ -6,6 +6,8 @@ import com.esri.arcgisruntime.geometry.PointCollection;
 import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
+import com.esri.arcgisruntime.loadable.LoadStatus;
+import com.esri.arcgisruntime.mapping.MobileScenePackage;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -26,8 +28,6 @@ import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
 import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStep;
-import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.mapping.*;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -42,11 +42,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ros.RosBridge;
@@ -54,15 +56,10 @@ import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
 import ros.tools.MessageUnpacker;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -190,7 +187,7 @@ public class DashboardController {
     public void initialize() {
         sceneView = new SceneView();
         // load a mobile scene package
-        final String mspkPath = new File("/home/john/dev/dragonfly-dashboard/map.mspk").getAbsolutePath();
+        final String mspkPath = new File("/workspace/map.mspk").getAbsolutePath();
         MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
 
         mobileScenePackage.loadAsync();
@@ -347,12 +344,12 @@ public class DashboardController {
             @Override
             public void handle(ActionEvent event) {
                 if(!boundaryPoints.isEmpty()) {
-                        LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waittime, distanceThreshold) -> {
+                        LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waitTime, distanceThreshold) -> {
                                 Drone selected = drones.getSelectionModel().getSelectedItem();
-                            selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime)
+                            selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime)
                                     .observeOn(JavaFxScheduler.platform())
                                     .subscribe(waypoints -> draw(waypoints));
-                            selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waittime, distanceThreshold);
+                            selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime, distanceThreshold);
                         });
                 }
                 drones.getSelectionModel().clearSelection();
@@ -362,12 +359,12 @@ public class DashboardController {
         ddsa.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                DDSADialogFactory.create((radius, stepLength, altitude, loops, stacks, walk, waittime, distanceThreshold) -> {
+                DDSADialogFactory.create((radius, stepLength, altitude, loops, stacks, walk, waitTime, distanceThreshold) -> {
                     Drone selected = drones.getSelectionModel().getSelectedItem();
-                    selected.getDDSAWaypoints(radius, stepLength, altitude, loops, stacks, walk.id, waittime)
+                    selected.getDDSAWaypoints(radius, stepLength, altitude, loops, stacks, walk.id, waitTime)
                             .observeOn(JavaFxScheduler.platform())
                             .subscribe(waypoints -> draw(waypoints));
-                    selected.ddsa(radius, stepLength, altitude, loops, stacks, walk.id, waittime, distanceThreshold);
+                    selected.ddsa(radius, stepLength, altitude, loops, stacks, walk.id, waitTime, distanceThreshold);
 
                 });
                 drones.getSelectionModel().clearSelection();
@@ -379,7 +376,7 @@ public class DashboardController {
             public void handle(ActionEvent event) {
                 if(!boundaryPoints.isEmpty()) {
                     Drone selectedDrone = drones.getSelectionModel().getSelectedItem();
-                    RandomPathDialogFactory.create((minAltitude, maxAltitude, size, iterations, population, waittime, distanceThreshold) -> {
+                    RandomPathDialogFactory.create((minAltitude, maxAltitude, size, iterations, population, waitTime, distanceThreshold) -> {
                         Observable.fromCallable(new Callable<GeneticTSP.Tour<ProjectedPoint>>() {
                             @Override
                             public GeneticTSP.Tour<ProjectedPoint> call() {

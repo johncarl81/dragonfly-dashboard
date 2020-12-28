@@ -7,19 +7,19 @@ import java.util.List;
  */
 public class LawnmowerWaypointsRequest {
     public List<LatLon> boundary;
-    public double steplength;
+    public double stepLength;
     public boolean walkBoundary;
     public int walk;
     public int stacks;
     public double altitude;
-    public double waittime;
+    public double waitTime;
 
     public void setBoundary(List<LatLon> boundary) {
         this.boundary = boundary;
     }
 
-    public void setSteplength(double steplength) {
-        this.steplength = steplength;
+    public void setStepLength(double stepLength) {
+        this.stepLength = stepLength;
     }
 
     public void setWalkBoundary(boolean walkBoundary) {
@@ -38,7 +38,7 @@ public class LawnmowerWaypointsRequest {
         this.altitude = altitude;
     }
 
-    public void setWaittime(double waittime) {
-        this.waittime = waittime;
+    public void setWaitTime(double waitTime) {
+        this.waitTime = waitTime;
     }
 }

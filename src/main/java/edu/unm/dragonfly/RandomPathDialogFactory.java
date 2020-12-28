@@ -1,6 +1,10 @@
 package edu.unm.dragonfly;
 
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import java.util.Optional;
@@ -8,7 +12,7 @@ import java.util.Optional;
 public class RandomPathDialogFactory {
 
     public interface DialogCallback {
-        void call(float minAltitude, float maxAltitude, int size, int iterations, int population, float waittime, float distanceThreshold);
+        void call(float minAltitude, float maxAltitude, int size, int iterations, int population, float waitTime, float distanceThreshold);
     }
 
     public static void create(DialogCallback callback) {

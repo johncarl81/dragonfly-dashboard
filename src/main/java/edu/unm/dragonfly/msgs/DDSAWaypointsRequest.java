@@ -5,12 +5,12 @@ package edu.unm.dragonfly.msgs;
  */
 public class DDSAWaypointsRequest {
     public double radius;
-    public double steplength;
+    public double stepLength;
     public int walk;
     public int stacks;
     public int loops;
     public double altitude;
-    public double waittime;
+    public double waitTime;
 
     public double getRadius() {
         return radius;
@@ -20,12 +20,12 @@ public class DDSAWaypointsRequest {
         this.radius = radius;
     }
 
-    public double getSteplength() {
-        return steplength;
+    public double getStepLength() {
+        return stepLength;
     }
 
-    public void setSteplength(double steplength) {
-        this.steplength = steplength;
+    public void setStepLength(double stepLength) {
+        this.stepLength = stepLength;
     }
 
     public int getWalk() {
@@ -60,11 +60,11 @@ public class DDSAWaypointsRequest {
         this.altitude = altitude;
     }
 
-    public double getWaittime() {
-        return waittime;
+    public double getWaitTime() {
+        return waitTime;
     }
 
-    public void setWaittime(double waittime) {
-        this.waittime = waittime;
+    public void setWaitTime(double waitTime) {
+        this.waitTime = waitTime;
     }
 }

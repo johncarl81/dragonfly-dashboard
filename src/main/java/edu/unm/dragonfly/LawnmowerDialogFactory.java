@@ -1,7 +1,12 @@
 package edu.unm.dragonfly;
 
 
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import java.util.Optional;
@@ -20,7 +25,7 @@ public class LawnmowerDialogFactory {
     }
 
     public interface DialogCallback {
-        void call(float stepLength, float altitude, int stacks, boolean walkBoundary, Walk selectedItem, float waittime, float distanceThreshold);
+        void call(float stepLength, float altitude, int stacks, boolean walkBoundary, Walk selectedItem, float waitTime, float distanceThreshold);
     }
 
     public static void create(DialogCallback callback) {

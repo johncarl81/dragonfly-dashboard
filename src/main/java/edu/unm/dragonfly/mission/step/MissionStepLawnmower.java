@@ -134,12 +134,12 @@ public class MissionStepLawnmower implements MissionStep {
     public String toString() {
         return "Lawnmower{" +
                 "drone='" + drone + '\'' +
-                ", steplength=" + stepLength +
+                ", stepLength=" + stepLength +
                 ", walkBoundary=" + walkBoundary +
                 ", walk=" + walk +
                 ", stacks=" + stacks +
                 ", altitude=" + altitude +
-                ", waittime=" + waitTime +
+                ", waitTime=" + waitTime +
                 ", distanceThreshold=" + distanceThreshold +
                 '}';
     }
