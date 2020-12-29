@@ -187,7 +187,7 @@ public class DashboardController {
     public void initialize() {
         sceneView = new SceneView();
         // load a mobile scene package
-        final String mspkPath = new File("/workspace/map.mspk").getAbsolutePath();
+        final String mspkPath = new File("map.mspk").getAbsolutePath();
         MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
 
         mobileScenePackage.loadAsync();
