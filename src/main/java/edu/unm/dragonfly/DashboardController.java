@@ -7,7 +7,7 @@ import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.mapping.MobileScenePackage;
+import com.esri.arcgisruntime.mapping.*;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -185,26 +185,12 @@ public class DashboardController {
 
 
     public void initialize() {
+
         sceneView = new SceneView();
-        // load a mobile scene package
-        final String mspkPath = new File("map.mspk").getAbsolutePath();
-        MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
-
-        mobileScenePackage.loadAsync();
-        mobileScenePackage.addDoneLoadingListener(() -> {
-
-            if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && mobileScenePackage.getScenes().size() > 0) {
-                // set the first scene from the package to the scene view
-                sceneView.setArcGISScene(mobileScenePackage.getScenes().get(0));
-
-                initalizeScene();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load the mobile scene package");
-                alert.show();
-            }
-        });
-
         mapPlaceholder.getChildren().add(sceneView);
+
+//        loadMMSP(sceneView);
+        loadWebMap(sceneView);
 
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -223,11 +209,6 @@ public class DashboardController {
                 select.setText(mode.buttonLabel);
             }
         });
-
-        // add base surface for elevation data
-//        Surface surface = new Surface();
-//        surface.getElevationSources().add(new ArcGISTiledElevationSource(ELEVATION_IMAGE_SERVICE));
-//        scene.setBaseSurface(surface);
 
         drones.setItems(droneList);
         log.setItems(logList);
@@ -289,8 +270,8 @@ public class DashboardController {
                 dialog.setHeaderText("Add Drone");
 
                 Drone selected = drones.getSelectionModel().getSelectedItem();
-                
-                
+
+
                 AddWaypointDialogFactory.createSelect(waypoints, selected, new AddWaypointDialogFactory.NavigateWaypointCallback(){
 
                     @Override
@@ -310,8 +291,8 @@ public class DashboardController {
                 dialog.setHeaderText("Add Drone");
 
                 Drone selected = drones.getSelectionModel().getSelectedItem();
-                
-                
+
+
                 AddWaypointDialogFactory.createSelect(waypoints, selected, new AddWaypointDialogFactory.NavigateWaypointCallback(){
 
                     @Override
@@ -344,13 +325,13 @@ public class DashboardController {
             @Override
             public void handle(ActionEvent event) {
                 if(!boundaryPoints.isEmpty()) {
-                        LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waitTime, distanceThreshold) -> {
-                                Drone selected = drones.getSelectionModel().getSelectedItem();
-                            selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime)
-                                    .observeOn(JavaFxScheduler.platform())
-                                    .subscribe(waypoints -> draw(waypoints));
-                            selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime, distanceThreshold);
-                        });
+                    LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waitTime, distanceThreshold) -> {
+                        Drone selected = drones.getSelectionModel().getSelectedItem();
+                        selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime)
+                                .observeOn(JavaFxScheduler.platform())
+                                .subscribe(waypoints -> draw(waypoints));
+                        selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime, distanceThreshold);
+                    });
                 }
                 drones.getSelectionModel().clearSelection();
             }
@@ -374,38 +355,40 @@ public class DashboardController {
         random.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!boundaryPoints.isEmpty()) {
+                if (!boundaryPoints.isEmpty()) {
                     Drone selectedDrone = drones.getSelectionModel().getSelectedItem();
                     RandomPathDialogFactory.create((minAltitude, maxAltitude, size, iterations, population, waitTime, distanceThreshold) -> {
                         Observable.fromCallable(new Callable<GeneticTSP.Tour<ProjectedPoint>>() {
                             @Override
                             public GeneticTSP.Tour<ProjectedPoint> call() {
                                 double xmax = Double.NEGATIVE_INFINITY;
-                                double xmin = Double.POSITIVE_INFINITY;;
+                                double xmin = Double.POSITIVE_INFINITY;
+                                ;
                                 double ymax = Double.NEGATIVE_INFINITY;
-                                double ymin = Double.POSITIVE_INFINITY;;
+                                double ymin = Double.POSITIVE_INFINITY;
+                                ;
 
                                 for (Point point : boundaryPoints) {
-                                    if(xmax < point.getX()) {
+                                    if (xmax < point.getX()) {
                                         xmax = point.getX();
                                     }
-                                    if(xmin > point.getX()) {
+                                    if (xmin > point.getX()) {
                                         xmin = point.getX();
                                     }
-                                    if(ymax < point.getY()) {
+                                    if (ymax < point.getY()) {
                                         ymax = point.getY();
                                     }
-                                    if(ymin > point.getY()) {
+                                    if (ymin > point.getY()) {
                                         ymin = point.getY();
                                     }
                                 }
 
                                 List<ProjectedPoint> points = new ArrayList<>();
-                                for(int i = 0; i < size;) {
+                                for (int i = 0; i < size; ) {
                                     Point randomPoint = new Point((RAND.nextDouble() * (xmax - xmin)) + xmin,
                                             (RAND.nextDouble() * (ymax - ymin)) + ymin,
                                             (RAND.nextDouble() * (maxAltitude - minAltitude)) + minAltitude);
-                                    if(inside(randomPoint, boundaryPoints)) {
+                                    if (inside(randomPoint, boundaryPoints)) {
                                         points.add(new ProjectedPoint(randomPoint));
                                         i++;
                                     }
@@ -415,7 +398,7 @@ public class DashboardController {
                                     @Override
                                     public double distance(List<ProjectedPoint> points) {
                                         double distance = 0;
-                                        for(int i = 0; i < points.size() - 1; i++) {
+                                        for (int i = 0; i < points.size() - 1; i++) {
                                             double deltax = points.get(i).getX() - points.get(i + 1).getX();
                                             double deltay = points.get(i).getY() - points.get(i + 1).getY();
                                             double deltaz = points.get(i).getZ() - points.get(i + 1).getZ();
@@ -425,7 +408,7 @@ public class DashboardController {
                                     }
                                 }, population);
 
-                                for(int i = 0; i < iterations; i++) {
+                                for (int i = 0; i < iterations; i++) {
                                     long start = System.currentTimeMillis();
                                     chromosomes = GeneticTSP.evolve(chromosomes);
 
@@ -440,16 +423,18 @@ public class DashboardController {
                                 .subscribeOn(Schedulers.computation())
                                 .observeOn(JavaFxScheduler.platform())
                                 .subscribe(tour -> {
-                                    List<Point> points = tour.getPoints().stream().map(ProjectedPoint::getOriginal).collect(Collectors.toList());
-                                    draw(points);
-                                    selectedDrone.navigate(points, distanceThreshold);
-                                },
+                                            List<Point> points = tour.getPoints().stream().map(ProjectedPoint::getOriginal).collect(Collectors.toList());
+                                            draw(points);
+                                            selectedDrone.navigate(points, distanceThreshold);
+                                        },
                                         throwable -> throwable.printStackTrace());
                     });
                     drones.getSelectionModel().clearSelection();
                 }
             }
         });
+
+
 
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -494,7 +479,7 @@ public class DashboardController {
                 nameSubject.onNext(msg.data);
             }
         });
-    
+
         nameSubject
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(
@@ -502,6 +487,41 @@ public class DashboardController {
                         error -> System.out.println("error while consuming announce: " + error.getMessage()));
 
         log("Dashboard Startup");
+    }
+
+    private void loadWebMap(SceneView sceneView) {
+        ArcGISScene scene = new ArcGISScene();
+        scene.setBasemap(Basemap.createImagery());
+
+        sceneView.setArcGISScene(scene);
+
+        // add base surface for elevation data
+        Surface surface = new Surface();
+        surface.getElevationSources().add(new ArcGISTiledElevationSource(ELEVATION_IMAGE_SERVICE));
+        scene.setBaseSurface(surface);
+
+        initalizeScene();
+
+    }
+
+    private void loadMMSP(SceneView sceneView) {
+        // load a mobile scene package
+        final String mspkPath = new File("map.mspk").getAbsolutePath();
+        MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
+
+        mobileScenePackage.loadAsync();
+        mobileScenePackage.addDoneLoadingListener(() -> {
+
+            if (mobileScenePackage.getLoadStatus() == LoadStatus.LOADED && mobileScenePackage.getScenes().size() > 0) {
+                // set the first scene from the package to the scene view
+                sceneView.setArcGISScene(mobileScenePackage.getScenes().get(0));
+
+                initalizeScene();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load the mobile scene package");
+                alert.show();
+            }
+        });
     }
 
     private void addMissionStepDialog() {
