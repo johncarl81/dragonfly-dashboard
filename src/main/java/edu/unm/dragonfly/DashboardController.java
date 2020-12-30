@@ -131,6 +131,8 @@ public class DashboardController {
     private Button missionUpload;
     @FXML
     private Button missionStart;
+    @FXML
+    private Button missionClear;
 
     @Inject
     private RosBridge bridge;
@@ -449,6 +451,7 @@ public class DashboardController {
         missionSave.setOnAction(event -> saveMissionToFile());
         missionUpload.setOnAction(event -> uploadMissionToDrones());
         missionStart.setOnAction(event -> startMission());
+        missionClear.setOnAction(event -> missionList.clear());
 
         drones.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Drone>() {
             @Override

@@ -49,6 +49,7 @@
                             <Button fx:id="missionAdd" text="Add"/>
                             <Button fx:id="missionLoad" text="Load"/>
                             <Button fx:id="missionSave" text="Save"/>
+                            <Button fx:id="missionClear" text="Clear"/>
                         </FlowPane>
                         <FlowPane hgap="2">
                             <Button fx:id="missionUpload" text="Upload"/>
