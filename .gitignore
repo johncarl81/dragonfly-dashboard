@@ -47,3 +47,5 @@ Thumbs.db
 /docker/java_rosbridge-2.0.3-SNAPSHOT-javadoc.jar
 /docker/java_rosbridge-2.0.3-SNAPSHOT-sources.jar
 /docker/maven-metadata-local.xml
+/docker/arcgis-java-*.zip
+/docker/jdk-*.tar.gz

@@ -39,6 +39,7 @@ public class MissionStepDialogFactory {
             put(MissionStepType.DDSA, new DDSACreator(drones, waypoints));
             put(MissionStepType.LAWNMOWER, new LawnmowerCreator(drones));
             put(MissionStepType.NAVIGATION, new RandomPointCreator(drones, boundary));
+            put(MissionStepType.FLOCK, new FlockCreator(drones));
         }};
 
         Dialog<ButtonType> dialog = new Dialog<>();
