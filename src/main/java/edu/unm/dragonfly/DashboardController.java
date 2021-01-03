@@ -7,7 +7,11 @@ import com.esri.arcgisruntime.geometry.Polygon;
 import com.esri.arcgisruntime.geometry.PolylineBuilder;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.loadable.LoadStatus;
-import com.esri.arcgisruntime.mapping.*;
+import com.esri.arcgisruntime.mapping.ArcGISScene;
+import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.MobileScenePackage;
+import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
@@ -191,8 +195,8 @@ public class DashboardController {
         sceneView = new SceneView();
         mapPlaceholder.getChildren().add(sceneView);
 
-//        loadMMSP(sceneView);
-        loadWebMap(sceneView);
+        loadMMSP(sceneView);
+//        loadWebMap(sceneView);
 
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -579,7 +583,7 @@ public class DashboardController {
                 for(Point point : boundaryPoints) {
                     boundaryWaypoints.add(new Waypoint(point.getX(), point.getY(), point.getZ()));
                 }
-                mapper.writeValue(saveFile, new MissionDataHolder(missionList, waypoints, boundaries));
+                mapper.writerWithDefaultPrettyPrinter().writeValue(saveFile, new MissionDataHolder(missionList, waypoints, boundaries));
             } catch (IOException e) {
                 e.printStackTrace();
             }
