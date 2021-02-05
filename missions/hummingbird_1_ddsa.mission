@@ -16,10 +16,10 @@
     "radius" : 1.0,
     "stepLength" : 1.0,
     "altitude" : 10.0,
-    "loops" : 5,
-    "stacks" : 5,
-    "walk" : "WALK",
-    "waitTime" : 3.0,
+    "loops" : 10,
+    "stacks" : 6,
+    "walk" : "RANGE",
+    "waitTime" : 0.0,
     "distanceThreshold" : 1.0
   }, {
     "@type" : "Waypoint",
@@ -40,8 +40,8 @@
     },
     "ddsa.home" : {
       "waypoint" : {
-        "longitude" : -106.65538024902344,
-        "latitude" : 35.825828552246094,
+        "longitude" : -106.65531158447266,
+        "latitude" : 35.82585906982422,
         "altitude" : 10.0
       },
       "distanceThreshold" : 1.0
