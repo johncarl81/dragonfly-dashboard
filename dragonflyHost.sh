@@ -7,3 +7,5 @@ sleep 10
 rosrun master_discovery_fkie master_discovery _mcast_group:=224.0.0.0 &
 sleep 10
 rosrun master_sync_fkie master_sync &
+sleep 10
+roslaunch rosbridge_server rosbridge_websocket.launch&
