@@ -21,5 +21,6 @@ docker run -it \
     --runtime=nvidia \
     --privileged \
     --network ros-net \
+    --mount type=bind,source="$(pwd)"/missions,target=/workspace/missions \
     dragonfly-dashboard:latest \
     /bin/sh -c 'cd /workspace; ./gradlew run'

@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
 import edu.unm.dragonfly.mission.Waypoint;
+import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -216,9 +217,10 @@ public class DashboardController {
             }
         });
 
-        drones.setItems(droneList);
+        drones.setItems(droneList.sorted());
         log.setItems(logList);
         mission.setItems(missionList);
+        clearMission();
 
         delete.setDisable(true);
         takeoff.setDisable(true);
@@ -455,7 +457,7 @@ public class DashboardController {
         missionSave.setOnAction(event -> saveMissionToFile());
         missionUpload.setOnAction(event -> uploadMissionToDrones());
         missionStart.setOnAction(event -> startMission());
-        missionClear.setOnAction(event -> missionList.clear());
+        missionClear.setOnAction(event -> clearMission());
 
         drones.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Drone>() {
             @Override
@@ -537,7 +539,7 @@ public class DashboardController {
             public void call(MissionStep step) {
                 missionList.add(step);
             }
-        }, droneList.stream().map(Drone::getName).collect(Collectors.toList()),
+        }, droneList.stream().map(Drone::getName).sorted().collect(Collectors.toList()),
                 new ArrayList<>(waypoints.keySet()), boundaryPoints);
     }
 
@@ -619,6 +621,11 @@ public class DashboardController {
             jsonBoundaries.add(boundaryNode);
             drone.sendMission(mission);
         }
+    }
+
+    private void clearMission() {
+        missionList.clear();
+        missionList.add(new MissionStart());
     }
 
     private void startMission() {

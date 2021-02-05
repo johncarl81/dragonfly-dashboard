@@ -18,7 +18,7 @@ RUN add-apt-repository ppa:linuxuprising/java && apt-get -qq update && \
 	echo "oracle-java11-installer-local shared/accepted-oracle-license-v1-2 select true" | debconf-set-selections
 
 RUN mkdir -p /var/cache/oracle-jdk11-installer-local/
-COPY docker/jdk-11.0.9_linux-x64_bin.tar.gz /var/cache/oracle-jdk11-installer-local/
+COPY docker/jdk-11.0.*_linux-x64_bin.tar.gz /var/cache/oracle-jdk11-installer-local/
 
 RUN apt-get -qq install ros-melodic-mavros ros-melodic-mavros-extras oracle-java11-installer-local openjfx unzip
 
