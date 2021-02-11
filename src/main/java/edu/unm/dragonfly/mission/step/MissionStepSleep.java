@@ -68,7 +68,7 @@ public class MissionStepSleep implements MissionStep {
 
     @Override
     public String toString() {
-        return "MissionStepSleep{" +
+        return "Sleep{" +
                 "drones=" + drones +
                 ", duration=" + duration +
                 '}';

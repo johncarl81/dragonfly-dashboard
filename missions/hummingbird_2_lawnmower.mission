@@ -12,8 +12,8 @@
     "altitude" : 10.0,
     "stacks" : 3,
     "walkBoundary" : true,
-    "walk" : 1,
-    "waitTime" : 3.0,
+    "walk" : 2,
+    "waitTime" : 0.0,
     "distanceThreshold" : 1.0
   }, {
     "@type" : "Waypoint",

@@ -1,0 +1,66 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly2", "dragonfly3", "dragonfly4" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly3",
+    "waypoint" : "df3.home"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "df4.home"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly2", "dragonfly3", "dragonfly4" ],
+    "id" : "c9d32fdc-aafb-4397-8c78-0dd13b5152b4"
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly2",
+    "leader" : "dragonfly3",
+    "x" : -6.0,
+    "y" : -6.0
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly4",
+    "leader" : "dragonfly3",
+    "x" : 6.0,
+    "y" : -6.0
+  } ],
+  "waypoints" : {
+    "df2.home" : {
+      "waypoint" : {
+        "longitude" : -106.59663391113281,
+        "latitude" : 35.19424057006836,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df3.home" : {
+      "waypoint" : {
+        "longitude" : -106.59640502929688,
+        "latitude" : 35.19416046142578,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df4.home" : {
+      "waypoint" : {
+        "longitude" : -106.5961685180664,
+        "latitude" : 35.19409942626953,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "boundary" : [ ]
+  }
+}

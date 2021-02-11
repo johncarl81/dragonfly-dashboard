@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.util.List;
-
 /**
  * @author John Ericksen
  */
@@ -89,7 +87,7 @@ public class MissionStepFlock implements MissionStep {
 
     @Override
     public String toString() {
-        return "MissionStepFlock{" +
+        return "Flock{" +
                 "drone='" + drone + '\'' +
                 ", leader='" + leader + '\'' +
                 ", x=" + x +
