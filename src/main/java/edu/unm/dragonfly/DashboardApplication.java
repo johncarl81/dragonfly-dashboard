@@ -1,5 +1,6 @@
 package edu.unm.dragonfly;
 
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.application.Application;
@@ -49,6 +50,7 @@ public class DashboardApplication extends Application {
      * @param args arguments passed to this application
      */
     public static void main(String[] args) {
+        ArcGISRuntimeEnvironment.setLicense("runtimelite,1000,rud2004642504,none,4N5X0H4AH76FTK118137");
 
         Application.launch(args);
     }
