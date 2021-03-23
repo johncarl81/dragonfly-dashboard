@@ -25,7 +25,7 @@ public class MissionStepGoto implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode gotoWaypoint = mapper.createObjectNode();
 
         gotoWaypoint.put("msg_type", MissionStepType.GOTO_WAYPOINT.getMission_type());

@@ -46,7 +46,7 @@ public class MissionStepFlock implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode flock = mapper.createObjectNode();
 
         flock.put("msg_type", MissionStepType.FLOCK.getMission_type());

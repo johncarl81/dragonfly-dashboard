@@ -41,7 +41,7 @@ public class MissionStepSemaphore implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode semaphore = mapper.createObjectNode();
 
         semaphore.put("msg_type", MissionStepType.SEMAPHORE.getMission_type());

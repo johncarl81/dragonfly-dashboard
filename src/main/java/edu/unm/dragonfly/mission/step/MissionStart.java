@@ -14,7 +14,7 @@ public class MissionStart implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode missionStart = mapper.createObjectNode();
 
         missionStart.put("msg_type", MissionStepType.START.getMission_type());

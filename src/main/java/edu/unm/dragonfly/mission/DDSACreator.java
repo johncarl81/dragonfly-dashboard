@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DDSACreator implements MissionStepCreator {
 
-    private final ComboBox<String> droneSelection;
+    private final SelectableDronesCreator droneSelection;
     private final ComboBox<String> waypointSelection;
     private TextField radiusField;
     private TextField stepLengthField;
@@ -28,7 +28,7 @@ public class DDSACreator implements MissionStepCreator {
     private TextField distanceThreshold;
 
     public DDSACreator(List<String> drones, List<String> waypoints) {
-        this.droneSelection = new ComboBox<>(FXCollections.observableList(drones));
+        this.droneSelection = new SelectableDronesCreator(drones);
         this.waypointSelection = new ComboBox<>(FXCollections.observableList(waypoints));
     }
 
@@ -55,8 +55,7 @@ public class DDSACreator implements MissionStepCreator {
         waitTimeField.setText("3");
         distanceThreshold.setText("1");
 
-        grid.add(new Label("Drone:"), 1, 2);
-        grid.add(droneSelection, 2, 2);
+        droneSelection.create(grid, 2);
         grid.add(new Label("Waypoint:"), 1, 3);
         grid.add(waypointSelection, 2, 3);
         grid.add(new Label("Radius: "), 1, 4);
@@ -79,7 +78,7 @@ public class DDSACreator implements MissionStepCreator {
 
     @Override
     public MissionStep build() {
-        return new MissionStepDDSA(droneSelection.getSelectionModel().getSelectedItem(),
+        return new MissionStepDDSA(droneSelection.getSelectedDrones(),
                 waypointSelection.getSelectionModel().getSelectedItem(),
                 Float.parseFloat(radiusField.getText()),
                 Float.parseFloat(stepLengthField.getText()),

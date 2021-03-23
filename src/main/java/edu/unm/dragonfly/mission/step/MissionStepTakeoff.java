@@ -35,7 +35,7 @@ public class MissionStepTakeoff implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode takeoff = mapper.createObjectNode();
 
         takeoff.put("msg_type", MissionStepType.TAKEOFF.getMission_type());

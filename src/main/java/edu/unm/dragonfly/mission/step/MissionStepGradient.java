@@ -36,7 +36,7 @@ public class MissionStepGradient implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode semaphore = mapper.createObjectNode();
 
         semaphore.put("msg_type", MissionStepType.GRADIENT.getMission_type());

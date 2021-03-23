@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.Walk;
 
+import java.util.List;
+
 /**
  * @author John Ericksen
  */
 public class MissionStepDDSA implements MissionStep{
 
-    private final String drone;
+    private final List<String> drones;
     private final String waypoint;
     private final float radius;
     private final float stepLength;
@@ -23,7 +25,7 @@ public class MissionStepDDSA implements MissionStep{
     private final float distanceThreshold;
 
     @JsonCreator
-    public MissionStepDDSA(@JsonProperty("drone") String drone,
+    public MissionStepDDSA(@JsonProperty("drone") List<String> drones,
                            @JsonProperty("waypoint") String waypoint,
                            @JsonProperty("radius") float radius,
                            @JsonProperty("stepLength") float stepLength,
@@ -33,7 +35,7 @@ public class MissionStepDDSA implements MissionStep{
                            @JsonProperty("walk") Walk walk,
                            @JsonProperty("waitTime") float waitTime,
                            @JsonProperty("distanceThreshold") float distanceThreshold) {
-        this.drone = drone;
+        this.drones = drones;
         this.waypoint = waypoint;
         this.radius = radius;
         this.stepLength = stepLength;
@@ -45,8 +47,8 @@ public class MissionStepDDSA implements MissionStep{
         this.distanceThreshold = distanceThreshold;
     }
 
-    public String getDrone() {
-        return drone;
+    public List<String> getDrones() {
+        return drones;
     }
 
     public String getWaypoint() {
@@ -87,11 +89,11 @@ public class MissionStepDDSA implements MissionStep{
 
     @Override
     public boolean appliesTo(String name) {
-        return this.drone.equals(name);
+        return this.drones.contains(name);
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode ddsa = mapper.createObjectNode();
 
         ddsa.put("msg_type", MissionStepType.DDSA.getMission_type());
@@ -101,6 +103,8 @@ public class MissionStepDDSA implements MissionStep{
         data.put("radius", radius);
         data.put("stepLength", stepLength);
         data.put("walk", walk.id);
+        data.put("swarm_size", drones.size());
+        data.put("swarm_index", drones.indexOf(droneName));
         data.put("stacks", stacks);
         data.put("loops", loops);
         data.put("altitude", altitude);
@@ -125,14 +129,14 @@ public class MissionStepDDSA implements MissionStep{
         if (stacks != that.stacks) return false;
         if (Float.compare(that.waitTime, waitTime) != 0) return false;
         if (Float.compare(that.distanceThreshold, distanceThreshold) != 0) return false;
-        if (drone != null ? !drone.equals(that.drone) : that.drone != null) return false;
+        if (drones != null ? !drones.equals(that.drones) : that.drones != null) return false;
         if (waypoint != null ? !waypoint.equals(that.waypoint) : that.waypoint != null) return false;
         return walk == that.walk;
     }
 
     @Override
     public int hashCode() {
-        int result = drone != null ? drone.hashCode() : 0;
+        int result = drones != null ? drones.hashCode() : 0;
         result = 31 * result + (waypoint != null ? waypoint.hashCode() : 0);
         result = 31 * result + (radius != +0.0f ? Float.floatToIntBits(radius) : 0);
         result = 31 * result + (stepLength != +0.0f ? Float.floatToIntBits(stepLength) : 0);
@@ -148,7 +152,7 @@ public class MissionStepDDSA implements MissionStep{
     @Override
     public String toString() {
         return "DDSA{" +
-                "drone='" + drone + '\'' +
+                "drones='" + drones + '\'' +
                 ", radius=" + radius +
                 ", stepLength=" + stepLength +
                 ", altitude=" + altitude +

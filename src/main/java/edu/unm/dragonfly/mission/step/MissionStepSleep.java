@@ -34,7 +34,7 @@ public class MissionStepSleep implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode sleep = mapper.createObjectNode();
 
         sleep.put("msg_type", MissionStepType.SLEEP.getMission_type());

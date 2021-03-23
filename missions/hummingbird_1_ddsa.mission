@@ -11,7 +11,7 @@
     "waypoint" : "ddsa.home"
   }, {
     "@type" : "DDSA",
-    "drone" : "dragonfly3",
+    "drones": ["dragonfly3"],
     "waypoint" : "ddsa.home",
     "radius" : 1.0,
     "stepLength" : 1.0,

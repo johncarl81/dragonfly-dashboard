@@ -28,5 +28,5 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 public interface MissionStep {
     boolean appliesTo(String name);
 
-    ObjectNode toROSJson(ObjectMapper mapper);
+    ObjectNode toROSJson(ObjectMapper mapper, String droneName);
 }

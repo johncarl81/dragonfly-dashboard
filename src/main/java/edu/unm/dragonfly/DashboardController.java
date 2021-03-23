@@ -599,7 +599,7 @@ public class DashboardController {
             ArrayNode missionSteps = mission.putArray("steps");
             for(MissionStep step : missionList){
                 if(step.appliesTo(drone.getName())) {
-                    missionSteps.add(step.toROSJson(mapper));
+                    missionSteps.add(step.toROSJson(mapper, drone.getName()));
                 }
             }
             ArrayNode jsonWaypoints = mission.putArray("waypoints");
@@ -757,6 +757,7 @@ public class DashboardController {
 
         SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.DASH, 0xFF800080, 1);
         Graphic graphic = new Graphic(lineBuilder.toGeometry(), lineSymbol);
+
         pathOverlay.getGraphics().add(graphic);
     }
 
@@ -852,7 +853,7 @@ public class DashboardController {
     }
 
     private void log(String message) {
-        logList.add("[" + DATE_FORMAT.format(new Date()) + "]" + message);
+        logList.add(0, "[" + DATE_FORMAT.format(new Date()) + "]" + message);
     }
 
     void terminate() {

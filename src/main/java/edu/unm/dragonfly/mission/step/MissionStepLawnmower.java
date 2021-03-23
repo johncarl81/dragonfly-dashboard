@@ -76,7 +76,7 @@ public class MissionStepLawnmower implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode lawnmower = mapper.createObjectNode();
 
         lawnmower.put("msg_type", MissionStepType.LAWNMOWER.getMission_type());

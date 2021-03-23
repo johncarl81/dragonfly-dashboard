@@ -29,7 +29,7 @@ public class MissionStepRTL implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode rtl = mapper.createObjectNode();
 
         rtl.put("msg_type", MissionStepType.RTL.getMission_type());

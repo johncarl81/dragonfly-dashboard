@@ -25,7 +25,7 @@ public class MissionStepLand implements MissionStep {
     }
 
     @Override
-    public ObjectNode toROSJson(ObjectMapper mapper) {
+    public ObjectNode toROSJson(ObjectMapper mapper, String droneName) {
         ObjectNode land = mapper.createObjectNode();
 
         land.put("msg_type", MissionStepType.LAND.getMission_type());
