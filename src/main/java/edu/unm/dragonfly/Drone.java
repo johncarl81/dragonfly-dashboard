@@ -2,6 +2,7 @@ package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.msgs.DDSARequest;
 import edu.unm.dragonfly.msgs.DDSAResponse;
@@ -289,6 +290,30 @@ public class Drone {
                     @Override
                     public void receive(JsonNode data, String stringRep) {
                         System.out.println("Start mission sent to " + name);
+                    }
+                });
+    }
+
+    public void setup(int rtlAltitude) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode setupData = mapper.createObjectNode();
+        setupData.put("rtl_altitude", rtlAltitude);
+        /*
+        final ObjectNode boundaryNode = jsonBoundaries.addObject();
+            boundaryNode.put("name", "boundary");
+            ArrayNode pointNodes = boundaryNode.putArray("points");
+            for(Point point : boundaryPoints) {
+                ObjectNode pointNode = pointNodes.addObject();
+                pointNode.put("longitude", point.getX());
+                pointNode.put("latitude", point.getY());
+                pointNode.put("relativeAltitude", point.getZ());
+            }
+         */
+        bridge.call("/" + name + "/command/setup", "dragonfly_messages/Setup", setupData,
+                new RosListenDelegate() {
+                    @Override
+                    public void receive(JsonNode data, String stringRep) {
+                        System.out.println("Setup sent to " + name);
                     }
                 });
     }

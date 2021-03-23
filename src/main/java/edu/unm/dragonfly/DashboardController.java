@@ -109,6 +109,8 @@ public class DashboardController {
     @FXML
     private TextField coordinates;
     @FXML
+    private Button setupDrones;
+    @FXML
     private Button select;
     @FXML
     private Button lawnmower;
@@ -452,6 +454,7 @@ public class DashboardController {
             }
         });
 
+        setupDrones.setOnAction(event -> setupDrones());
         missionAdd.setOnAction(event -> addMissionStepDialog());
         missionLoad.setOnAction(event -> loadMissionFromFile());
         missionSave.setOnAction(event -> saveMissionToFile());
@@ -589,6 +592,13 @@ public class DashboardController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void setupDrones() {
+        for(int i = 0; i < droneList.size(); i++) {
+            Drone drone = droneList.get(i);
+            drone.setup(1000 + (i * 200));
         }
     }
 
