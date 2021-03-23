@@ -23,6 +23,7 @@ public class MissionStepDDSA implements MissionStep{
     private final Walk walk;
     private final float waitTime;
     private final float distanceThreshold;
+    private final boolean uniqueAltitudes;
 
     @JsonCreator
     public MissionStepDDSA(@JsonProperty("drone") List<String> drones,
@@ -34,7 +35,8 @@ public class MissionStepDDSA implements MissionStep{
                            @JsonProperty("stacks") int stacks,
                            @JsonProperty("walk") Walk walk,
                            @JsonProperty("waitTime") float waitTime,
-                           @JsonProperty("distanceThreshold") float distanceThreshold) {
+                           @JsonProperty("distanceThreshold") float distanceThreshold,
+                           @JsonProperty("uniqueAltitudes") boolean uniqueAltitudes) {
         this.drones = drones;
         this.waypoint = waypoint;
         this.radius = radius;
@@ -45,6 +47,7 @@ public class MissionStepDDSA implements MissionStep{
         this.walk = walk;
         this.waitTime = waitTime;
         this.distanceThreshold = distanceThreshold;
+        this.uniqueAltitudes = uniqueAltitudes;
     }
 
     public List<String> getDrones() {
@@ -87,6 +90,10 @@ public class MissionStepDDSA implements MissionStep{
         return distanceThreshold;
     }
 
+    public boolean isUniqueAltitudes() {
+        return uniqueAltitudes;
+    }
+
     @Override
     public boolean appliesTo(String name) {
         return this.drones.contains(name);
@@ -107,7 +114,11 @@ public class MissionStepDDSA implements MissionStep{
         data.put("swarm_index", drones.indexOf(droneName));
         data.put("stacks", stacks);
         data.put("loops", loops);
-        data.put("altitude", altitude);
+        if(uniqueAltitudes) {
+            data.put("altitude", altitude + (radius * drones.indexOf(droneName)));
+        } else {
+            data.put("altitude", altitude);
+        }
         data.put("waitTime", waitTime);
         data.put("distanceThreshold", distanceThreshold);
 
@@ -129,6 +140,7 @@ public class MissionStepDDSA implements MissionStep{
         if (stacks != that.stacks) return false;
         if (Float.compare(that.waitTime, waitTime) != 0) return false;
         if (Float.compare(that.distanceThreshold, distanceThreshold) != 0) return false;
+        if (uniqueAltitudes != that.uniqueAltitudes) return false;
         if (drones != null ? !drones.equals(that.drones) : that.drones != null) return false;
         if (waypoint != null ? !waypoint.equals(that.waypoint) : that.waypoint != null) return false;
         return walk == that.walk;
@@ -146,13 +158,15 @@ public class MissionStepDDSA implements MissionStep{
         result = 31 * result + (walk != null ? walk.hashCode() : 0);
         result = 31 * result + (waitTime != +0.0f ? Float.floatToIntBits(waitTime) : 0);
         result = 31 * result + (distanceThreshold != +0.0f ? Float.floatToIntBits(distanceThreshold) : 0);
+        result = 31 * result + (uniqueAltitudes ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "DDSA{" +
-                "drones='" + drones + '\'' +
+                "drones=" + drones +
+                ", waypoint='" + waypoint + '\'' +
                 ", radius=" + radius +
                 ", stepLength=" + stepLength +
                 ", altitude=" + altitude +
@@ -161,6 +175,7 @@ public class MissionStepDDSA implements MissionStep{
                 ", walk=" + walk +
                 ", waitTime=" + waitTime +
                 ", distanceThreshold=" + distanceThreshold +
+                ", uniqueAltitudes=" + uniqueAltitudes +
                 '}';
     }
 }

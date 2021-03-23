@@ -4,6 +4,7 @@ import edu.unm.dragonfly.Walk;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepDDSA;
 import javafx.collections.FXCollections;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -26,6 +27,7 @@ public class DDSACreator implements MissionStepCreator {
     private ComboBox<Walk> walkComboBox;
     private TextField waitTimeField;
     private TextField distanceThreshold;
+    private CheckBox uniqueAltitudes;
 
     public DDSACreator(List<String> drones, List<String> waypoints) {
         this.droneSelection = new SelectableDronesCreator(drones);
@@ -44,6 +46,7 @@ public class DDSACreator implements MissionStepCreator {
         walkComboBox.getItems().addAll(Walk.values());
         waitTimeField = new TextField();
         distanceThreshold = new TextField();
+        uniqueAltitudes = new CheckBox();
 
         // Set Defaults
         radiusField.setText("1");
@@ -51,9 +54,10 @@ public class DDSACreator implements MissionStepCreator {
         loopsField.setText("5");
         stacksField.setText("1");
         altitudeField.setText("10");
-        walkComboBox.getSelectionModel().select(Walk.WALK);
-        waitTimeField.setText("3");
+        walkComboBox.getSelectionModel().select(Walk.RANGE);
+        waitTimeField.setText("0");
         distanceThreshold.setText("1");
+        uniqueAltitudes.setSelected(true);
 
         droneSelection.create(grid, 2);
         grid.add(new Label("Waypoint:"), 1, 3);
@@ -74,6 +78,8 @@ public class DDSACreator implements MissionStepCreator {
         grid.add(waitTimeField, 2, 10);
         grid.add(new Label("Distance Threshold: "), 1, 11);
         grid.add(distanceThreshold, 2, 11);
+        grid.add(new Label("Unique Altitudes: "), 1, 12);
+        grid.add(uniqueAltitudes, 2, 12);
     }
 
     @Override
@@ -87,6 +93,7 @@ public class DDSACreator implements MissionStepCreator {
                 Integer.parseInt(stacksField.getText()),
                 walkComboBox.getSelectionModel().getSelectedItem(),
                 Float.parseFloat(waitTimeField.getText()),
-                Float.parseFloat(distanceThreshold.getText()));
+                Float.parseFloat(distanceThreshold.getText()),
+                uniqueAltitudes.isSelected());
     }
 }

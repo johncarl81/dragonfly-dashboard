@@ -11,11 +11,12 @@
     "radius" : 2.0,
     "stepLength" : 1.0,
     "altitude" : 10.0,
-    "loops" : 5,
+    "loops" : 2,
     "stacks" : 1,
     "walk" : "RANGE",
     "waitTime" : 0.0,
     "distanceThreshold" : 1.0,
+    "uniqueAltitudes" : true,
     "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3", "dragonfly4" ]
   }, {
     "@type" : "Semaphore",
