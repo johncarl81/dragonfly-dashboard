@@ -9,13 +9,13 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -27,8 +27,9 @@ public class RandomPointCreator implements MissionStepCreator {
 
     private static final Random RAND = new Random(System.currentTimeMillis());
 
-    private final List<Point> boundaryPoints;
+    private final Map<String, List<Waypoint>> boundaries;
     private final ComboBox<String> droneSelection;
+    private final ComboBox<String> boundarySelection;
     private TextField minAltitude;
     private TextField maxAltitude;
     private TextField size;
@@ -38,9 +39,10 @@ public class RandomPointCreator implements MissionStepCreator {
     private TextField distanceThreshold;
     private ProgressBar progressBar;
 
-    public RandomPointCreator(List<String> drones, List<Point> boundaryPoints) {
+    public RandomPointCreator(List<String> drones, Map<String, List<Waypoint>> boundaries) {
         this.droneSelection = new ComboBox<>(FXCollections.observableList(drones));
-        this.boundaryPoints = boundaryPoints;
+        this.boundarySelection = new ComboBox<>(FXCollections.observableList(boundaries.keySet().stream().sorted().collect(Collectors.toList())));
+        this.boundaries = boundaries;
     }
 
     @Override
@@ -64,25 +66,17 @@ public class RandomPointCreator implements MissionStepCreator {
         waitTimeField.setText("3");
         distanceThreshold.setText("1");
 
-
-        grid.add(new Label("Drone:"), 1, 2);
-        grid.add(droneSelection, 2, 2);
-        grid.add(new Label("Min Altitude: "), 1, 3);
-        grid.add(minAltitude, 2, 3);
-        grid.add(new Label("Max Altitude: "), 1, 4);
-        grid.add(maxAltitude, 2, 4);
-        grid.add(new Label("Size: "), 1, 5);
-        grid.add(size, 2, 5);
-        grid.add(new Label("Iterations: "), 1, 6);
-        grid.add(iterations, 2, 6);
-        grid.add(new Label("Population: "), 1, 7);
-        grid.add(population, 2, 7);
-        grid.add(new Label("Wait Time: "), 1, 8);
-        grid.add(waitTimeField, 2, 8);
-        grid.add(new Label("Distance Threshold: "), 1, 9);
-        grid.add(distanceThreshold, 2, 9);
-        grid.add(progressBar, 1, 10, 2, 10);
-
+        GridUtil.builder(grid).increment()
+                .add("Drone:", droneSelection)
+                .add("Boundary:", boundarySelection)
+                .add("Min Altitude:", minAltitude)
+                .add("Max Altitude:", maxAltitude)
+                .add("Size:", size)
+                .add("Iterations:", iterations)
+                .add("Population:", population)
+                .add("Wait Time:", waitTimeField)
+                .add("Distance Threshold:", distanceThreshold)
+                .add(progressBar);
     }
 
 
@@ -93,6 +87,9 @@ public class RandomPointCreator implements MissionStepCreator {
         List<Waypoint> waypoints = Observable.fromCallable(new Callable<GeneticTSP.Tour<ProjectedPoint>>() {
             @Override
             public GeneticTSP.Tour<ProjectedPoint> call() {
+
+                List<Point> boundaryPoints = boundaries.get(boundarySelection.getValue()).stream().map(Waypoint::toPoint).collect(Collectors.toList());
+
                 double xmax = Double.NEGATIVE_INFINITY;
                 double xmin = Double.POSITIVE_INFINITY;;
                 double ymax = Double.NEGATIVE_INFINITY;

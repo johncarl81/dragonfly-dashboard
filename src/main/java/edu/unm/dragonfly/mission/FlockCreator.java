@@ -1,12 +1,9 @@
 package edu.unm.dragonfly.mission;
 
-import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepFlock;
-import edu.unm.dragonfly.mission.step.MissionStepGoto;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -36,14 +33,11 @@ public class FlockCreator implements MissionStepCreator {
         xoffset.setText("10");
         yoffset.setText("0");
 
-        grid.add(new Label("Drone:"), 1, 2);
-        grid.add(droneSelection, 2, 2);
-        grid.add(new Label("Leader:"), 1, 3);
-        grid.add(leaderSelection, 2, 3);
-        grid.add(new Label("x offset:"), 1, 4);
-        grid.add(xoffset, 2, 4);
-        grid.add(new Label("y offset:"), 1, 5);
-        grid.add(yoffset, 2, 5);
+        GridUtil.builder(grid).increment()
+                .add("Drone:", droneSelection)
+                .add("Leader:", leaderSelection)
+                .add("X offset:", xoffset)
+                .add("Y offset:", yoffset);
     }
 
     @Override

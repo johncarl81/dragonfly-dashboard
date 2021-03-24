@@ -6,7 +6,6 @@ import edu.unm.dragonfly.mission.step.MissionStepDDSA;
 import javafx.collections.FXCollections;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -60,26 +59,18 @@ public class DDSACreator implements MissionStepCreator {
         uniqueAltitudes.setSelected(true);
 
         droneSelection.create(grid, 2);
-        grid.add(new Label("Waypoint:"), 1, 3);
-        grid.add(waypointSelection, 2, 3);
-        grid.add(new Label("Radius: "), 1, 4);
-        grid.add(radiusField, 2, 4);
-        grid.add(new Label("Step Length: "), 1, 5);
-        grid.add(stepLengthField, 2, 5);
-        grid.add(new Label("Altitude: "), 1, 6);
-        grid.add(altitudeField, 2, 6);
-        grid.add(new Label("Loops: "), 1, 7);
-        grid.add(loopsField, 2, 7);
-        grid.add(new Label("Stacks: "), 1, 8);
-        grid.add(stacksField, 2, 8);
-        grid.add(new Label("Walk: "), 1, 9);
-        grid.add(walkComboBox, 2, 9);
-        grid.add(new Label("Wait Time: "), 1, 10);
-        grid.add(waitTimeField, 2, 10);
-        grid.add(new Label("Distance Threshold: "), 1, 11);
-        grid.add(distanceThreshold, 2, 11);
-        grid.add(new Label("Unique Altitudes: "), 1, 12);
-        grid.add(uniqueAltitudes, 2, 12);
+        GridUtil.builder(grid).increment().increment()
+                .add("Waypoint:", waypointSelection)
+                .add("Radius:", radiusField)
+                .add("Step Length:", stepLengthField)
+                .add("Altitude:", altitudeField)
+                .add("Loops:", loopsField)
+                .add("Stacks:", stacksField)
+                .add("Walk:", walkComboBox)
+                .add("Wait Time:", waitTimeField)
+                .add("Distance Threshold:", distanceThreshold)
+                .add("Unique Altitudes:", uniqueAltitudes);
+
     }
 
     @Override

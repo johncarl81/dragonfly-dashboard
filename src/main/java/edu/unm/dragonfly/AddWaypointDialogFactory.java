@@ -1,8 +1,13 @@
 package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
+import edu.unm.dragonfly.mission.GridUtil;
 import javafx.collections.FXCollections;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import java.util.Map;
@@ -38,16 +43,12 @@ public class AddWaypointDialogFactory {
         altitudeField.setText("10");
         distanceThreshold.setText("1");
 
-        grid.add(new Label("Name: "), 1, 1);
-        grid.add(nameField, 2, 1);
-        grid.add(new Label("Latitude: "), 1, 2);
-        grid.add(latitudeField, 2, 2);
-        grid.add(new Label("Logitude: "), 1, 3);
-        grid.add(longitudeField, 2, 3);
-        grid.add(new Label("Altitude: "), 1, 4);
-        grid.add(altitudeField, 2, 4);
-        grid.add(new Label("Distance Threshold: "), 1, 5);
-        grid.add(distanceThreshold, 2, 5);
+        GridUtil.builder(grid)
+                .add("Name:", nameField)
+                .add("Latitude:", latitudeField)
+                .add("Longitude:", longitudeField)
+                .add("Altitude:", altitudeField)
+                .add("Distance Threshold:", distanceThreshold);
 
         dialog.getDialogPane().setContent(grid);
 

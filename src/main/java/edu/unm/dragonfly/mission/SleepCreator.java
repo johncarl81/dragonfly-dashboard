@@ -2,7 +2,6 @@ package edu.unm.dragonfly.mission;
 
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepSleep;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -25,9 +24,10 @@ public class SleepCreator implements MissionStepCreator {
         durationField = new TextField();
 
         durationField.setText("0");
+
         droneSelection.create(grid, 2);
-        grid.add(new Label("Duration:"), 1, 3);
-        grid.add(durationField, 2, 3);
+        GridUtil.builder(grid).increment().increment()
+                .add("Duration:", durationField);
     }
 
     @Override

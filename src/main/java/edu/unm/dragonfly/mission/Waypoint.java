@@ -1,7 +1,11 @@
 package edu.unm.dragonfly.mission;
 
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.beans.Transient;
 
 /**
  * @author John Ericksen
@@ -19,6 +23,10 @@ public class Waypoint {
         this.altitude = altitude;
     }
 
+    public static Waypoint from(Point point) {
+        return new Waypoint(point.getX(), point.getY(), point.getZ());
+    }
+
     public double getLongitude() {
         return longitude;
     }
@@ -29,6 +37,11 @@ public class Waypoint {
 
     public double getAltitude() {
         return altitude;
+    }
+
+    @Transient
+    public Point toPoint() {
+        return new Point(longitude, latitude, altitude, SpatialReferences.getWgs84());
     }
 
     @Override

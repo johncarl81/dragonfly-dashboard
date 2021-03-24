@@ -49,6 +49,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -85,6 +86,7 @@ import java.util.stream.Collectors;
 
 public class DashboardController {
 
+    private static final int[] COLORS = {0xFF1F77B4, 0xFFFF7F0E, 0xFF2CA02C, 0xFFd62728, 0xFF9467BD, 0xFF8C564B, 0xFFE377C2, 0xFF7F7F7F, 0xFFBCBD22, 0xFF17BECF};
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("hh:mm:ss");
     private static final String ELEVATION_IMAGE_SERVICE =
             "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer";
@@ -153,19 +155,20 @@ public class DashboardController {
     private final ObservableList<MissionStep> missionList = FXCollections.observableArrayList();
     private final GraphicsOverlay droneOverlay = new GraphicsOverlay();
     private final GraphicsOverlay droneShadowOverlay = new GraphicsOverlay();
-    private final GraphicsOverlay boundaryOverlay = new GraphicsOverlay();
+    private final GraphicsOverlay drawBoundaryOverlay = new GraphicsOverlay();
     private final GraphicsOverlay pathOverlay = new GraphicsOverlay();
     private final GraphicsOverlay waypointOverlay = new GraphicsOverlay();
+    private final GraphicsOverlay boundaryOverlay = new GraphicsOverlay();
     private final List<Point> boundaryPoints = new ArrayList<>();
-    private CoordinateSelectionMode mode = CoordinateSelectionMode.CLEAR;
+    private CoordinateSelectionMode mode = CoordinateSelectionMode.DRAW;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
+    private final Map<String, List<Waypoint>> boundaries = new HashMap<>();
     SceneView sceneView;
     private boolean localMap = false;
 
     private enum CoordinateSelectionMode {
-        SELECT("Finished"),
-        FINISHED("Clear"),
-        CLEAR("Select Boundary");
+        FINISHED("Finished"),
+        DRAW("Draw Boundary");
 
         private final String buttonLabel;
 
@@ -175,7 +178,7 @@ public class DashboardController {
     }
 
     private void drawBoundaries() {
-        boundaryOverlay.getGraphics().clear();
+        drawBoundaryOverlay.getGraphics().clear();
 
         Graphic boundaryGraphic;
         if(boundaryPoints.size() == 1) {
@@ -192,7 +195,7 @@ public class DashboardController {
             SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, ALPHA_RED, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, .3f));
             boundaryGraphic = new Graphic(new Polygon(polygonPoints), polygonSymbol);
         }
-        boundaryOverlay.getGraphics().add(boundaryGraphic);
+        drawBoundaryOverlay.getGraphics().add(boundaryGraphic);
     }
 
 
@@ -227,16 +230,33 @@ public class DashboardController {
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(mode == CoordinateSelectionMode.SELECT) {
+                if (mode == CoordinateSelectionMode.FINISHED) {
+                    if(boundaryPoints.size() < 3) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to create boundary", ButtonType.CANCEL, ButtonType.OK);
+                        final Optional<ButtonType> result = alert.showAndWait();
+
+                        if(result.isPresent() && result.get() == ButtonType.CANCEL) {
+                            mode = CoordinateSelectionMode.DRAW;
+                            drawBoundaryOverlay.getGraphics().clear();
+                            boundaryPoints.clear();
+                            updateBoundaryOverlay();
+                        }
+                    } else {
+                        TextInputDialog dialog = new TextInputDialog();
+                        dialog.setHeaderText("Boundary Name");
+                        Optional<String> output = dialog.showAndWait();
+
+                        if(output.isPresent()) {
+                            boundaries.put(output.get(), boundaryPoints.stream().map(Waypoint::from).collect(Collectors.toList()));
+                        }
+
+                        mode = CoordinateSelectionMode.DRAW;
+                        drawBoundaryOverlay.getGraphics().clear();
+                        boundaryPoints.clear();
+                        updateBoundaryOverlay();
+                    }
+                } else if (mode == CoordinateSelectionMode.DRAW) {
                     mode = CoordinateSelectionMode.FINISHED;
-                    lawnmower.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaryPoints.isEmpty()));
-                    random.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaryPoints.isEmpty()));
-                } else if (mode == CoordinateSelectionMode.FINISHED) {
-                    mode = CoordinateSelectionMode.CLEAR;
-                    boundaryOverlay.getGraphics().clear();
-                    boundaryPoints.clear();
-                } else if (mode == CoordinateSelectionMode.CLEAR) {
-                    mode = CoordinateSelectionMode.SELECT;
                 }
                 select.setText(mode.buttonLabel);
             }
@@ -336,13 +356,14 @@ public class DashboardController {
         lawnmower.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!boundaryPoints.isEmpty()) {
-                    LawnmowerDialogFactory.create((stepLength, altitude, stacks, walkBoundary, walk, waitTime, distanceThreshold) -> {
+                if(!boundaries.isEmpty()) {
+                    LawnmowerDialogFactory.create(boundaries, (boundaryName, stepLength, altitude, stacks, walkBoundary, walk, waitTime, distanceThreshold) -> {
                         Drone selected = drones.getSelectionModel().getSelectedItem();
-                        selected.getLawnmowerWaypoints(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime)
+                        List<Point> selecteBoundaryPoints = boundaries.get(boundaryName).stream().map(Waypoint::toPoint).collect(Collectors.toList());
+                        selected.getLawnmowerWaypoints(selecteBoundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime)
                                 .observeOn(JavaFxScheduler.platform())
                                 .subscribe(waypoints -> draw(waypoints));
-                        selected.lawnmower(boundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime, distanceThreshold);
+                        selected.lawnmower(selecteBoundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime, distanceThreshold);
                     });
                 }
                 drones.getSelectionModel().clearSelection();
@@ -367,20 +388,22 @@ public class DashboardController {
         random.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (!boundaryPoints.isEmpty()) {
+                if (!boundaries.isEmpty()) {
                     Drone selectedDrone = drones.getSelectionModel().getSelectedItem();
-                    RandomPathDialogFactory.create((minAltitude, maxAltitude, size, iterations, population, waitTime, distanceThreshold) -> {
+                    RandomPathDialogFactory.create(boundaries, (boundaryName, minAltitude, maxAltitude, size, iterations, population, waitTime, distanceThreshold) -> {
                         Observable.fromCallable(new Callable<GeneticTSP.Tour<ProjectedPoint>>() {
                             @Override
                             public GeneticTSP.Tour<ProjectedPoint> call() {
+
+                                List<Point> selectedBoundaryPoints = boundaries.get(boundaryName).stream().map(Waypoint::toPoint).collect(Collectors.toList());
+
                                 double xmax = Double.NEGATIVE_INFINITY;
                                 double xmin = Double.POSITIVE_INFINITY;
-                                ;
                                 double ymax = Double.NEGATIVE_INFINITY;
                                 double ymin = Double.POSITIVE_INFINITY;
-                                ;
 
-                                for (Point point : boundaryPoints) {
+
+                                for (Point point : selectedBoundaryPoints) {
                                     if (xmax < point.getX()) {
                                         xmax = point.getX();
                                     }
@@ -400,7 +423,7 @@ public class DashboardController {
                                     Point randomPoint = new Point((RAND.nextDouble() * (xmax - xmin)) + xmin,
                                             (RAND.nextDouble() * (ymax - ymin)) + ymin,
                                             (RAND.nextDouble() * (maxAltitude - minAltitude)) + minAltitude);
-                                    if (inside(randomPoint, boundaryPoints)) {
+                                    if (inside(randomPoint, selectedBoundaryPoints)) {
                                         points.add(new ProjectedPoint(randomPoint));
                                         i++;
                                     }
@@ -474,9 +497,9 @@ public class DashboardController {
                 delete.setDisable(!selected);
                 waypoint.setDisable(!selected);
                 center.setDisable(!selected);
-                lawnmower.setDisable(!(selected && !boundaryPoints.isEmpty() && mode == CoordinateSelectionMode.FINISHED));
+                lawnmower.setDisable(!(selected && !boundaries.isEmpty()));
                 ddsa.setDisable(!selected);
-                random.setDisable(!(selected && !boundaryPoints.isEmpty() && mode == CoordinateSelectionMode.FINISHED));
+                random.setDisable(!(selected && !boundaries.isEmpty()));
                 cancel.setDisable(!selected);
             }
         });
@@ -545,7 +568,7 @@ public class DashboardController {
                 missionList.add(step);
             }
         }, droneList.stream().map(Drone::getName).sorted().collect(Collectors.toList()),
-                new ArrayList<>(waypoints.keySet()), boundaryPoints);
+                new ArrayList<>(waypoints.keySet()), boundaries);
     }
 
     private void loadMissionFromFile() {
@@ -563,14 +586,9 @@ public class DashboardController {
                 waypoints.putAll(holder.getWaypoints());
                 updateWaypointOverlay();
 
-                if(holder.getBoundaries().containsKey("boundary")){
-                    boundaryPoints.clear();
+                boundaries.putAll(holder.getBoundaries());
+                updateBoundaryOverlay();
 
-                    for(Waypoint waypoint : holder.getBoundaries().get("boundary")) {
-                        boundaryPoints.add(new Point(waypoint.getLongitude(), waypoint.getLatitude(), waypoint.getAltitude()));
-                    }
-                }
-                drawBoundaries();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -584,12 +602,6 @@ public class DashboardController {
             ObjectMapper mapper = new ObjectMapper();
 
             try {
-                Map<String, List<Waypoint>> boundaries = new HashMap<>();
-                List<Waypoint> boundaryWaypoints = new ArrayList<>();
-                boundaries.put("boundary", boundaryWaypoints);
-                for(Point point : boundaryPoints) {
-                    boundaryWaypoints.add(new Waypoint(point.getX(), point.getY(), point.getZ()));
-                }
                 mapper.writerWithDefaultPrettyPrinter().writeValue(saveFile, new MissionDataHolder(missionList, waypoints, boundaries));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -621,16 +633,18 @@ public class DashboardController {
                 jsonWaypoints.add(waypointNode);
             }
             ArrayNode jsonBoundaries = mission.putArray("boundaries");
-            final ObjectNode boundaryNode = jsonBoundaries.addObject();
-            boundaryNode.put("name", "boundary");
-            ArrayNode pointNodes = boundaryNode.putArray("points");
-            for(Point point : boundaryPoints) {
-                ObjectNode pointNode = pointNodes.addObject();
-                pointNode.put("longitude", point.getX());
-                pointNode.put("latitude", point.getY());
-                pointNode.put("relativeAltitude", point.getZ());
+            for(Map.Entry<String, List<Waypoint>> entry : boundaries.entrySet()) {
+                final ObjectNode boundaryNode = jsonBoundaries.addObject();
+                boundaryNode.put("name", entry.getKey());
+                ArrayNode pointNodes = boundaryNode.putArray("points");
+                for(Waypoint waypoint : entry.getValue()) {
+                    ObjectNode pointNode = pointNodes.addObject();
+                    pointNode.put("longitude", waypoint.getLongitude());
+                    pointNode.put("latitude", waypoint.getLatitude());
+                    pointNode.put("relativeAltitude", waypoint.getAltitude());
+                }
+                jsonBoundaries.add(boundaryNode);
             }
-            jsonBoundaries.add(boundaryNode);
             drone.sendMission(mission);
         }
     }
@@ -660,12 +674,14 @@ public class DashboardController {
         droneOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
         sceneView.getGraphicsOverlays().add(droneShadowOverlay);
         droneShadowOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
-        sceneView.getGraphicsOverlays().add(boundaryOverlay);
-        boundaryOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
+        sceneView.getGraphicsOverlays().add(drawBoundaryOverlay);
+        drawBoundaryOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
         sceneView.getGraphicsOverlays().add(pathOverlay);
         pathOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
         sceneView.getGraphicsOverlays().add(waypointOverlay);
         waypointOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
+        sceneView.getGraphicsOverlays().add(boundaryOverlay);
+        boundaryOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
 
         sceneView.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
@@ -677,7 +693,7 @@ public class DashboardController {
                 pointFuture.addDoneListener(() -> {
                     try {
                         Point point = pointFuture.get();
-                        coordinates.setText("Lat: " + point.getY() + " Lon: " + point.getX());
+                        coordinates.setText("Lat: " + String.format("%,.5f", point.getY()) + " Lon: " + String.format("%,.5f", point.getX()));
 
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -689,7 +705,7 @@ public class DashboardController {
         sceneView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(mode == CoordinateSelectionMode.SELECT) {
+                if(mode == CoordinateSelectionMode.FINISHED) {
                     Point2D point2D = new Point2D(event.getX(), event.getY());
 
                     // get the scene location from the screen position
@@ -701,8 +717,6 @@ public class DashboardController {
                             boundaryPoints.add(point);
 
                             drawBoundaries();
-
-
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
@@ -755,6 +769,29 @@ public class DashboardController {
             nameText.setOffsetX(25);
             Graphic waypointGraphic = new Graphic(entry.getValue().toPoint(), new CompositeSymbol(Arrays.asList(symbol, nameText)));
             waypointOverlay.getGraphics().add(waypointGraphic);
+        }
+    }
+
+    private void updateBoundaryOverlay() {
+        boundaryOverlay.getGraphics().clear();
+
+        lawnmower.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaries.isEmpty()));
+        random.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaries.isEmpty()));
+
+        int color = 0;
+        for(Map.Entry<String, List<Waypoint>> entry : boundaries.entrySet()) {
+            List<Waypoint> boundary = entry.getValue();
+
+            PointCollection polygonPoints = new PointCollection(boundary.stream().map(Waypoint::toPoint).collect(Collectors.toList()));
+            SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, 0x000000, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, COLORS[color], .3f));
+
+            TextSymbol nameText = new TextSymbol(10, entry.getKey(), 0xFFFFFFFF, TextSymbol.HorizontalAlignment.LEFT, TextSymbol.VerticalAlignment.MIDDLE);
+            nameText.setOffsetX(25);
+
+            boundaryOverlay.getGraphics().add(new Graphic(new Polygon(polygonPoints), polygonSymbol));
+            boundaryOverlay.getGraphics().add(new Graphic(boundary.get(0).toPoint(), nameText));
+
+            color = (color + 1) % COLORS.length;
         }
     }
 

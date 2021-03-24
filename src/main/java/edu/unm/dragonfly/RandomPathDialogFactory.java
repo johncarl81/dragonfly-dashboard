@@ -1,27 +1,34 @@
 package edu.unm.dragonfly;
 
+import edu.unm.dragonfly.mission.GridUtil;
+import edu.unm.dragonfly.mission.Waypoint;
+import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RandomPathDialogFactory {
 
     public interface DialogCallback {
-        void call(float minAltitude, float maxAltitude, int size, int iterations, int population, float waitTime, float distanceThreshold);
+        void call(String boundaryName, float minAltitude, float maxAltitude, int size, int iterations, int population, float waitTime, float distanceThreshold);
     }
 
-    public static void create(DialogCallback callback) {
+    public static void create(Map<String, List<Waypoint>> boundaries, DialogCallback callback) {
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Random Path Parameters");
 
         GridPane grid = new GridPane();
 
+        ComboBox<String> boundarySelection = new ComboBox<>(FXCollections.observableList(boundaries.keySet().stream().sorted().collect(Collectors.toList())));
         TextField minAltitude = new TextField();
         TextField maxAltitude = new TextField();
         TextField size = new TextField();
@@ -40,21 +47,16 @@ public class RandomPathDialogFactory {
         waitTimeField.setText("3");
         distanceThreshold.setText("1");
 
-        grid.add(new Label("Min Altitude: "), 1, 1);
-        grid.add(minAltitude, 2, 1);
-        grid.add(new Label("Max Altitude: "), 1, 2);
-        grid.add(maxAltitude, 2, 2);
-        grid.add(new Label("Size: "), 1, 3);
-        grid.add(size, 2, 3);
-        grid.add(new Label("Iterations: "), 1, 4);
-        grid.add(iterations, 2, 4);
-        grid.add(new Label("Population: "), 1, 5);
-        grid.add(population, 2, 5);
-        grid.add(new Label("Wait Time: "), 1, 6);
-        grid.add(waitTimeField, 2, 6);
-        grid.add(new Label("Distance Threshold: "), 1, 7);
-        grid.add(distanceThreshold, 2, 7);
-        grid.add(progressBar, 1, 8, 2, 8);
+        GridUtil.builder(grid)
+                .add("Boundary:", boundarySelection)
+                .add("Min Altitude:", minAltitude)
+                .add("Max Altitude:", maxAltitude)
+                .add("Size:", size)
+                .add("Iterations:", iterations)
+                .add("Population:", population)
+                .add("Wait Time:", waitTimeField)
+                .add("Distance Threshold:", distanceThreshold)
+                .add(progressBar);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -64,7 +66,8 @@ public class RandomPathDialogFactory {
         Optional<ButtonType> result = dialog.showAndWait();
 
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            callback.call(Float.parseFloat(minAltitude.getText()),
+            callback.call(boundarySelection.getSelectionModel().getSelectedItem(),
+                    Float.parseFloat(minAltitude.getText()),
                     Float.parseFloat(maxAltitude.getText()),
                     Integer.parseInt(size.getText()),
                     Integer.parseInt(iterations.getText()),

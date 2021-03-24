@@ -2,7 +2,6 @@ package edu.unm.dragonfly.mission;
 
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepTakeoff;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -27,8 +26,8 @@ public class TakeoffCreator implements MissionStepCreator {
         altitudeField.setText("10");
 
         droneSelection.create(grid, 2);
-        grid.add(new Label("Altitude:"), 1, 3);
-        grid.add(altitudeField, 2, 3);
+        GridUtil.builder(grid).increment().increment()
+                .add("Altitude:", altitudeField);
     }
 
     @Override

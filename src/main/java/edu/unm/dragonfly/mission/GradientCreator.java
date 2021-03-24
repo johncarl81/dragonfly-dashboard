@@ -4,7 +4,6 @@ import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepGradient;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import java.util.List;
@@ -24,8 +23,8 @@ public class GradientCreator implements MissionStepCreator {
 
     @Override
     public void create(GridPane grid) {
-        grid.add(new Label("Target:"), 1, 2);
-        grid.add(targetSelection, 2, 2);
+        GridUtil.builder(grid).increment()
+                .add("Target:", targetSelection);
         droneSelection.create(grid, 3);
     }
 

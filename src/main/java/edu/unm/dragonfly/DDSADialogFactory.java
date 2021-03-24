@@ -1,9 +1,9 @@
 package edu.unm.dragonfly;
 
+import edu.unm.dragonfly.mission.GridUtil;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -38,26 +38,19 @@ public class DDSADialogFactory {
         loopsField.setText("5");
         stacksField.setText("1");
         altitudeField.setText("10");
-        walkComboBox.getSelectionModel().select(Walk.WALK);
-        waitTimeField.setText("3");
+        walkComboBox.getSelectionModel().select(Walk.RANGE);
+        waitTimeField.setText("0");
         distanceThreshold.setText("1");
 
-        grid.add(new Label("Radius: "), 1, 1);
-        grid.add(radiusField, 2, 1);
-        grid.add(new Label("Step Length: "), 1, 2);
-        grid.add(stepLengthField, 2, 2);
-        grid.add(new Label("Altitude: "), 1, 3);
-        grid.add(altitudeField, 2, 3);
-        grid.add(new Label("Loops: "), 1, 4);
-        grid.add(loopsField, 2, 4);
-        grid.add(new Label("Stacks: "), 1, 5);
-        grid.add(stacksField, 2, 5);
-        grid.add(new Label("Walk: "), 1, 6);
-        grid.add(walkComboBox, 2, 6);
-        grid.add(new Label("Wait Time: "), 1, 7);
-        grid.add(waitTimeField, 2, 7);
-        grid.add(new Label("Distance Threshold: "), 1, 8);
-        grid.add(distanceThreshold, 2, 8);
+        GridUtil.builder(grid)
+                .add("Radius:", radiusField)
+                .add("Step Length:", stepLengthField)
+                .add("Altitude:", altitudeField)
+                .add("Loops:", loopsField)
+                .add("Stacks:", stacksField)
+                .add("Walk:", walkComboBox)
+                .add("Wait Time:", waitTimeField)
+                .add("Distance Threshold:", distanceThreshold);
 
         dialog.getDialogPane().setContent(grid);
 

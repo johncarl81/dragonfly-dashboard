@@ -6,7 +6,6 @@ import edu.unm.dragonfly.mission.step.MissionStepLawnmower;
 import javafx.collections.FXCollections;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
@@ -18,6 +17,7 @@ import java.util.List;
 public class LawnmowerCreator implements MissionStepCreator {
 
     private final ComboBox<String> droneSelection;
+    private final ComboBox<String> boundarySelection;
     private TextField stepLengthField;
     private TextField stacksField;
     private TextField altitudeField;
@@ -26,8 +26,9 @@ public class LawnmowerCreator implements MissionStepCreator {
     private TextField waitTimeField;
     private TextField distanceThreshold;
 
-    public LawnmowerCreator(List<String> drones) {
+    public LawnmowerCreator(List<String> drones, List<String> boundaries) {
         this.droneSelection = new ComboBox<>(FXCollections.observableList(drones));
+        this.boundarySelection = new ComboBox<>(FXCollections.observableList(boundaries));
     }
 
     @Override
@@ -47,26 +48,20 @@ public class LawnmowerCreator implements MissionStepCreator {
         stacksField.setText("1");
         altitudeField.setText("10");
         walkBoundaryField.setSelected(true);
-        walkComboBox.getSelectionModel().select(LawnmowerDialogFactory.Walk.WALK);
-        waitTimeField.setText("3");
+        walkComboBox.getSelectionModel().select(LawnmowerDialogFactory.Walk.RANGE);
+        waitTimeField.setText("0");
         distanceThreshold.setText("1");
 
-        grid.add(new Label("Drone:"), 1, 2);
-        grid.add(droneSelection, 2, 2);
-        grid.add(new Label("Step Length: "), 1, 3);
-        grid.add(stepLengthField, 2, 3);
-        grid.add(new Label("Altitude: "), 1, 4);
-        grid.add(altitudeField, 2, 4);
-        grid.add(new Label("Stacks: "), 1, 5);
-        grid.add(stacksField, 2, 5);
-        grid.add(new Label("Walk Boundary: "), 1, 6);
-        grid.add(walkBoundaryField, 2, 6);
-        grid.add(new Label("Walk: "), 1, 7);
-        grid.add(walkComboBox, 2, 7);
-        grid.add(new Label("Wait Time: "), 1, 8);
-        grid.add(waitTimeField, 2, 8);
-        grid.add(new Label("Distance Threshold: "), 1, 9);
-        grid.add(distanceThreshold, 2, 9);
+        GridUtil.builder(grid).increment().increment()
+                .add("Drone:", droneSelection)
+                .add("Boundary:", boundarySelection)
+                .add("Step Length:", stepLengthField)
+                .add("Altitude:", altitudeField)
+                .add("Stacks:", stacksField)
+                .add("Walk Boundary:", walkBoundaryField)
+                .add("Walk:", walkComboBox)
+                .add("Wait Time:", waitTimeField)
+                .add("Distance Threshold:", distanceThreshold);
     }
 
     @Override

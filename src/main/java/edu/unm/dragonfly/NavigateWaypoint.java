@@ -1,7 +1,6 @@
 package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
-import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +26,7 @@ public class NavigateWaypoint {
 
     @Transient
     public Point toPoint() {
-        return new Point(point.getLongitude(), point.getLatitude(), point.getAltitude(), SpatialReferences.getWgs84());
+        return point.toPoint();
     }
 
     public float getDistanceThreshold() {

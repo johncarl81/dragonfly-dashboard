@@ -2,9 +2,6 @@ package edu.unm.dragonfly.mission;
 
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepRTL;
-import edu.unm.dragonfly.mission.step.MissionStepSleep;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import java.util.List;

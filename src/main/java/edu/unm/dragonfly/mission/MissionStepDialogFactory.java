@@ -1,6 +1,5 @@
 package edu.unm.dragonfly.mission;
 
-import com.esri.arcgisruntime.geometry.Point;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.mission.step.MissionStepType;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +15,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author John Ericksen
@@ -26,7 +26,7 @@ public class MissionStepDialogFactory {
         void call(MissionStep step);
     }
 
-    public static void create(CreateMissionStep callback, List<String> drones, List<String> waypoints, List<Point> boundary) {
+    public static void create(CreateMissionStep callback, List<String> drones, List<String> waypoints, Map<String, List<Waypoint>> boundaries) {
 
         Map<MissionStepType, MissionStepCreator> creators = new EnumMap<MissionStepType, MissionStepCreator>(MissionStepType.class){{
             put(MissionStepType.TAKEOFF, new TakeoffCreator(drones));
@@ -36,8 +36,8 @@ public class MissionStepDialogFactory {
             put(MissionStepType.SEMAPHORE, new SemaphoreCreator(drones));
             put(MissionStepType.RTL, new RTLCreator(drones));
             put(MissionStepType.DDSA, new DDSACreator(drones, waypoints));
-            put(MissionStepType.LAWNMOWER, new LawnmowerCreator(drones));
-            put(MissionStepType.NAVIGATION, new RandomPointCreator(drones, boundary));
+            put(MissionStepType.LAWNMOWER, new LawnmowerCreator(drones, boundaries.keySet().stream().sorted().collect(Collectors.toList())));
+            put(MissionStepType.NAVIGATION, new RandomPointCreator(drones, boundaries));
             put(MissionStepType.FLOCK, new FlockCreator(drones));
             put(MissionStepType.GRADIENT, new GradientCreator(drones));
         }};
