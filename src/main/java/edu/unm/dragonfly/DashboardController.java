@@ -157,19 +157,19 @@ public class DashboardController {
     private final GraphicsOverlay pathOverlay = new GraphicsOverlay();
     private final GraphicsOverlay waypointOverlay = new GraphicsOverlay();
     private final List<Point> boundaryPoints = new ArrayList<>();
-    private CoordianteSelectionMode mode = CoordianteSelectionMode.CLEAR;
+    private CoordinateSelectionMode mode = CoordinateSelectionMode.CLEAR;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
     SceneView sceneView;
     private boolean localMap = false;
 
-    private enum CoordianteSelectionMode {
+    private enum CoordinateSelectionMode {
         SELECT("Finished"),
         FINISHED("Clear"),
         CLEAR("Select Boundary");
 
         private final String buttonLabel;
 
-        CoordianteSelectionMode(String buttonLabel) {
+        CoordinateSelectionMode(String buttonLabel) {
             this.buttonLabel = buttonLabel;
         }
     }
@@ -177,22 +177,22 @@ public class DashboardController {
     private void drawBoundaries() {
         boundaryOverlay.getGraphics().clear();
 
-        Graphic boudaryGraphic;
+        Graphic boundaryGraphic;
         if(boundaryPoints.size() == 1) {
             SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, RED, 2);
-            boudaryGraphic = new Graphic(new Point(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY()), markerSymbol);
+            boundaryGraphic = new Graphic(new Point(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY()), markerSymbol);
         } else if(boundaryPoints.size() == 2) {
             PolylineBuilder lineBuilder = new PolylineBuilder(SpatialReferences.getWgs84());
             lineBuilder.addPoint(boundaryPoints.get(0).getX(), boundaryPoints.get(0).getY());
             lineBuilder.addPoint(boundaryPoints.get(1).getX(), boundaryPoints.get(1).getY());
             SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, 1);
-            boudaryGraphic = new Graphic(lineBuilder.toGeometry(), lineSymbol);
+            boundaryGraphic = new Graphic(lineBuilder.toGeometry(), lineSymbol);
         } else {
             PointCollection polygonPoints = new PointCollection(boundaryPoints);
             SimpleFillSymbol polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.Style.SOLID, ALPHA_RED, new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, RED, .3f));
-            boudaryGraphic = new Graphic(new Polygon(polygonPoints), polygonSymbol);
+            boundaryGraphic = new Graphic(new Polygon(polygonPoints), polygonSymbol);
         }
-        boundaryOverlay.getGraphics().add(boudaryGraphic);
+        boundaryOverlay.getGraphics().add(boundaryGraphic);
     }
 
 
@@ -227,16 +227,16 @@ public class DashboardController {
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(mode == CoordianteSelectionMode.SELECT) {
-                    mode = CoordianteSelectionMode.FINISHED;
+                if(mode == CoordinateSelectionMode.SELECT) {
+                    mode = CoordinateSelectionMode.FINISHED;
                     lawnmower.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaryPoints.isEmpty()));
                     random.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaryPoints.isEmpty()));
-                } else if (mode == CoordianteSelectionMode.FINISHED) {
-                    mode = CoordianteSelectionMode.CLEAR;
+                } else if (mode == CoordinateSelectionMode.FINISHED) {
+                    mode = CoordinateSelectionMode.CLEAR;
                     boundaryOverlay.getGraphics().clear();
                     boundaryPoints.clear();
-                } else if (mode == CoordianteSelectionMode.CLEAR) {
-                    mode = CoordianteSelectionMode.SELECT;
+                } else if (mode == CoordinateSelectionMode.CLEAR) {
+                    mode = CoordinateSelectionMode.SELECT;
                 }
                 select.setText(mode.buttonLabel);
             }
@@ -293,27 +293,6 @@ public class DashboardController {
             public void handle(ActionEvent event) {
                 Drone selected = drones.getSelectionModel().getSelectedItem();
                 selected.rtl();
-            }
-        });
-
-        waypoint.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                TextInputDialog dialog = new TextInputDialog("Goto Waypoint");
-                dialog.setHeaderText("Add Drone");
-
-                Drone selected = drones.getSelectionModel().getSelectedItem();
-
-
-                AddWaypointDialogFactory.createSelect(waypoints, selected, new AddWaypointDialogFactory.NavigateWaypointCallback(){
-
-                    @Override
-                    public void call(NavigateWaypoint waypoint) {
-                        selected.navigate(Collections.singletonList(waypoint.toPoint()), waypoint.getDistanceThreshold());
-                    }
-                });
-
-                drones.getSelectionModel().clearSelection();
             }
         });
 
@@ -710,7 +689,7 @@ public class DashboardController {
         sceneView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(mode == CoordianteSelectionMode.SELECT) {
+                if(mode == CoordinateSelectionMode.SELECT) {
                     Point2D point2D = new Point2D(event.getX(), event.getY());
 
                     // get the scene location from the screen position
