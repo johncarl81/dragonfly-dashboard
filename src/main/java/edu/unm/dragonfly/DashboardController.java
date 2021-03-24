@@ -95,6 +95,8 @@ public class DashboardController {
     @FXML
     private StackPane mapPlaceholder;
     @FXML
+    private Button menuLoadMap;
+    @FXML
     private Button add;
     @FXML
     private Button delete;
@@ -158,6 +160,7 @@ public class DashboardController {
     private CoordianteSelectionMode mode = CoordianteSelectionMode.CLEAR;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
     SceneView sceneView;
+    private boolean localMap = false;
 
     private enum CoordianteSelectionMode {
         SELECT("Finished"),
@@ -194,12 +197,32 @@ public class DashboardController {
 
 
     public void initialize() {
-
         sceneView = new SceneView();
         mapPlaceholder.getChildren().add(sceneView);
 
-        loadMMSP(sceneView);
-//        loadWebMap(sceneView);
+        loadWebMap(sceneView);
+
+        menuLoadMap.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!localMap) {
+                    FileChooser fileChooser = new FileChooser();
+                    File openFile = fileChooser.showOpenDialog(stage);
+
+                    if(openFile != null) {
+                        sceneView.getGraphicsOverlays().clear();
+                        loadMMSP(openFile, sceneView);
+                        menuLoadMap.setText("Toggle Web Scene");
+                        localMap = true;
+                    }
+                } else {
+                    sceneView.getGraphicsOverlays().clear();
+                    loadWebMap(sceneView);
+                    menuLoadMap.setText("Load Scene...");
+                    localMap = false;
+                }
+            }
+        });
 
         select.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -472,9 +495,9 @@ public class DashboardController {
                 delete.setDisable(!selected);
                 waypoint.setDisable(!selected);
                 center.setDisable(!selected);
-                lawnmower.setDisable(!(selected && !boundaryPoints.isEmpty() && mode == CoordianteSelectionMode.FINISHED));
+                lawnmower.setDisable(!(selected && !boundaryPoints.isEmpty() && mode == CoordinateSelectionMode.FINISHED));
                 ddsa.setDisable(!selected);
-                random.setDisable(!(selected && !boundaryPoints.isEmpty() && mode == CoordianteSelectionMode.FINISHED));
+                random.setDisable(!(selected && !boundaryPoints.isEmpty() && mode == CoordinateSelectionMode.FINISHED));
                 cancel.setDisable(!selected);
             }
         });
@@ -516,7 +539,7 @@ public class DashboardController {
 
     }
 
-    private void loadMMSP(SceneView sceneView) {
+    private void loadMMSP(File mmspFile, SceneView sceneView) {
         // load a mobile scene package
         final String mspkPath = new File("map.mspk").getAbsolutePath();
         MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);

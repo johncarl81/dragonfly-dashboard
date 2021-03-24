@@ -65,6 +65,7 @@
             <HBox>
                 <Button fx:id="select" prefWidth="130.0" text="Select Bounds"/>
                 <TextField fx:id="coordinates" prefWidth="400.0"/>
+                <Button fx:id="menuLoadMap" text="Open map..."/>
             </HBox>
         </bottom>
     </BorderPane>
