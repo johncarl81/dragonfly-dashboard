@@ -9,6 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
 <StackPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.unm.dragonfly.DashboardController">
     <StackPane fx:id="mapPlaceholder"/>
     <BorderPane pickOnBounds="false">
@@ -21,7 +24,6 @@
                             <Button fx:id="add" text="Add..." />
                             <Button fx:id="delete" text="Remove" />
                             <Button fx:id="center" text="Center"/>
-                            <Button fx:id="setupDrones" text="Setup"/>
                         </FlowPane>
                         <FlowPane hgap="2">
                             <Button fx:id="takeoff" text="Takeoff" />
@@ -35,6 +37,15 @@
                             <Button fx:id="random" text="Random"/>
                             <Button fx:id="cancel" text="Cancel"/>
                         </FlowPane>
+                        <GridPane>
+                            <Label text="Max Altitude (m):" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                            <TextField fx:id="maxAltitude" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                            <Label text="RTL Boundary:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                            <ComboBox fx:id="rtlBoundary" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                            <Label text="RTL Alt Factor:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                            <TextField fx:id="rtlAltitudeFactor" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            <Button fx:id="setupDrones" text="Setup" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        </GridPane>
                     </VBox>
                 </TitledPane>
             </VBox>

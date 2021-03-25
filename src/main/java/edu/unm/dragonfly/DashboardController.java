@@ -50,6 +50,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -96,6 +97,12 @@ public class DashboardController {
 
     @FXML
     private StackPane mapPlaceholder;
+    @FXML
+    private TextField maxAltitude;
+    @FXML
+    private ComboBox<String> rtlBoundary;
+    @FXML
+    private TextField rtlAltitudeFactor;
     @FXML
     private Button menuLoadMap;
     @FXML
@@ -200,6 +207,10 @@ public class DashboardController {
 
 
     public void initialize() {
+
+        maxAltitude.setText("100");
+        rtlAltitudeFactor.setText("2");
+
         sceneView = new SceneView();
         mapPlaceholder.getChildren().add(sceneView);
 
@@ -610,9 +621,16 @@ public class DashboardController {
     }
 
     private void setupDrones() {
+        int maxAltitudeInteger = Integer.parseInt(maxAltitude.getText());
+        int rtlFactor = Integer.parseInt(rtlAltitudeFactor.getText());
+        List<Waypoint> boundary = null;
+        if(boundaries.containsKey(rtlBoundary.getValue())) {
+            boundary = boundaries.get(rtlBoundary.getValue());
+        }
+
         for(int i = 0; i < droneList.size(); i++) {
             Drone drone = droneList.get(i);
-            drone.setup(1000 + (i * 200));
+            drone.setup(maxAltitudeInteger, 1000 + (i * rtlFactor * 100), boundary);
         }
     }
 
@@ -773,6 +791,8 @@ public class DashboardController {
     }
 
     private void updateBoundaryOverlay() {
+        rtlBoundary.setItems(FXCollections.observableList(boundaries.keySet().stream().sorted().collect(Collectors.toList())));
+
         boundaryOverlay.getGraphics().clear();
 
         lawnmower.setDisable(!(!drones.getSelectionModel().isEmpty() && !boundaries.isEmpty()));

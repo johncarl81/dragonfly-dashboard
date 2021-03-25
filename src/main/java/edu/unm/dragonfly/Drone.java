@@ -3,7 +3,9 @@ package edu.unm.dragonfly;
 import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.msgs.DDSARequest;
 import edu.unm.dragonfly.msgs.DDSAResponse;
 import edu.unm.dragonfly.msgs.DDSAWaypointsRequest;
@@ -294,21 +296,25 @@ public class Drone {
                 });
     }
 
-    public void setup(int rtlAltitude) {
+    public void setup(int maxAltitude, int rtlAltitude, List<Waypoint> rtlBoundary) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode setupData = mapper.createObjectNode();
+
+        setupData.put("max_altitude", maxAltitude);
         setupData.put("rtl_altitude", rtlAltitude);
-        /*
-        final ObjectNode boundaryNode = jsonBoundaries.addObject();
+
+        if(rtlBoundary != null) {
+            final ObjectNode boundaryNode = setupData.putObject("rtl_boundary");
             boundaryNode.put("name", "boundary");
             ArrayNode pointNodes = boundaryNode.putArray("points");
-            for(Point point : boundaryPoints) {
+            for (Waypoint waypoint : rtlBoundary) {
                 ObjectNode pointNode = pointNodes.addObject();
-                pointNode.put("longitude", point.getX());
-                pointNode.put("latitude", point.getY());
-                pointNode.put("relativeAltitude", point.getZ());
+                pointNode.put("longitude", waypoint.getLongitude());
+                pointNode.put("latitude", waypoint.getLatitude());
+                pointNode.put("relativeAltitude", waypoint.getAltitude());
             }
-         */
+        }
+
         bridge.call("/" + name + "/command/setup", "dragonfly_messages/Setup", setupData,
                 new RosListenDelegate() {
                     @Override
