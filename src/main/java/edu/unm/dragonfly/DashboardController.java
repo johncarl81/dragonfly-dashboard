@@ -12,7 +12,6 @@ import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.MobileScenePackage;
 import com.esri.arcgisruntime.mapping.Surface;
-import com.esri.arcgisruntime.mapping.view.Camera;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LayerSceneProperties;
@@ -114,6 +113,8 @@ public class DashboardController {
     @FXML
     private ListView<Drone> drones;
     @FXML
+    private ListView<Fixture> fixtures;
+    @FXML
     private ListView<String> log;
     @FXML
     private ListView<MissionStep> mission;
@@ -140,6 +141,10 @@ public class DashboardController {
     @FXML
     private Button rtl;
     @FXML
+    private Button deleteFixture;
+    @FXML
+    private Button centerFixture;
+    @FXML
     private Button missionAdd;
     @FXML
     private Button missionLoad;
@@ -160,6 +165,7 @@ public class DashboardController {
     private final ObservableList<Drone> droneList = FXCollections.observableArrayList();
     private final ObservableList<String> logList = FXCollections.observableArrayList();
     private final ObservableList<MissionStep> missionList = FXCollections.observableArrayList();
+    private final ObservableList<Fixture> fixtureList = FXCollections.observableArrayList();
     private final GraphicsOverlay droneOverlay = new GraphicsOverlay();
     private final GraphicsOverlay droneShadowOverlay = new GraphicsOverlay();
     private final GraphicsOverlay drawBoundaryOverlay = new GraphicsOverlay();
@@ -275,6 +281,8 @@ public class DashboardController {
 
         drones.setItems(droneList.sorted());
         drones.setCellFactory(new TooltipCellFactory<>());
+        fixtures.setItems(fixtureList.sorted());
+        fixtures.setCellFactory(new IconCellFixtureDecorator());
         log.setItems(logList);
         log.setCellFactory(new TooltipCellFactory<>());
         mission.setItems(missionList);
@@ -291,6 +299,8 @@ public class DashboardController {
         ddsa.setDisable(true);
         random.setDisable(true);
         cancel.setDisable(true);
+        deleteFixture.setDisable(true);
+        centerFixture.setDisable(true);
 
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -416,20 +426,11 @@ public class DashboardController {
                                 double ymax = Double.NEGATIVE_INFINITY;
                                 double ymin = Double.POSITIVE_INFINITY;
 
-
                                 for (Point point : selectedBoundaryPoints) {
-                                    if (xmax < point.getX()) {
-                                        xmax = point.getX();
-                                    }
-                                    if (xmin > point.getX()) {
-                                        xmin = point.getX();
-                                    }
-                                    if (ymax < point.getY()) {
-                                        ymax = point.getY();
-                                    }
-                                    if (ymin > point.getY()) {
-                                        ymin = point.getY();
-                                    }
+                                    xmax = Math.max(xmax, point.getX());
+                                    xmin = Math.min(xmin, point.getX());
+                                    ymax = Math.max(ymax, point.getY());
+                                    ymin = Math.min(ymin, point.getY());
                                 }
 
                                 List<ProjectedPoint> points = new ArrayList<>();
@@ -518,6 +519,34 @@ public class DashboardController {
             }
         });
 
+        fixtures.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Fixture>() {
+            @Override
+            public void changed(ObservableValue observable, Fixture oldValue, Fixture newValue) {
+                boolean selected = newValue != null;
+                deleteFixture.setDisable(!selected || isReferenced(newValue));
+                centerFixture.setDisable(!selected);
+            }
+        });
+
+        deleteFixture.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Fixture selectedItem = fixtures.getSelectionModel().getSelectedItem();
+                if(!isReferenced(selectedItem)) {
+                    selectedItem.remove();
+                    updateFixtures();
+                }
+            }
+        });
+
+        centerFixture.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Fixture selectedItem = fixtures.getSelectionModel().getSelectedItem();
+                selectedItem.center(sceneView);
+            }
+        });
+
 
         PublishSubject<String> nameSubject = PublishSubject.create();
         bridge.subscribe(SubscriptionRequestMsg.generate("/dragonfly/announce")
@@ -538,6 +567,15 @@ public class DashboardController {
                         error -> System.out.println("error while consuming announce: " + error.getMessage()));
 
         log("Dashboard Startup");
+    }
+
+    private boolean isReferenced(Fixture fixture) {
+        for(MissionStep step : missionList) {
+            if(step.references(fixture)) {
+                return true;
+            }
+        }
+        return fixture instanceof BoundaryFixture && fixture.getName().equals(rtlBoundary.getSelectionModel().getSelectedItem());
     }
 
     private void loadWebMap(SceneView sceneView) {
@@ -791,6 +829,8 @@ public class DashboardController {
             Graphic waypointGraphic = new Graphic(entry.getValue().toPoint(), new CompositeSymbol(Arrays.asList(symbol, nameText)));
             waypointOverlay.getGraphics().add(waypointGraphic);
         }
+
+        updateFixtures();
     }
 
     private void updateBoundaryOverlay() {
@@ -816,6 +856,22 @@ public class DashboardController {
 
             color = (color + 1) % COLORS.length;
         }
+
+        updateFixtures();
+    }
+
+    private void updateFixtures() {
+        fixtureList.clear();
+
+        for(Map.Entry<String, NavigateWaypoint> entry : waypoints.entrySet()) {
+            final String name = entry.getKey();
+            fixtureList.add(new WaypointFixture(entry.getKey(), entry.getValue(), () -> {waypoints.remove(name); updateWaypointOverlay();}));
+        }
+
+        for(Map.Entry<String, List<Waypoint>> entry : boundaries.entrySet()) {
+            final String name = entry.getKey();
+            fixtureList.add(new BoundaryFixture(entry.getKey(), entry.getValue(), () -> {boundaries.remove(name); updateBoundaryOverlay();}));
+        }
     }
 
     private void draw(List<Point> path) {
@@ -836,8 +892,8 @@ public class DashboardController {
     private void centerDrone(Drone drone) {
          drone.getLatestPosition()
                  .observeOn(JavaFxScheduler.platform())
-                 .map(position -> new Camera(position.getLatitude(), position.getLongitude(), 10, 0, 0, 0))
-                 .subscribe(camera -> sceneView.setViewpointCameraAsync(camera));
+                 .map(ViewpointUtil::create)
+                 .subscribe(camera -> sceneView.setViewpointAsync(camera));
     }
 
     private void deleteDrone(Drone name) {

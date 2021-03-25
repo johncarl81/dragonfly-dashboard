@@ -96,18 +96,10 @@ public class RandomPointCreator implements MissionStepCreator {
                 double ymin = Double.POSITIVE_INFINITY;;
 
                 for (Point point : boundaryPoints) {
-                    if(xmax < point.getX()) {
-                        xmax = point.getX();
-                    }
-                    if(xmin > point.getX()) {
-                        xmin = point.getX();
-                    }
-                    if(ymax < point.getY()) {
-                        ymax = point.getY();
-                    }
-                    if(ymin > point.getY()) {
-                        ymin = point.getY();
-                    }
+                    xmax = Math.max(xmax, point.getX());
+                    xmin = Math.min(xmin, point.getX());
+                    ymax = Math.max(ymax, point.getY());
+                    ymin = Math.min(ymin, point.getY());
                 }
 
                 List<ProjectedPoint> points = new ArrayList<>();

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
 import edu.unm.dragonfly.Walk;
+import edu.unm.dragonfly.WaypointFixture;
 
 import java.util.List;
 
@@ -92,6 +94,11 @@ public class MissionStepDDSA implements MissionStep{
 
     public boolean isUniqueAltitudes() {
         return uniqueAltitudes;
+    }
+
+    @Override
+    public boolean references(Fixture fixture) {
+        return fixture instanceof WaypointFixture && fixture.getName().equals(waypoint);
     }
 
     @Override

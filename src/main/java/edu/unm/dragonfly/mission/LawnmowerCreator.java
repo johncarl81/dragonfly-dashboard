@@ -67,6 +67,7 @@ public class LawnmowerCreator implements MissionStepCreator {
     @Override
     public MissionStep build() {
         return new MissionStepLawnmower(
+                boundarySelection.getSelectionModel().getSelectedItem(),
                 droneSelection.getSelectionModel().getSelectedItem(),
                 Float.parseFloat(stepLengthField.getText()),
                 Float.parseFloat(altitudeField.getText()),

@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.BoundaryFixture;
+import edu.unm.dragonfly.Fixture;
 
 /**
  * @author John Ericksen
  */
 public class MissionStepLawnmower implements MissionStep {
 
+    private final String boundaryName;
     private final String drone;
     private final double stepLength;
     private final boolean walkBoundary;
@@ -20,7 +23,8 @@ public class MissionStepLawnmower implements MissionStep {
     private final double distanceThreshold;
 
     @JsonCreator
-    public MissionStepLawnmower(@JsonProperty("drone") String drone,
+    public MissionStepLawnmower(@JsonProperty("boundaryName") String boundaryName,
+                                @JsonProperty("drone") String drone,
                                 @JsonProperty("stepLength") double stepLength,
                                 @JsonProperty("altitude") double altitude,
                                 @JsonProperty("stacks") int stacks,
@@ -28,6 +32,7 @@ public class MissionStepLawnmower implements MissionStep {
                                 @JsonProperty("walk") int walk,
                                 @JsonProperty("waitTime") double waitTime,
                                 @JsonProperty("distanceThreshold") double distanceThreshold) {
+        this.boundaryName = boundaryName;
         this.drone = drone;
         this.stepLength = stepLength;
         this.walkBoundary = walkBoundary;
@@ -38,6 +43,10 @@ public class MissionStepLawnmower implements MissionStep {
         this.distanceThreshold = distanceThreshold;
     }
 
+
+    public String getBoundaryName() {
+        return boundaryName;
+    }
     public String getDrone() {
         return drone;
     }
@@ -71,6 +80,11 @@ public class MissionStepLawnmower implements MissionStep {
     }
 
     @Override
+    public boolean references(Fixture fixture) {
+        return fixture instanceof BoundaryFixture && fixture.getName().equals(boundaryName);
+    }
+
+    @Override
     public boolean appliesTo(String name) {
         return this.drone.equals(name);
     }
@@ -82,7 +96,7 @@ public class MissionStepLawnmower implements MissionStep {
         lawnmower.put("msg_type", MissionStepType.LAWNMOWER.getMission_type());
         ObjectNode data = lawnmower.putObject("lawnmower");
 
-        data.put("boundary", "boundary");
+        data.put("boundary", boundaryName);
         data.put("stepLength", stepLength);
         data.put("walkBoundary", walkBoundary);
         data.put("walk", walk);
@@ -108,6 +122,7 @@ public class MissionStepLawnmower implements MissionStep {
         if (Double.compare(that.altitude, altitude) != 0) return false;
         if (Double.compare(that.waitTime, waitTime) != 0) return false;
         if (Double.compare(that.distanceThreshold, distanceThreshold) != 0) return false;
+        if (boundaryName != null ? !boundaryName.equals(that.boundaryName) : that.boundaryName != null) return false;
         return drone != null ? drone.equals(that.drone) : that.drone == null;
     }
 
@@ -115,7 +130,8 @@ public class MissionStepLawnmower implements MissionStep {
     public int hashCode() {
         int result;
         long temp;
-        result = drone != null ? drone.hashCode() : 0;
+        result = boundaryName != null ? boundaryName.hashCode() : 0;
+        result = 31 * result + (drone != null ? drone.hashCode() : 0);
         temp = Double.doubleToLongBits(stepLength);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (walkBoundary ? 1 : 0);
@@ -132,8 +148,9 @@ public class MissionStepLawnmower implements MissionStep {
 
     @Override
     public String toString() {
-        return "Lawnmower{" +
-                "drone='" + drone + '\'' +
+        return "MissionStepLawnmower{" +
+                "boundaryName='" + boundaryName + '\'' +
+                ", drone='" + drone + '\'' +
                 ", stepLength=" + stepLength +
                 ", walkBoundary=" + walkBoundary +
                 ", walk=" + walk +

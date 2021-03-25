@@ -48,6 +48,15 @@
                         </GridPane>
                     </VBox>
                 </TitledPane>
+                <TitledPane text="Fixtures">
+                    <VBox prefWidth="300.0">
+                        <ListView fx:id="fixtures" prefHeight="240"/>
+                        <FlowPane hgap="2">
+                            <Button fx:id="deleteFixture" text="Remove" />
+                            <Button fx:id="centerFixture" text="Center"/>
+                        </FlowPane>
+                    </VBox>
+                </TitledPane>
             </VBox>
         </left>
         <right>

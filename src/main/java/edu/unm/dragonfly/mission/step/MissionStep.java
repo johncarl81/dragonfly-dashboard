@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
 
@@ -29,4 +30,6 @@ public interface MissionStep {
     boolean appliesTo(String name);
 
     ObjectNode toROSJson(ObjectMapper mapper, String droneName);
+
+    boolean references(Fixture fixture);
 }

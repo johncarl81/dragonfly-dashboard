@@ -2,6 +2,7 @@ package edu.unm.dragonfly.mission.step;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
 
 /**
  * @author John Ericksen
@@ -20,6 +21,11 @@ public class MissionStart implements MissionStep {
         missionStart.put("msg_type", MissionStepType.START.getMission_type());
 
         return missionStart;
+    }
+
+    @Override
+    public boolean references(Fixture fixture) {
+        return false;
     }
 
     @Override

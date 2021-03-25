@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
 
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class MissionStepGradient implements MissionStep {
 
     public List<String> getDrones() {
         return drones;
+    }
+
+    @Override
+    public boolean references(Fixture fixture) {
+        return false;
     }
 
     @Override

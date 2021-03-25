@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
 
 /**
  * @author John Ericksen
@@ -38,6 +39,11 @@ public class MissionStepFlock implements MissionStep {
 
     public double getY() {
         return y;
+    }
+
+    @Override
+    public boolean references(Fixture fixture) {
+        return false;
     }
 
     @Override

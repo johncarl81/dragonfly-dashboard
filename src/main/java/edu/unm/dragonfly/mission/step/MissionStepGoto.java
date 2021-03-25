@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
+import edu.unm.dragonfly.WaypointFixture;
 
 /**
  * @author John Ericksen
@@ -17,6 +19,11 @@ public class MissionStepGoto implements MissionStep {
     public MissionStepGoto(@JsonProperty("drone") String drone, @JsonProperty("waypoint") String waypoint) {
         this.drone = drone;
         this.waypoint = waypoint;
+    }
+
+    @Override
+    public boolean references(Fixture fixture) {
+        return fixture instanceof WaypointFixture && fixture.getName().equals(waypoint);
     }
 
     @Override

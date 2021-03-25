@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.unm.dragonfly.Fixture;
 
 import java.util.List;
 
@@ -26,6 +27,11 @@ public class MissionStepRTL implements MissionStep {
     @Override
     public boolean appliesTo(String name) {
         return this.drones.contains(name);
+    }
+
+    @Override
+    public boolean references(Fixture fixture) {
+        return false;
     }
 
     @Override

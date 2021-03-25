@@ -46,7 +46,7 @@ public class MissionDataHolderTest {
         steps.add(new MissionStepRTL(Arrays.asList("one")));
         steps.add(new MissionStepSemaphore(Arrays.asList("one")));
         steps.add(new MissionStepDDSA(Arrays.asList("four"), "test", 1, 2, 3, 4, 5, Walk.RANGE, 10, 20, true));
-        steps.add(new MissionStepLawnmower("four", 5, 4, 3, true, 1, 5, 3));
+        steps.add(new MissionStepLawnmower("boundary 1", "four", 5, 4, 3, true, 1, 5, 3));
         steps.add(new MissionStepFlock("one", "two", 42, 30));
         List<Waypoint> navigationWaypoints = new ArrayList<>();
         navigationWaypoints.add(new Waypoint(1, 2, 3));
