@@ -274,8 +274,11 @@ public class DashboardController {
         });
 
         drones.setItems(droneList.sorted());
+        drones.setCellFactory(new TooltipCellFactory<>());
         log.setItems(logList);
+        log.setCellFactory(new TooltipCellFactory<>());
         mission.setItems(missionList);
+        mission.setCellFactory(new TooltipCellFactory<>());
         clearMission();
 
         delete.setDisable(true);
