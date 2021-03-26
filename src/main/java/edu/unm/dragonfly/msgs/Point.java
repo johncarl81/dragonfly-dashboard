@@ -1,18 +1,23 @@
 package edu.unm.dragonfly.msgs;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+
 /**
  * @author John Ericksen
  */
-public class Point {
-    public double x;
-    public double y;
-    public double z;
+@AutoValue
+public abstract class Point {
+    @JsonProperty
+    public abstract double x();
+    @JsonProperty
+    public abstract double y();
+    @JsonProperty
+    public abstract double z();
 
-    public Point(){}
-
-    public Point(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    @JsonCreator
+    public static Point create(@JsonProperty("x") double x, @JsonProperty("y") double y, @JsonProperty("z") double z) {
+        return new AutoValue_Point(x, y, z);
     }
 }

@@ -1,70 +1,45 @@
 package edu.unm.dragonfly.msgs;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.auto.value.AutoValue;
+
 /**
  * @author John Ericksen
  */
-public class DDSAWaypointsRequest {
-    public double radius;
-    public double stepLength;
-    public int walk;
-    public int stacks;
-    public int loops;
-    public double altitude;
-    public double waitTime;
+@AutoValue
+@JsonDeserialize(builder = AutoValue_DDSAWaypointsRequest.Builder.class)
+public abstract class DDSAWaypointsRequest {
+    @JsonProperty
+    public abstract double radius();
+    @JsonProperty
+    public abstract double stepLength();
+    @JsonProperty
+    public abstract int walk();
+    @JsonProperty
+    public abstract int stacks();
+    @JsonProperty
+    public abstract int loops();
+    @JsonProperty
+    public abstract double altitude();
+    @JsonProperty
+    public abstract double waitTime();
 
-    public double getRadius() {
-        return radius;
+    public static Builder builder() {
+        return new AutoValue_DDSAWaypointsRequest.Builder();
     }
 
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
-
-    public double getStepLength() {
-        return stepLength;
-    }
-
-    public void setStepLength(double stepLength) {
-        this.stepLength = stepLength;
-    }
-
-    public int getWalk() {
-        return walk;
-    }
-
-    public void setWalk(int walk) {
-        this.walk = walk;
-    }
-
-    public int getStacks() {
-        return stacks;
-    }
-
-    public void setStacks(int stacks) {
-        this.stacks = stacks;
-    }
-
-    public int getLoops() {
-        return loops;
-    }
-
-    public void setLoops(int loops) {
-        this.loops = loops;
-    }
-
-    public double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
-    }
-
-    public double getWaitTime() {
-        return waitTime;
-    }
-
-    public void setWaitTime(double waitTime) {
-        this.waitTime = waitTime;
+    @AutoValue.Builder
+    @JsonPOJOBuilder(withPrefix = "")
+    public abstract static class Builder {
+        public abstract Builder radius(double radius);
+        public abstract Builder stepLength(double stepLength);
+        public abstract Builder walk(int walk);
+        public abstract Builder stacks(int stacks);
+        public abstract Builder loops(int loops);
+        public abstract Builder altitude(double altitude);
+        public abstract Builder waitTime(double waitTime);
+        public abstract DDSAWaypointsRequest build();
     }
 }

@@ -8,14 +8,14 @@ import com.google.auto.value.AutoValue;
  * @author John Ericksen
  */
 @AutoValue
-public abstract class NavSatStatus {
+public abstract class Response {
     @JsonProperty
-    public abstract int status();
+    public abstract int success();
     @JsonProperty
-    public abstract int service();
+    public abstract String message();
 
     @JsonCreator
-    public static NavSatStatus create(@JsonProperty("status") int status, @JsonProperty("service") int service) {
-        return new AutoValue_NavSatStatus(status, service);
+    public static Response create(@JsonProperty("success") int success, @JsonProperty("message") String message) {
+        return new AutoValue_Response(success, message);
     }
 }

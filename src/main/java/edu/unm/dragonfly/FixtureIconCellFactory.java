@@ -10,7 +10,7 @@ import javafx.util.Callback;
 /**
  * @author John Ericksen
  */
-public class IconCellFixtureDecorator implements Callback<ListView<Fixture>, ListCell<Fixture>> {
+public class FixtureIconCellFactory implements Callback<ListView<Fixture>, ListCell<Fixture>> {
 
     @Override
     public ListCell<Fixture> call(ListView<Fixture> param) {

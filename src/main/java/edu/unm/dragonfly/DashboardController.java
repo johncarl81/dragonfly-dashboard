@@ -23,7 +23,6 @@ import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSceneSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.symbology.TextSymbol;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -58,10 +57,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ros.RosBridge;
-import ros.RosListenDelegate;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
-import ros.tools.MessageUnpacker;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -280,9 +277,9 @@ public class DashboardController {
         });
 
         drones.setItems(droneList.sorted());
-        drones.setCellFactory(new TooltipCellFactory<>());
+        drones.setCellFactory(new DroneCellFactory());
         fixtures.setItems(fixtureList.sorted());
-        fixtures.setCellFactory(new IconCellFixtureDecorator());
+        fixtures.setCellFactory(new FixtureIconCellFactory());
         log.setItems(logList);
         log.setCellFactory(new TooltipCellFactory<>());
         mission.setItems(missionList);
@@ -550,15 +547,8 @@ public class DashboardController {
 
         PublishSubject<String> nameSubject = PublishSubject.create();
         bridge.subscribe(SubscriptionRequestMsg.generate("/dragonfly/announce")
-                .setType("std_msgs/String"), new RosListenDelegate() {
-            private final MessageUnpacker<PrimitiveMsg<String>> unpacker = new MessageUnpacker<>(PrimitiveMsg.class);
-            @Override
-            public void receive(JsonNode data, String stringRep) {
-
-                PrimitiveMsg<String> msg = unpacker.unpackRosMessage(data);
-                nameSubject.onNext(msg.data);
-            }
-        });
+                .setType("std_msgs/String"), new JsonRosListenerDelegate<PrimitiveMsg<String>>(PrimitiveMsg.class,
+                value -> nameSubject.onNext(value.data())));
 
         nameSubject
                 .observeOn(JavaFxScheduler.platform())

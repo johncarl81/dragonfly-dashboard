@@ -1,44 +1,47 @@
 package edu.unm.dragonfly.msgs;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.auto.value.AutoValue;
+
 import java.util.List;
 
 /**
  * @author John Ericksen
  */
-public class LawnmowerWaypointsRequest {
-    public List<LatLon> boundary;
-    public double stepLength;
-    public boolean walkBoundary;
-    public int walk;
-    public int stacks;
-    public double altitude;
-    public double waitTime;
+@AutoValue
+@JsonDeserialize(builder = AutoValue_LawnmowerWaypointsRequest.Builder.class)
+public abstract class LawnmowerWaypointsRequest {
+    @JsonProperty
+    public abstract List<LatLon> boundary();
+    @JsonProperty
+    public abstract double stepLength();
+    @JsonProperty
+    public abstract boolean walkBoundary();
+    @JsonProperty
+    public abstract int walk();
+    @JsonProperty
+    public abstract int stacks();
+    @JsonProperty
+    public abstract double altitude();
+    @JsonProperty
+    public abstract double waitTime();
 
-    public void setBoundary(List<LatLon> boundary) {
-        this.boundary = boundary;
+    public static Builder builder() {
+        return new AutoValue_LawnmowerWaypointsRequest.Builder();
     }
 
-    public void setStepLength(double stepLength) {
-        this.stepLength = stepLength;
-    }
-
-    public void setWalkBoundary(boolean walkBoundary) {
-        this.walkBoundary = walkBoundary;
-    }
-
-    public void setWalk(int walk) {
-        this.walk = walk;
-    }
-
-    public void setStacks(int stacks) {
-        this.stacks = stacks;
-    }
-
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
-    }
-
-    public void setWaitTime(double waitTime) {
-        this.waitTime = waitTime;
+    @AutoValue.Builder
+    @JsonPOJOBuilder(withPrefix = "")
+    public abstract static class Builder {
+        public abstract Builder boundary(List<LatLon> boundary);
+        public abstract Builder stepLength(double stepLength);
+        public abstract Builder walkBoundary(boolean walkBoundary);
+        public abstract Builder walk(int walk);
+        public abstract Builder stacks(int stacks);
+        public abstract Builder altitude(double altitude);
+        public abstract Builder waitTime(double waitTime);
+        public abstract LawnmowerWaypointsRequest build();
     }
 }

@@ -1,36 +1,35 @@
 package edu.unm.dragonfly.msgs;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.auto.value.AutoValue;
+
 import java.util.List;
 
 /**
  * @author John Ericksen
  */
-public class NavigationRequest {
-    public List<LatLon> waypoints;
-    public double waitTime;
-    public double distanceThreshold;
+@AutoValue
+@JsonDeserialize(builder = AutoValue_NavigationRequest.Builder.class)
+public abstract class NavigationRequest {
+    @JsonProperty
+    public abstract List<LatLon> waypoints();
+    @JsonProperty
+    public abstract double waitTime();
+    @JsonProperty
+    public abstract double distanceThreshold();
 
-    public List<LatLon> getWaypoints() {
-        return waypoints;
+    public static Builder builder() {
+        return new AutoValue_NavigationRequest.Builder();
     }
 
-    public void setWaypoints(List<LatLon> waypoints) {
-        this.waypoints = waypoints;
-    }
-
-    public double getWaitTime() {
-        return waitTime;
-    }
-
-    public void setWaitTime(double waitTime) {
-        this.waitTime = waitTime;
-    }
-
-    public double getDistanceThreshold() {
-        return distanceThreshold;
-    }
-
-    public void setDistanceThreshold(double distanceThreshold) {
-        this.distanceThreshold = distanceThreshold;
+    @AutoValue.Builder
+    @JsonPOJOBuilder(withPrefix = "")
+    public abstract static class Builder {
+        public abstract Builder waypoints(List<LatLon> waypoints);
+        public abstract Builder waitTime(double waitTime);
+        public abstract Builder distanceThreshold(double distanceThreshold);
+        public abstract NavigationRequest build();
     }
 }
