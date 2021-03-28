@@ -31,6 +31,8 @@ import edu.unm.dragonfly.mission.MissionStepDialogFactory;
 import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
+import edu.unm.dragonfly.msgs.Boundary;
+import edu.unm.dragonfly.msgs.SetupRequest;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -59,6 +61,7 @@ import javafx.stage.Stage;
 import ros.RosBridge;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
+import ros.msgs.std_msgs.Time;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -654,14 +657,18 @@ public class DashboardController {
     private void setupDrones() {
         int maxAltitudeInteger = Integer.parseInt(maxAltitude.getText());
         int rtlFactor = Integer.parseInt(rtlAltitudeFactor.getText());
-        List<Waypoint> boundary = null;
+        Boundary boundary = null;
         if(boundaries.containsKey(rtlBoundary.getValue())) {
-            boundary = boundaries.get(rtlBoundary.getValue());
+            boundary = Boundary.create(rtlBoundary.getValue(),
+                    boundaries.get(rtlBoundary.getValue()).stream().map(Waypoint::toLatLon).collect(Collectors.toList()));
         }
 
         for(int i = 0; i < droneList.size(); i++) {
             Drone drone = droneList.get(i);
-            drone.setup(maxAltitudeInteger, 1000 + (i * rtlFactor * 100), boundary);
+            drone.setup(SetupRequest.create(Time.now(),
+                    maxAltitudeInteger,
+                    1000 + (i * rtlFactor * 100),
+                    boundary));
         }
     }
 

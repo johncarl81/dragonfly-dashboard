@@ -1,6 +1,7 @@
 package edu.unm.dragonfly;
 
 import edu.unm.dragonfly.msgs.MavrosState;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.scene.control.ListCell;
@@ -65,6 +66,7 @@ public class DroneCellFactory implements Callback<ListView<Drone>, ListCell<Dron
         return new ListCell<Drone>() {
             final Tooltip tooltip = new Tooltip();
             final ImageView imageView = new ImageView();
+            CompositeDisposable subscriptions = new CompositeDisposable();
             @Override
             protected void updateItem(Drone drone, boolean empty) {
 
@@ -74,6 +76,8 @@ public class DroneCellFactory implements Callback<ListView<Drone>, ListCell<Dron
                     setGraphic(null);
                     setText(null);
                     setTooltip(null);
+                    subscriptions.dispose();
+                    subscriptions = new CompositeDisposable();
                 } else {
                     final String name = drone.getName();
 
@@ -85,16 +89,16 @@ public class DroneCellFactory implements Callback<ListView<Drone>, ListCell<Dron
                     tooltip.setText(drone.toString());
                     setTooltip(tooltip);
 
-                    drone.getStatus()
+                    subscriptions.add(drone.getStatus()
                             .observeOn(JavaFxScheduler.platform())
                             .subscribe(new Consumer<MavrosState.SystemStatus>() {
-                        @Override
-                        public void accept(MavrosState.SystemStatus systemStatus) {
-                            imageView.setImage(new Image(StatusIcon.get(systemStatus).getIcon()));
-                            setText(name + "(" + systemStatus.getName() + ")");
-                            tooltip.setText(systemStatus.getDescription());
-                        }
-                    });
+                                @Override
+                                public void accept(MavrosState.SystemStatus systemStatus) {
+                                    imageView.setImage(new Image(StatusIcon.get(systemStatus).getIcon()));
+                                    setText(name + "(" + systemStatus.getName() + ")");
+                                    tooltip.setText(systemStatus.getDescription());
+                                }
+                            }));
                 }
             }
         };

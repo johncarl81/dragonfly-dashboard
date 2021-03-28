@@ -4,6 +4,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.unm.dragonfly.msgs.LatLon;
 
 import java.beans.Transient;
 
@@ -42,6 +43,11 @@ public class Waypoint {
     @Transient
     public Point toPoint() {
         return new Point(longitude, latitude, altitude, SpatialReferences.getWgs84());
+    }
+
+    @Transient
+    public LatLon toLatLon() {
+        return LatLon.builder().latitude(latitude).longitude(longitude).relativeAltitude(altitude).build();
     }
 
     @Override

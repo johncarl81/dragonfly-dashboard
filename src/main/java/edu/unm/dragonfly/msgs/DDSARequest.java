@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
+import ros.msgs.std_msgs.Time;
 
 /**
  * @author John Ericksen
@@ -11,6 +12,8 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 @JsonDeserialize(builder = AutoValue_DDSARequest.Builder.class)
 public abstract class DDSARequest {
+    @JsonProperty("command_time")
+    public abstract Time commandTime();
     @JsonProperty
     public abstract double radius();
     @JsonProperty
@@ -35,6 +38,8 @@ public abstract class DDSARequest {
     @AutoValue.Builder
     @JsonPOJOBuilder(withPrefix = "")
     public abstract static class Builder {
+        @JsonProperty("command_time")
+        public abstract Builder commandTime(Time time);
         public abstract Builder radius(double radius);
         public abstract Builder stepLength(double stepLength);
         public abstract Builder walk(int walk);

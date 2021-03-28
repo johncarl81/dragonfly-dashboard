@@ -1,10 +1,7 @@
 package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.msgs.DDSARequest;
 import edu.unm.dragonfly.msgs.DDSAWaypointsRequest;
 import edu.unm.dragonfly.msgs.LatLon;
@@ -16,6 +13,8 @@ import edu.unm.dragonfly.msgs.NavSatFix;
 import edu.unm.dragonfly.msgs.NavigationRequest;
 import edu.unm.dragonfly.msgs.PoseStamped;
 import edu.unm.dragonfly.msgs.Response;
+import edu.unm.dragonfly.msgs.SetupRequest;
+import edu.unm.dragonfly.msgs.SimpleRequest;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.BehaviorSubject;
@@ -25,6 +24,7 @@ import io.reactivex.subjects.Subject;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.msgs.std_msgs.PrimitiveMsg;
+import ros.msgs.std_msgs.Time;
 
 import java.util.List;
 import java.util.function.Function;
@@ -67,6 +67,7 @@ public class Drone {
 
     public void lawnmower(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waitTime, float distanceThreshold) {
         LawnmowerRequest request = LawnmowerRequest.builder()
+                .commandTime(Time.now())
                 .boundary(boundaryPoints.stream().map(mapToLatLon()).collect(Collectors.toList()))
                 .stepLength(stepLength)
                 .walkBoundary(walkBoundary)
@@ -114,6 +115,7 @@ public class Drone {
 
     public void ddsa(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waitTime, float distanceThreshold) {
         DDSARequest request = DDSARequest.builder()
+                .commandTime(Time.now())
                 .radius(radius)
                 .stepLength(stepLength)
                 .stacks(stacks)
@@ -150,6 +152,7 @@ public class Drone {
 
     public void navigate(List<Point> waypoints, float distanceThreshold) {
         NavigationRequest request = NavigationRequest.builder()
+                .commandTime(Time.now())
                 .waypoints(waypoints.stream().map(mapToLatLon()).collect(Collectors.toList()))
                 .waitTime(0)
                 .distanceThreshold(distanceThreshold)
@@ -164,7 +167,7 @@ public class Drone {
 
     public void cancel() {
 
-        bridge.call("/" + name + "/command/cancel", "std_msgs/Empty", null, (data, stringRep) -> System.out.println("Cancel sent to " + name));
+        bridge.call("/" + name + "/command/cancel", "dragonfly_messages/Simple", SimpleRequest.now(), (data, stringRep) -> System.out.println("Cancel sent to " + name));
     }
 
     public Observable<MavrosState.SystemStatus> getStatus() {
@@ -199,17 +202,17 @@ public class Drone {
     }
 
     public void takeoff() {
-        bridge.call("/" + name + "/command/takeoff", "std_msgs/Empty", null,
+        bridge.call("/" + name + "/command/takeoff", "dragonfly_messages/Simple", SimpleRequest.now(),
                 (data, stringRep) -> System.out.println("Takeoff sent to " + name));
     }
 
     public void land() {
-        bridge.call("/" + name + "/command/land", "std_msgs/Empty", null,
+        bridge.call("/" + name + "/command/land", "dragonfly_messages/Simple", SimpleRequest.now(),
                 (data, stringRep) -> System.out.println("Land sent to " + name));
     }
 
     public void rtl() {
-        bridge.call("/" + name + "/command/rtl", "std_msgs/Empty", null,
+        bridge.call("/" + name + "/command/rtl", "dragonfly_messages/Simple", SimpleRequest.now(),
                 (data, stringRep) -> System.out.println("RTL sent to " + name));
     }
 
@@ -219,29 +222,11 @@ public class Drone {
     }
 
     public void startMission() {
-        bridge.call("/" + name + "/command/start_mission", "std_msgs/Empty", null,
+        bridge.call("/" + name + "/command/start_mission", "dragonfly_messages/Simple", SimpleRequest.now(),
                 (data, stringRep) -> System.out.println("Start mission sent to " + name));
     }
 
-    public void setup(int maxAltitude, int rtlAltitude, List<Waypoint> rtlBoundary) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode setupData = mapper.createObjectNode();
-
-        setupData.put("max_altitude", maxAltitude);
-        setupData.put("rtl_altitude", rtlAltitude);
-
-        if(rtlBoundary != null) {
-            final ObjectNode boundaryNode = setupData.putObject("rtl_boundary");
-            boundaryNode.put("name", "boundary");
-            ArrayNode pointNodes = boundaryNode.putArray("points");
-            for (Waypoint waypoint : rtlBoundary) {
-                ObjectNode pointNode = pointNodes.addObject();
-                pointNode.put("longitude", waypoint.getLongitude());
-                pointNode.put("latitude", waypoint.getLatitude());
-                pointNode.put("relativeAltitude", waypoint.getAltitude());
-            }
-        }
-
+    public void setup(SetupRequest setupData) {
         bridge.call("/" + name + "/command/setup", "dragonfly_messages/Setup", setupData,
                 (data, stringRep) -> System.out.println("Setup sent to " + name));
     }
