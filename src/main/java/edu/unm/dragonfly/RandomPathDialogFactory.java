@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class RandomPathDialogFactory {
 
     public interface DialogCallback {
-        void call(String boundaryName, float minAltitude, float maxAltitude, int size, int iterations, int population, float waitTime, float distanceThreshold);
+        void call(String boundaryName, float minAltitude, float maxAltitude, int size, float waitTime, float distanceThreshold);
     }
 
     public static void create(Map<String, List<Waypoint>> boundaries, DialogCallback callback) {
@@ -32,8 +32,6 @@ public class RandomPathDialogFactory {
         TextField minAltitude = new TextField();
         TextField maxAltitude = new TextField();
         TextField size = new TextField();
-        TextField iterations = new TextField();
-        TextField population = new TextField();
         TextField waitTimeField = new TextField();
         TextField distanceThreshold = new TextField();
         ProgressBar progressBar = new ProgressBar(0);
@@ -42,8 +40,6 @@ public class RandomPathDialogFactory {
         minAltitude.setText("10");
         maxAltitude.setText("20");
         size.setText("100");
-        iterations.setText("100");
-        population.setText("100");
         waitTimeField.setText("3");
         distanceThreshold.setText("1");
 
@@ -52,8 +48,6 @@ public class RandomPathDialogFactory {
                 .add("Min Altitude:", minAltitude)
                 .add("Max Altitude:", maxAltitude)
                 .add("Size:", size)
-                .add("Iterations:", iterations)
-                .add("Population:", population)
                 .add("Wait Time:", waitTimeField)
                 .add("Distance Threshold:", distanceThreshold)
                 .add(progressBar);
@@ -70,8 +64,6 @@ public class RandomPathDialogFactory {
                     Float.parseFloat(minAltitude.getText()),
                     Float.parseFloat(maxAltitude.getText()),
                     Integer.parseInt(size.getText()),
-                    Integer.parseInt(iterations.getText()),
-                    Integer.parseInt(population.getText()),
                     Float.parseFloat(waitTimeField.getText()),
                     Float.parseFloat(distanceThreshold.getText()));
         }

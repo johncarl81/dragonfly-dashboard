@@ -39,4 +39,20 @@ public class ProjectedPoint {
     public Waypoint toWaypoint() {
         return new Waypoint(original.getX(), original.getY(), original.getZ());
     }
+
+    public double distanceTo(ProjectedPoint other) {
+        double dx = x - other.x;
+        double dy = y - other.y;
+        double dz = z - other.z;
+        return Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectedPoint{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

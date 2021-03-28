@@ -28,11 +28,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.mission.MissionDataHolder;
 import edu.unm.dragonfly.mission.MissionStepDialogFactory;
+import edu.unm.dragonfly.mission.PointUtil;
 import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.msgs.Boundary;
 import edu.unm.dragonfly.msgs.SetupRequest;
+import edu.unm.dragonfly.tsp.TSP;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -414,66 +416,22 @@ public class DashboardController {
             public void handle(ActionEvent event) {
                 if (!boundaries.isEmpty()) {
                     Drone selectedDrone = drones.getSelectionModel().getSelectedItem();
-                    RandomPathDialogFactory.create(boundaries, (boundaryName, minAltitude, maxAltitude, size, iterations, population, waitTime, distanceThreshold) -> {
-                        Observable.fromCallable(new Callable<GeneticTSP.Tour<ProjectedPoint>>() {
+                    RandomPathDialogFactory.create(boundaries, (boundaryName, minAltitude, maxAltitude, size, waitTime, distanceThreshold) -> {
+                        Observable.fromCallable(new Callable<List<ProjectedPoint>>() {
                             @Override
-                            public GeneticTSP.Tour<ProjectedPoint> call() {
-
-                                List<Point> selectedBoundaryPoints = boundaries.get(boundaryName).stream().map(Waypoint::toPoint).collect(Collectors.toList());
-
-                                double xmax = Double.NEGATIVE_INFINITY;
-                                double xmin = Double.POSITIVE_INFINITY;
-                                double ymax = Double.NEGATIVE_INFINITY;
-                                double ymin = Double.POSITIVE_INFINITY;
-
-                                for (Point point : selectedBoundaryPoints) {
-                                    xmax = Math.max(xmax, point.getX());
-                                    xmin = Math.min(xmin, point.getX());
-                                    ymax = Math.max(ymax, point.getY());
-                                    ymin = Math.min(ymin, point.getY());
-                                }
-
-                                List<ProjectedPoint> points = new ArrayList<>();
-                                for (int i = 0; i < size; ) {
-                                    Point randomPoint = new Point((RAND.nextDouble() * (xmax - xmin)) + xmin,
-                                            (RAND.nextDouble() * (ymax - ymin)) + ymin,
-                                            (RAND.nextDouble() * (maxAltitude - minAltitude)) + minAltitude);
-                                    if (inside(randomPoint, selectedBoundaryPoints)) {
-                                        points.add(new ProjectedPoint(randomPoint));
-                                        i++;
-                                    }
-                                }
-
-                                GeneticTSP.Population<ProjectedPoint> chromosomes = GeneticTSP.Population.generate(points, new GeneticTSP.DistanceMetric<ProjectedPoint>() {
-                                    @Override
-                                    public double distance(List<ProjectedPoint> points) {
-                                        double distance = 0;
-                                        for (int i = 0; i < points.size() - 1; i++) {
-                                            double deltax = points.get(i).getX() - points.get(i + 1).getX();
-                                            double deltay = points.get(i).getY() - points.get(i + 1).getY();
-                                            double deltaz = points.get(i).getZ() - points.get(i + 1).getZ();
-                                            distance += Math.sqrt((deltax * deltax) + (deltay * deltay) + (deltaz * deltaz));
-                                        }
-                                        return distance;
-                                    }
-                                }, population);
-
-                                for (int i = 0; i < iterations; i++) {
-                                    long start = System.currentTimeMillis();
-                                    chromosomes = GeneticTSP.evolve(chromosomes);
-
-                                    System.out.println("Evolution " + i + " " +
-                                            "took: " + (System.currentTimeMillis() - start) + "ms, " +
-                                            "distance: " + chromosomes.getMostFit().getDistance());
-                                }
-
-                                return chromosomes.getMostFit();
+                            public List<ProjectedPoint> call() {
+                                List<ProjectedPoint> randomPoints = PointUtil.createRandomPoints(
+                                        boundaries.get(boundaryName).stream().map(Waypoint::toPoint).collect(Collectors.toList()),
+                                        size,
+                                        minAltitude,
+                                        maxAltitude);
+                                return TSP.optimize(randomPoints);
                             }
                         })
                                 .subscribeOn(Schedulers.computation())
                                 .observeOn(JavaFxScheduler.platform())
                                 .subscribe(tour -> {
-                                            List<Point> points = tour.getPoints().stream().map(ProjectedPoint::getOriginal).collect(Collectors.toList());
+                                            List<Point> points = tour.stream().map(ProjectedPoint::getOriginal).collect(Collectors.toList());
                                             draw(points);
                                             selectedDrone.navigate(points, distanceThreshold);
                                         },
@@ -799,21 +757,6 @@ public class DashboardController {
                 }
             }
         });
-    }
-
-    private boolean inside(Point randomPoint, List<Point> boundaryPoints) {
-        for(int i = 0; i < boundaryPoints.size() - 1; i++){
-            Point a = boundaryPoints.get(i);
-            Point b = boundaryPoints.get(i+1);
-            if(!isLeft(a, b, randomPoint)) {
-                return false;
-            }
-        }
-        return isLeft(boundaryPoints.get(boundaryPoints.size() - 1), boundaryPoints.get(0), randomPoint);
-    }
-
-    private boolean isLeft(Point a, Point b, Point c) {
-        return ((b.getX() - a.getX()) * (c.getY() - a.getY()) - (b.getY() - a.getY()) * (c.getX() - a.getX())) > 0;
     }
 
     private void updateWaypointOverlay() {

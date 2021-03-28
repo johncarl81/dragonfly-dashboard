@@ -1,4 +1,4 @@
-package edu.unm.dragonfly;
+package edu.unm.dragonfly.tsp;
 
 import java.util.ArrayList;
 import java.util.Collections;
