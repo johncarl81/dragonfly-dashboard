@@ -14,9 +14,10 @@ public enum MissionStepType {
     RTL(6, "RTL"),
     DDSA(7, "DDSA"),
     LAWNMOWER(8, "Lawnmower"),
-    NAVIGATION(9, "Navigation"),
+    NAVIGATION(9, "Random"),
     FLOCK(10, "Flock"),
-    GRADIENT(11, "Gradient");
+    GRADIENT(11, "Gradient"),
+    CURTAIN(12, "Curtain");
 
     private final int mission_type;
     private final String name;

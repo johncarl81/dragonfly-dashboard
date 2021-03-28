@@ -5,6 +5,7 @@ import edu.unm.dragonfly.NavigateWaypoint;
 import edu.unm.dragonfly.Walk;
 import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
+import edu.unm.dragonfly.mission.step.MissionStepCurtain;
 import edu.unm.dragonfly.mission.step.MissionStepDDSA;
 import edu.unm.dragonfly.mission.step.MissionStepFlock;
 import edu.unm.dragonfly.mission.step.MissionStepGoto;
@@ -53,6 +54,7 @@ public class MissionDataHolderTest {
         navigationWaypoints.add(new Waypoint(1, 2, 4));
         navigationWaypoints.add(new Waypoint(4, 2, 3));
         steps.add(new MissionStepNavigation("five", navigationWaypoints, 2, 1));
+        steps.add(new MissionStepCurtain("six", "seven", "eight", 10, 11, 12));
 
         Map<String, NavigateWaypoint> waypoints = new HashMap<>();
 
