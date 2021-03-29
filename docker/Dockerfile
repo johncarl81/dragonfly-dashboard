@@ -31,7 +31,7 @@ RUN apt-get -qq install ros-melodic-rosbridge-server
 RUN rm -rf /var/lib/apt/lists/*
 
 # Setup arcgis workspace
-ENV ARCGIS_VERSION=100.9.0
+ENV ARCGIS_VERSION=100.10.0
 RUN mkdir -p /root/.arcgis/$ARCGIS_VERSION/
 COPY ./docker/arcgis-java-jnilibs-$ARCGIS_VERSION.zip /tmp/
 
