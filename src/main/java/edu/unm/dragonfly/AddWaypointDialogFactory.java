@@ -8,7 +8,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +31,10 @@ public class AddWaypointDialogFactory {
         dialog.setTitle("Add Waypoint");
 
         GridPane grid = new GridPane();
+        ColumnConstraints constraints1 = new ColumnConstraints(100);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(constraints1, constraints2);
 
         TextField nameField = new TextField();
         TextField latitudeField = new TextField();
@@ -72,13 +78,17 @@ public class AddWaypointDialogFactory {
         dialog.setTitle("Add Waypoint");
 
         GridPane grid = new GridPane();
+        ColumnConstraints constraints1 = new ColumnConstraints(100);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(constraints1, constraints2);
 
         ComboBox<String> waypointComboBox = new ComboBox<>(FXCollections.observableArrayList(waypoints.keySet()));
 
-        grid.add(new Label("Name: "), 1, 1);
-        grid.add(new Label(selected.getName()), 2, 1);
-        grid.add(new Label("Waypoint: "), 1, 2);
-        grid.add(waypointComboBox, 2, 2);
+        grid.add(new Label("Name: "), 0, 0);
+        grid.add(new Label(selected.getName()), 1, 0);
+        grid.add(new Label("Waypoint: "), 0, 1);
+        grid.add(waypointComboBox, 1, 1);
 
         dialog.getDialogPane().setContent(grid);
 

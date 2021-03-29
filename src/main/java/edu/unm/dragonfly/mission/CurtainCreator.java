@@ -39,7 +39,7 @@ public class CurtainCreator implements MissionStepCreator {
         altitudeField.setText("10");
         distanceThreshold.setText("1");
 
-        GridUtil.builder(grid).increment().increment()
+        GridUtil.builder(grid).increment()
                 .add("Drone:", droneSelection)
                 .add("Start:", waypointStartSelection)
                 .add("End:", waypointEndSelection)

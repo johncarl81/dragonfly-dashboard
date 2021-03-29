@@ -25,8 +25,8 @@ public class TakeoffCreator implements MissionStepCreator {
 
         altitudeField.setText("10");
 
-        droneSelection.create(grid, 2);
-        GridUtil.builder(grid).increment().increment()
+        GridUtil.builder(grid).increment()
+                .add(droneSelection)
                 .add("Altitude:", altitudeField);
     }
 

@@ -52,7 +52,7 @@ public class LawnmowerCreator implements MissionStepCreator {
         waitTimeField.setText("0");
         distanceThreshold.setText("1");
 
-        GridUtil.builder(grid).increment().increment()
+        GridUtil.builder(grid).increment()
                 .add("Drone:", droneSelection)
                 .add("Boundary:", boundarySelection)
                 .add("Step Length:", stepLengthField)

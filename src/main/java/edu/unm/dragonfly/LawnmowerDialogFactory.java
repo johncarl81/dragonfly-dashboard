@@ -9,7 +9,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,11 @@ public class LawnmowerDialogFactory {
         distanceThreshold.setText("1");
 
         GridPane grid = new GridPane();
+        ColumnConstraints constraints1 = new ColumnConstraints(100);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(constraints1, constraints2);
+
         GridUtil.builder(grid)
                 .add("Boundary:", boundarySelection)
                 .add("Step Length:", stepLengthField)

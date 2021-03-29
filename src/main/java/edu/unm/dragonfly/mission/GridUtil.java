@@ -9,17 +9,28 @@ import javafx.scene.layout.GridPane;
  */
 public class GridUtil {
 
+    public interface GridBuilderInput {
+
+        void create(GridBuilder gridBuilder);
+    }
+
     public static class GridBuilder {
 
         private final GridPane grid;
-        private int index = 1;
+        private int index = 0;
 
         private GridBuilder(GridPane grid) {
             this.grid = grid;
         }
 
+        public GridBuilder add(GridBuilderInput delegate) {
+            delegate.create(this);
+
+            return this;
+        }
+
         public GridBuilder add(Node node) {
-            grid.add(node, 1, index, 2, index);
+            grid.add(node, 0, index, 1, index);
 
             index++;
 
@@ -27,8 +38,8 @@ public class GridUtil {
         }
 
         public GridBuilder add(String labelName, Node node) {
-            grid.add(new Label(labelName), 1, index);
-            grid.add(node, 2, index);
+            grid.add(new Label(labelName), 0, index);
+            grid.add(node, 1, index);
 
             index++;
 

@@ -58,8 +58,8 @@ public class DDSACreator implements MissionStepCreator {
         distanceThreshold.setText("1");
         uniqueAltitudes.setSelected(true);
 
-        droneSelection.create(grid, 2);
-        GridUtil.builder(grid).increment().increment()
+        GridUtil.builder(grid).increment()
+                .add(droneSelection)
                 .add("Waypoint:", waypointSelection)
                 .add("Radius:", radiusField)
                 .add("Step Length:", stepLengthField)

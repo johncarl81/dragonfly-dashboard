@@ -8,7 +8,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,10 @@ public class RandomPathDialogFactory {
         dialog.setTitle("Random Path Parameters");
 
         GridPane grid = new GridPane();
+        ColumnConstraints constraints1 = new ColumnConstraints(100);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(constraints1, constraints2);
 
         ComboBox<String> boundarySelection = new ComboBox<>(FXCollections.observableList(boundaries.keySet().stream().sorted().collect(Collectors.toList())));
         TextField minAltitude = new TextField();

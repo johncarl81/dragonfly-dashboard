@@ -5,7 +5,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.util.Optional;
 
@@ -21,6 +23,10 @@ public class DDSADialogFactory {
         dialog.setTitle("DDSA Parameters");
 
         GridPane grid = new GridPane();
+        ColumnConstraints constraints1 = new ColumnConstraints(100);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(constraints1, constraints2);
 
         TextField radiusField = new TextField();
         TextField stepLengthField = new TextField();

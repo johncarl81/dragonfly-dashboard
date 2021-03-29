@@ -24,8 +24,8 @@ public class GradientCreator implements MissionStepCreator {
     @Override
     public void create(GridPane grid) {
         GridUtil.builder(grid).increment()
-                .add("Target:", targetSelection);
-        droneSelection.create(grid, 3);
+                .add("Target:", targetSelection)
+                .add(droneSelection);
     }
 
     @Override

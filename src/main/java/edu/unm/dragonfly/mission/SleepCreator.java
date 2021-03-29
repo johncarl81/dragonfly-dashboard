@@ -25,8 +25,8 @@ public class SleepCreator implements MissionStepCreator {
 
         durationField.setText("0");
 
-        droneSelection.create(grid, 2);
-        GridUtil.builder(grid).increment().increment()
+        GridUtil.builder(grid).increment()
+                .add(droneSelection)
                 .add("Duration:", durationField);
     }
 

@@ -19,7 +19,7 @@ public class LandCreator implements MissionStepCreator {
 
     @Override
     public void create(GridPane grid) {
-        droneSelection.create(grid, 2);
+        droneSelection.create(grid, 1);
     }
 
     @Override

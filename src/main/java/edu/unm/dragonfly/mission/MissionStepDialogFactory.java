@@ -9,7 +9,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -45,14 +47,19 @@ public class MissionStepDialogFactory {
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Mission Step");
+        dialog.setResizable(true);
 
         GridPane grid = new GridPane();
+        ColumnConstraints constraints1 = new ColumnConstraints(100);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setHgrow(Priority.ALWAYS);
+        grid.getColumnConstraints().addAll(constraints1, constraints2);
 
         ComboBox<MissionStepType> typeSelection = new ComboBox<>(FXCollections.observableArrayList(MissionStepType.values()));
 
 
-        grid.add(new Label("Type:"), 1, 1);
-        grid.add(typeSelection, 2, 1);
+        grid.add(new Label("Type:"), 0, 0);
+        grid.add(typeSelection, 1, 0);
 
         typeSelection.valueProperty().addListener(new ChangeListener<MissionStepType>() {
             @Override

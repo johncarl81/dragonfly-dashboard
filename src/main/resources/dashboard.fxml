@@ -19,7 +19,7 @@
             <VBox prefWidth="300.0">
                 <TitledPane text="Drones">
                     <VBox>
-                        <ListView fx:id="drones" prefHeight="120"/>
+                        <ListView fx:id="drones" prefHeight="120" minHeight="60"/>
                         <FlowPane hgap="2">
                             <Button fx:id="add" text="Add..." />
                             <Button fx:id="delete" text="Remove" />
@@ -50,7 +50,7 @@
                 </TitledPane>
                 <TitledPane text="Fixtures">
                     <VBox prefWidth="300.0">
-                        <ListView fx:id="fixtures" prefHeight="240"/>
+                        <ListView fx:id="fixtures" prefHeight="240" minHeight="60"/>
                         <FlowPane hgap="2">
                             <Button fx:id="deleteFixture" text="Remove" />
                             <Button fx:id="centerFixture" text="Center"/>

@@ -11,16 +11,20 @@ import java.util.List;
 /**
  * @author John Ericksen
  */
-public class SelectableDronesCreator {
+public class SelectableDronesCreator implements GridUtil.GridBuilderInput {
     private final CheckComboBox<String> droneSelection;
 
     public SelectableDronesCreator(List<String> drones) {
         droneSelection = new CheckComboBox<>(FXCollections.observableList(drones));
     }
 
+    public void create(GridUtil.GridBuilder gridBuilder) {
+        gridBuilder.add("Drones:", droneSelection);
+    }
+
     public void create(GridPane grid, int row) {
-        grid.add(new Label("Drones:"), 1, row);
-        grid.add(droneSelection, 2, row);
+        grid.add(new Label("Drones:"), 0, row);
+        grid.add(droneSelection, 1, row);
     }
 
     public List<String> getSelectedDrones() {
