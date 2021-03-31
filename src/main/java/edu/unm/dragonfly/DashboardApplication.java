@@ -50,7 +50,7 @@ public class DashboardApplication extends Application {
      * @param args arguments passed to this application
      */
     public static void main(String[] args) {
-        ArcGISRuntimeEnvironment.setLicense("runtimelite,1000,rud2004642504,none,4N5X0H4AH76FTK118137");
+//        ArcGISRuntimeEnvironment.setLicense("runtimelite,1000,rud2004642504,none,4N5X0H4AH76FTK118137");
 
         Application.launch(args);
     }
