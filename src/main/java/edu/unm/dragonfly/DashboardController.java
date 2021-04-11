@@ -180,6 +180,7 @@ public class DashboardController {
     private final Map<String, List<Waypoint>> boundaries = new HashMap<>();
     SceneView sceneView;
     private boolean localMap = false;
+    private boolean zoomedToFirst = false;
 
     private enum CoordinateSelectionMode {
         FINISHED("Finished"),
@@ -233,7 +234,7 @@ public class DashboardController {
 
                     if(openFile != null) {
                         sceneView.getGraphicsOverlays().clear();
-                        loadMMSP(openFile, sceneView);
+                        loadMSPK(openFile, sceneView);
                         menuLoadMap.setText("Toggle Web Scene");
                         localMap = true;
                     }
@@ -544,7 +545,7 @@ public class DashboardController {
 
     }
 
-    private void loadMMSP(File mmspFile, SceneView sceneView) {
+    private void loadMSPK(File mmspFile, SceneView sceneView) {
         // load a mobile scene package
         final String mspkPath = mmspFile.getAbsolutePath();
         MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
@@ -557,6 +558,8 @@ public class DashboardController {
                 sceneView.setArcGISScene(mobileScenePackage.getScenes().get(0));
 
                 initalizeScene();
+                // Don't zoom if we loaded a mspk.
+                zoomedToFirst = true;
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load the mobile scene package");
                 alert.show();
@@ -905,8 +908,9 @@ public class DashboardController {
 
             log("Added " + name);
 
-            if(droneList.size() == 1) {
+            if(droneList.size() == 1 && !zoomedToFirst) {
                 centerDrone(drone);
+                zoomedToFirst = true;
             }
         }
     }
