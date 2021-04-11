@@ -546,7 +546,7 @@ public class DashboardController {
 
     private void loadMMSP(File mmspFile, SceneView sceneView) {
         // load a mobile scene package
-        final String mspkPath = new File("map.mspk").getAbsolutePath();
+        final String mspkPath = mmspFile.getAbsolutePath();
         MobileScenePackage mobileScenePackage = new MobileScenePackage(mspkPath);
 
         mobileScenePackage.loadAsync();
