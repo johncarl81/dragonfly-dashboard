@@ -1,6 +1,5 @@
 package edu.unm.dragonfly;
 
-import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.application.Application;
@@ -9,15 +8,29 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class DashboardApplication extends Application {
 
     private static DashboardController controller;
 
+    private String getParameter(List<String> keys) {
+        for(String key : keys) {
+            if(getParameters().getNamed().containsKey(key)) {
+                return getParameters().getNamed().get(key);
+            }
+        }
+        return null;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
 
-        final Injector injector = Guice.createInjector(new DashboardModule(stage));
+        String map = getParameter(Arrays.asList("m", "map"));
+
+        final Injector injector = Guice.createInjector(new DashboardModule(stage, map));
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
         loader.setControllerFactory(injector::getInstance);

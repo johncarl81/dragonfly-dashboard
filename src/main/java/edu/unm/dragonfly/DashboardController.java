@@ -65,7 +65,9 @@ import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
 import ros.msgs.std_msgs.Time;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -163,6 +165,10 @@ public class DashboardController {
     private RosBridge bridge;
     @Inject
     private Stage stage;
+    @Inject
+    @Named(DashboardModule.MAP_OVERRIDE)
+    @Nullable
+    private String mapOverride;
 
     private final ObservableList<Drone> droneList = FXCollections.observableArrayList();
     private final ObservableList<String> logList = FXCollections.observableArrayList();
@@ -223,7 +229,13 @@ public class DashboardController {
         sceneView = new SceneView();
         mapPlaceholder.getChildren().add(sceneView);
 
-        loadWebMap(sceneView);
+        if(mapOverride != null) {
+            loadLocalMap(sceneView, new File(mapOverride));
+        } else {
+            loadWebMap(sceneView);
+        }
+
+
 
         menuLoadMap.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -233,10 +245,7 @@ public class DashboardController {
                     File openFile = fileChooser.showOpenDialog(stage);
 
                     if(openFile != null) {
-                        sceneView.getGraphicsOverlays().clear();
-                        loadMSPK(openFile, sceneView);
-                        menuLoadMap.setText("Toggle Web Scene");
-                        localMap = true;
+                        loadLocalMap(sceneView, openFile);
                     }
                 } else {
                     sceneView.getGraphicsOverlays().clear();
@@ -543,6 +552,13 @@ public class DashboardController {
 
         initalizeScene();
 
+    }
+
+    private void loadLocalMap(SceneView sceneView, File mapFile) {
+        sceneView.getGraphicsOverlays().clear();
+        loadMSPK(mapFile, sceneView);
+        menuLoadMap.setText("Toggle Web Scene");
+        localMap = true;
     }
 
     private void loadMSPK(File mmspFile, SceneView sceneView) {
