@@ -1,0 +1,106 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "1"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "2"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly3",
+    "waypoint" : "3"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "id" : "a38ca454-1b98-4134-bf7b-3c4d185ead3f"
+  }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly2" ],
+    "duration" : 10.0
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly1",
+    "leader" : "dragonfly2",
+    "x" : -6.0,
+    "y" : -6.0
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly3",
+    "leader" : "dragonfly2",
+    "x" : 6.0,
+    "y" : -6.0
+  }, {
+    "@type" : "Gradient",
+    "target" : "dragonfly2",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ]
+  } ],
+  "waypoints" : {
+    "1" : {
+      "waypoint" : {
+        "longitude" : -106.55723571777344,
+        "latitude" : 35.13911819458008,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "2" : {
+      "waypoint" : {
+        "longitude" : -106.55708312988281,
+        "latitude" : 35.139129638671875,
+        "altitude" : 12.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "3" : {
+      "waypoint" : {
+        "longitude" : -106.55693054199219,
+        "latitude" : 35.13911056518555,
+        "altitude" : 14.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "target" : {
+      "waypoint" : {
+        "longitude" : -106.55735778808594,
+        "latitude" : 35.13960266113281,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -106.55778530575252,
+      "latitude" : 35.13880388658867,
+      "altitude" : 1640.5923995729536
+    }, {
+      "longitude" : -106.55697008170903,
+      "latitude" : 35.13866576040303,
+      "altitude" : 1641.7677840609103
+    }, {
+      "longitude" : -106.55529870830078,
+      "latitude" : 35.138681520353344,
+      "altitude" : 1644.607669699937
+    }, {
+      "longitude" : -106.55531604299308,
+      "latitude" : 35.139823800428026,
+      "altitude" : 1646.9361137496307
+    }, {
+      "longitude" : -106.55752994200135,
+      "latitude" : 35.14007641194158,
+      "altitude" : 1642.9697534181178
+    }, {
+      "longitude" : -106.55785471803347,
+      "latitude" : 35.13986673081542,
+      "altitude" : 1641.8284347215667
+    } ]
+  }
+}
