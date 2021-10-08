@@ -1,0 +1,289 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly3",
+    "waypoint" : "df3"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "id" : "0a1a672f-a160-430a-b912-6b98baf7aab3"
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly1",
+    "leader" : "dragonfly2",
+    "x" : -6.0,
+    "y" : -6.0
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly3",
+    "leader" : "dragonfly2",
+    "x" : 6.0,
+    "y" : -6.0
+  }, {
+       "@type" : "Lawnmower",
+       "boundaryName" : "lawnmower 1",
+       "drone" : "dragonfly2",
+       "stepLength" : 10.0,
+       "altitude" : 50.0,
+       "stacks" : 1,
+       "walkBoundary" : false,
+       "walk" : 2,
+       "waitTime" : 0.0,
+       "distanceThreshold" : 1.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "6"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "7"
+  }, {
+    "@type" : "Lawnmower",
+    "boundaryName" : "lawnmower 2",
+    "drone" : "dragonfly2",
+    "stepLength" : 10.0,
+    "altitude" : 50.0,
+    "stacks" : 1,
+    "walkBoundary" : false,
+    "walk" : 2,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "8"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "7"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly2" ]
+  } ],
+  "waypoints" : {
+    "df1" : {
+      "waypoint" : {
+        "longitude" : -106.65656280517578,
+        "latitude" : 35.82521057128906,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "home" : {
+      "waypoint" : {
+        "longitude" : -106.65618896484375,
+        "latitude" : 35.825538635253906,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df3" : {
+      "waypoint" : {
+        "longitude" : -106.65640258789062,
+        "latitude" : 35.82522201538086,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "1" : {
+      "waypoint" : {
+        "longitude" : -106.65771484375,
+        "latitude" : 35.824764251708984,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df2" : {
+      "waypoint" : {
+        "longitude" : -106.65644073486328,
+        "latitude" : 35.82535171508789,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "2" : {
+      "waypoint" : {
+        "longitude" : -106.65695190429688,
+        "latitude" : 35.82485580444336,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "rocket_top" : {
+      "waypoint" : {
+        "longitude" : -106.65536499023438,
+        "latitude" : 35.82590103149414,
+        "altitude" : 100.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "3" : {
+      "waypoint" : {
+        "longitude" : -106.65625762939453,
+        "latitude" : 35.8255729675293,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "4" : {
+      "waypoint" : {
+        "longitude" : -106.65552520751953,
+        "latitude" : 35.82585906982422,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "5" : {
+      "waypoint" : {
+        "longitude" : -106.65494537353516,
+        "latitude" : 35.82601547241211,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "6" : {
+      "waypoint" : {
+        "longitude" : -106.65425872802734,
+        "latitude" : 35.826114654541016,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "7" : {
+      "waypoint" : {
+        "longitude" : -106.65412139892578,
+        "latitude" : 35.825626373291016,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "8" : {
+      "waypoint" : {
+        "longitude" : -106.65385437011719,
+        "latitude" : 35.825706481933594,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "9" : {
+      "waypoint" : {
+        "longitude" : -106.65401458740234,
+        "latitude" : 35.82616424560547,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "rocket_bottom" : {
+      "waypoint" : {
+        "longitude" : -106.65535736083984,
+        "latitude" : 35.82583999633789,
+        "altitude" : 20.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "10" : {
+      "waypoint" : {
+        "longitude" : -106.65290069580078,
+        "latitude" : 35.82603073120117,
+        "altitude" : 50.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -106.6565322175906,
+      "latitude" : 35.82572753071294,
+      "altitude" : 2043.4777931887656
+    }, {
+      "longitude" : -106.65813834005111,
+      "latitude" : 35.82492813956912,
+      "altitude" : 2036.5122112333775
+    }, {
+      "longitude" : -106.65767730909165,
+      "latitude" : 35.82408637148287,
+      "altitude" : 2031.7524480735883
+    }, {
+      "longitude" : -106.65458228807299,
+      "latitude" : 35.82464293567046,
+      "altitude" : 2051.3708878979087
+    }, {
+      "longitude" : -106.65239004945772,
+      "latitude" : 35.82553836215342,
+      "altitude" : 2047.833469725214
+    }, {
+      "longitude" : -106.65249949741357,
+      "latitude" : 35.826389788194135,
+      "altitude" : 2051.2961372733116
+    }, {
+      "longitude" : -106.65432323424194,
+      "latitude" : 35.82651963244185,
+      "altitude" : 2053.6407800931484
+    }, {
+      "longitude" : -106.6552774909958,
+      "latitude" : 35.826343538899195,
+      "altitude" : 2049.9018807960674
+    } ],
+    "lawnmower 1" : [ {
+      "longitude" : -106.65763613869312,
+      "latitude" : 35.824620044588514,
+      "altitude" : 1928.1592850061134
+    }, {
+      "longitude" : -106.65407580232892,
+      "latitude" : 35.82534080484441,
+      "altitude" : 1944.903950070031
+    }, {
+      "longitude" : -106.65434850797142,
+      "latitude" : 35.82637488728157,
+      "altitude" : 1941.3289843695238
+    }, {
+      "longitude" : -106.6546938364043,
+      "latitude" : 35.82638417782897,
+      "altitude" : 1946.5088124834
+    }, {
+      "longitude" : -106.65527186017671,
+      "latitude" : 35.826250194912475,
+      "altitude" : 1943.150628064759
+    }, {
+      "longitude" : -106.65783920031366,
+      "latitude" : 35.82499966614675,
+      "altitude" : 1936.1887718327343
+    } ],
+    "lawnmower 2" : [ {
+      "longitude" : -106.65386343810088,
+      "latitude" : 35.825386435275696,
+      "altitude" : 1941.8722090162337
+    }, {
+      "longitude" : -106.65276798711447,
+      "latitude" : 35.82560186702123,
+      "altitude" : 1949.6082176025957
+    }, {
+      "longitude" : -106.65285235126709,
+      "latitude" : 35.82628555894396,
+      "altitude" : 1943.0421005664393
+    }, {
+      "longitude" : -106.65418686267955,
+      "latitude" : 35.8263814691937,
+      "altitude" : 1943.0235424302518
+    } ]
+  }
+}
