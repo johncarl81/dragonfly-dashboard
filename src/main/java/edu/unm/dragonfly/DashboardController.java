@@ -643,8 +643,8 @@ public class DashboardController {
         for(int i = 0; i < droneList.size(); i++) {
             Drone drone = droneList.get(i);
             drone.setup(SetupRequest.create(Time.now(),
-                    maxAltitudeInteger,
                     1000 + (i * rtlFactor * 100),
+                    maxAltitudeInteger,
                     boundary));
         }
     }
