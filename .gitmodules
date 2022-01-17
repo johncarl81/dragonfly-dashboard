@@ -1,3 +1,6 @@
 [submodule "dragonfly"]
 	path = dragonfly
 	url = git@github.com:johncarl81/dragonfly.git
+[submodule "java_rosbridge"]
+	path = java_rosbridge
+	url = ../java_rosbridge

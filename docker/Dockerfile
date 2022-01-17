@@ -27,6 +27,9 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # Install ROS Bridge
 RUN apt-get -qq install ros-melodic-rosbridge-server
 
+# Install Maven
+RUN apt-get -qq install maven
+
 # Clear apt cache to save on space
 RUN rm -rf /var/lib/apt/lists/*
 
@@ -45,13 +48,6 @@ COPY ./docker/arcgis-java-resources-$ARCGIS_VERSION.zip /tmp/
 RUN unzip /tmp/arcgis-java-resources-$ARCGIS_VERSION.zip -d /root/.arcgis/$ARCGIS_VERSION/ \
 	&& rm /tmp/arcgis-java-resources-$ARCGIS_VERSION.zip
 
-# Install java_rosbridge snapshot
-ENV JAVA_ROSBRIDGE_DIR=edu/brown/cs/burlap/java_rosbridge
-ENV JAVA_ROSBRIDGE_VERSION=2.0.3-SNAPSHOT
-RUN mkdir -p /root/.m2/repository/$JAVA_ROSBRIDGE_DIR/$JAVA_ROSBRIDGE_VERSION/
-COPY ./docker/*.jar /root/.m2/repository/$JAVA_ROSBRIDGE_DIR/$JAVA_ROSBRIDGE_VERSION/
-COPY ./docker/*.pom /root/.m2/repository/$JAVA_ROSBRIDGE_DIR/$JAVA_ROSBRIDGE_VERSION/
-
 # Setup Gradle - hoping this aids performance
 RUN mkdir -p $WORKSPACE/gradle/wrapper
 ADD build.gradle $WORKSPACE
@@ -59,8 +55,11 @@ ADD gradlew $WORKSPACE
 ADD gradle/wrapper/* $WORKSPACE/gradle/wrapper/
 
 RUN cd $WORKSPACE && ./gradlew clean
-
 COPY . $WORKSPACE
+# Build and install java_rosbridge submodule
+RUN cd $WORKSPACE/java_rosbridge && \
+    mvn clean install
+
 # Install dragonfly infrastructure
 RUN source /opt/ros/melodic/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
