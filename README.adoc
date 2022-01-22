@@ -9,11 +9,7 @@ A base station to control a swarm of UAVs running the Dragonfly Controller.
 
 The following files are required by Docker to build the project:
 
-1. ArcGIS Runtime version 100.10.0 (https://developers.arcgis.com/downloads/#java[download])
-   Docker is expecting the files:
-   * `arcgis-java-jnilibs-100.10.0.zip`
-   * `arcgis-java-resources-100.10.0.zip`
-2. Java JDK version 11.0.13 (https://www.oracle.com/java/technologies/downloads/#java11[download])
+1. Java JDK version 11.0.13 (https://www.oracle.com/java/technologies/downloads/#java11[download])
    Docker is expecting the file:
    * `jdk-11.0.13_linux-x64_bin.tar.gz`
 
