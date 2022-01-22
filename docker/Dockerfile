@@ -33,20 +33,7 @@ RUN apt-get -qq install maven
 # Clear apt cache to save on space
 RUN rm -rf /var/lib/apt/lists/*
 
-# Setup arcgis workspace
-ENV ARCGIS_VERSION=100.10.0
-RUN mkdir -p /root/.arcgis/$ARCGIS_VERSION/
-COPY ./docker/arcgis-java-jnilibs-$ARCGIS_VERSION.zip /tmp/
-
 RUN echo "Xft.dpi: 192" > ~/.Xdefaults
-
-RUN unzip /tmp/arcgis-java-jnilibs-$ARCGIS_VERSION.zip -d /root/.arcgis/$ARCGIS_VERSION/ \
-    && rm /tmp/arcgis-java-jnilibs-$ARCGIS_VERSION.zip
-
-COPY ./docker/arcgis-java-resources-$ARCGIS_VERSION.zip /tmp/
-
-RUN unzip /tmp/arcgis-java-resources-$ARCGIS_VERSION.zip -d /root/.arcgis/$ARCGIS_VERSION/ \
-	&& rm /tmp/arcgis-java-resources-$ARCGIS_VERSION.zip
 
 # Setup Gradle - hoping this aids performance
 RUN mkdir -p $WORKSPACE/gradle/wrapper
@@ -56,6 +43,7 @@ ADD gradle/wrapper/* $WORKSPACE/gradle/wrapper/
 
 RUN cd $WORKSPACE && ./gradlew clean
 COPY . $WORKSPACE
+
 # Build and install java_rosbridge submodule
 RUN cd $WORKSPACE/java_rosbridge && \
     mvn clean install
