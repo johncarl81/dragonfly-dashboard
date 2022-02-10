@@ -63,7 +63,6 @@ import javafx.stage.Stage;
 import ros.RosBridge;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
-import ros.msgs.std_msgs.Time;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
