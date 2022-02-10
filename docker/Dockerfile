@@ -12,7 +12,7 @@ ENV MAVEN_VERSION 3.8.5
 # Install dependencies
 RUN apt-get -qq update && \
     apt-get -qq upgrade && \
-    apt-get -qq install apt-utils build-essential vim software-properties-common
+    apt-get -qq install apt-utils build-essential vim python-catkin-tools software-properties-common
 
 # Setup Java JDK pacakge repository
 RUN add-apt-repository ppa:linuxuprising/java && apt-get -qq update && \
@@ -63,7 +63,9 @@ RUN cd $WORKSPACE/java_rosbridge && \
 # Install dragonfly infrastructure
 RUN source /opt/ros/rolling/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
-	colcon build
+	rm -rf src/dragonfly_dashboard src/dragonfly_messages_java build devel && \
+	catkin_make && \
+	catkin_make install
 
 # Install dragonfly desktop
 
