@@ -1,4 +1,4 @@
-FROM ros:foxy
+FROM ros:rolling-ros-base
 
 ENV NVIDIA_VISIBLE_DEVICES \
     ${NVIDIA_VISIBLE_DEVICES:-all}
@@ -16,15 +16,24 @@ RUN apt-get -qq update && \
 
 # Setup Java JDK pacakge repository
 RUN add-apt-repository ppa:linuxuprising/java && apt-get -qq update && \
-	echo "oracle-java17-installer-local shared/accepted-oracle-license-v1-3 select true" | debconf-set-selections
+	echo "oracle-java17-installer-local shared/accepted-oracle-license-v1-2 select true" | debconf-set-selections
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+RUN echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
 
-RUN apt-get -qq install ros-foxy-mavros ros-foxy-mavros-extras oracle-java17-installer oracle-java17-set-default openjfx unzip ros-foxy-rosbridge-server
+RUN echo debconf shared/accepted-oracle-license-v1-2 select true | sudo debconf-set-selections
+RUN echo debconf shared/accepted-oracle-license-v1-2 seen true | sudo debconf-set-selections
+
+RUN echo debconf shared/accepted-oracle-license-v1-3 select true | sudo debconf-set-selections
+RUN echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-set-selections
+
+
+# Install Mavros, Java & ROS Bridge
+RUN apt-get -qq -y install ros-rolling-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-rolling-rosbridge-server 
 
 # Install maven
 RUN wget https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp
 RUN tar xf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /opt
 RUN ln -s /opt/apache-maven-$MAVEN_VERSION /opt/maven
-RUN apt-get -qq install ros-foxy-mavros oracle-java11-installer-local openjfx unzip
 
 RUN export JAVA_HOME
 ENV M2_HOME /opt/maven
@@ -32,9 +41,6 @@ ENV MAVEN_HOME /opt/maven
 ENV PATH "$M2_HOME/bin:$PATH"
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
-# Install ROS Bridge
-RUN apt-get -qq install ros-foxy-rosbridge-server
 
 # Clear apt cache to save on space
 RUN rm -rf /var/lib/apt/lists/*
@@ -55,7 +61,7 @@ RUN cd $WORKSPACE/java_rosbridge && \
     mvn clean install
 
 # Install dragonfly infrastructure
-RUN source /opt/ros/foxy/setup.bash && \
+RUN source /opt/ros/rolling/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
 	colcon build
 
