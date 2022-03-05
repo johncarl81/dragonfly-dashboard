@@ -54,21 +54,21 @@ RUN mkdir -p $WORKSPACE/gradle/wrapper
 ADD build.gradle $WORKSPACE
 ADD gradlew $WORKSPACE
 ADD gradle/wrapper/* $WORKSPACE/gradle/wrapper/
-
 RUN cd $WORKSPACE && ./gradlew clean
-COPY . $WORKSPACE
 
 # Build and install java_rosbridge submodule
+COPY java_rosbridge $WORKSPACE/java_rosbridge
 RUN cd $WORKSPACE/java_rosbridge && \
     mvn clean install
 
 # Install dragonfly infrastructure
+COPY dragonfly $WORKSPACE/dragonfly
 RUN source /opt/ros/galactic/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
 	colcon build
 
 # Install dragonfly desktop
-
+COPY . $WORKSPACE
 RUN cd $WORKSPACE && \
 	./gradlew build --parallel
 
