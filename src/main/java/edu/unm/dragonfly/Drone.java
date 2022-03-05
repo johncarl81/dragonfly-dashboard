@@ -152,7 +152,6 @@ public class Drone {
 
     public void navigate(List<Point> waypoints, float distanceThreshold) {
         NavigationRequest request = NavigationRequest.builder()
-                .commandTime(Time.now())
                 .waypoints(waypoints.stream().map(mapToLatLon()).collect(Collectors.toList()))
                 .waitTime(0)
                 .distanceThreshold(distanceThreshold)

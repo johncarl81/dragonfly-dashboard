@@ -10,8 +10,6 @@ import ros.msgs.std_msgs.Time;
  */
 @AutoValue
 public abstract class SetupRequest {
-    @JsonProperty("command_time")
-    public abstract Time commandTime();
     @JsonProperty("rtl_altitude")
     public abstract int rtlAltitude();
     @JsonProperty("max_altitude")
@@ -20,10 +18,9 @@ public abstract class SetupRequest {
     public abstract Boundary rtlBoundary();
 
     @JsonCreator
-    public static SetupRequest create(@JsonProperty("command_time") Time commandTime,
-                                      @JsonProperty("rtl_altitude") int rtlAltitude,
+    public static SetupRequest create(@JsonProperty("rtl_altitude") int rtlAltitude,
                                       @JsonProperty("max_altitude") int maxAltitude,
                                       @JsonProperty("rtl_boundary") Boundary rtlBoundary) {
-        return new AutoValue_SetupRequest(commandTime, rtlAltitude, maxAltitude, rtlBoundary);
+        return new AutoValue_SetupRequest(rtlAltitude, maxAltitude, rtlBoundary);
     }
 }

@@ -74,7 +74,6 @@ public class JacksonSerializationTest {
         testMarshalling(MavrosState.class, MavrosState.create(TEST_HEADER, true, false, true, false, "mode", MavrosState.SystemStatus.MAV_STATE_CALIBRATING));
 
         testMarshalling(NavigationRequest.class, NavigationRequest.builder()
-                .commandTime(Time.create(9, 10))
                 .distanceThreshold(1)
                 .waitTime(2)
                 .waypoints(TEST_LAT_LON_LIST)
