@@ -21,10 +21,10 @@ public abstract class NavSatFix {
     @JsonProperty
     public abstract double altitude();
     @SuppressWarnings("mutable")
-    @JsonProperty
-    public abstract double[] position_covariance();
-    @JsonProperty
-    public abstract int position_covariance_type();
+    @JsonProperty("position_covariance")
+    public abstract double[] positionCovariance();
+    @JsonProperty("position_covariance_type")
+    public abstract int positionCovarianceType();
 
     @JsonCreator
     public static NavSatFix create(@JsonProperty("header") Header header,
@@ -32,8 +32,8 @@ public abstract class NavSatFix {
                                    @JsonProperty("latitude") double latitude,
                                    @JsonProperty("longitude") double longitude,
                                    @JsonProperty("altitude") double altitude,
-                                   @JsonProperty("position_covariance") double[] position_covariance,
-                                   @JsonProperty("position_covariance_type") int position_covariance_type) {
-        return new AutoValue_NavSatFix(header, status, latitude, longitude, altitude, position_covariance, position_covariance_type);
+                                   @JsonProperty("position_covariance") double[] positionCovariance,
+                                   @JsonProperty("position_covariance_type") int positionCovarianceType) {
+        return new AutoValue_NavSatFix(header, status, latitude, longitude, altitude, positionCovariance, positionCovarianceType);
     }
 }

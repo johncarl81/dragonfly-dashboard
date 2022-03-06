@@ -51,7 +51,7 @@ public class MissionStepSemaphore implements MissionStep {
         ObjectNode semaphore = mapper.createObjectNode();
 
         semaphore.put("msg_type", MissionStepType.SEMAPHORE.getMission_type());
-        ObjectNode data = semaphore.putObject("semaphore");
+        ObjectNode data = semaphore.putObject("semaphore_step");
 
         ArrayNode dronesArray = data.putArray("drones");
         drones.forEach(dronesArray::add);

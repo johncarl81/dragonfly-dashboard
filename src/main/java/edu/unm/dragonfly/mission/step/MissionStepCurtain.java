@@ -21,11 +21,11 @@ public class MissionStepCurtain implements MissionStep {
 
     @JsonCreator
     public MissionStepCurtain(@JsonProperty("drone") String drone,
-                              @JsonProperty("waypointStart") String waypointStart,
-                              @JsonProperty("waypointEnd") String waypointEnd,
+                              @JsonProperty("waypoint_start") String waypointStart,
+                              @JsonProperty("waypoint_end") String waypointEnd,
                               @JsonProperty("altitude") float altitude,
                               @JsonProperty("stacks") int stacks,
-                              @JsonProperty("distanceThreshold") float distanceThreshold) {
+                              @JsonProperty("distance_threshold") float distanceThreshold) {
         this.drone = drone;
         this.waypointStart = waypointStart;
         this.waypointEnd = waypointEnd;
@@ -75,13 +75,13 @@ public class MissionStepCurtain implements MissionStep {
         ObjectNode curtain = mapper.createObjectNode();
 
         curtain.put("msg_type", MissionStepType.CURTAIN.getMission_type());
-        ObjectNode data = curtain.putObject("curtain");
+        ObjectNode data = curtain.putObject("curtain_step");
 
         data.put("start_waypoint", waypointStart);
         data.put("end_waypoint", waypointEnd);
         data.put("stacks", stacks);
         data.put("altitude", altitude);
-        data.put("distanceThreshold", distanceThreshold);
+        data.put("distance_threshold", distanceThreshold);
 
         return curtain;
     }

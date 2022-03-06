@@ -63,7 +63,6 @@ import javafx.stage.Stage;
 import ros.RosBridge;
 import ros.SubscriptionRequestMsg;
 import ros.msgs.std_msgs.PrimitiveMsg;
-import ros.msgs.std_msgs.Time;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -673,7 +672,7 @@ public class DashboardController {
                     ObjectNode pointNode = pointNodes.addObject();
                     pointNode.put("longitude", waypoint.getLongitude());
                     pointNode.put("latitude", waypoint.getLatitude());
-                    pointNode.put("relativeAltitude", waypoint.getAltitude());
+                    pointNode.put("relative_altitude", waypoint.getAltitude());
                 }
                 jsonBoundaries.add(boundaryNode);
             }

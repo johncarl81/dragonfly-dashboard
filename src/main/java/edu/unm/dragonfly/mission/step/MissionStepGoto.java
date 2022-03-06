@@ -36,7 +36,7 @@ public class MissionStepGoto implements MissionStep {
         ObjectNode gotoWaypoint = mapper.createObjectNode();
 
         gotoWaypoint.put("msg_type", MissionStepType.GOTO_WAYPOINT.getMission_type());
-        ObjectNode data = gotoWaypoint.putObject("goto");
+        ObjectNode data = gotoWaypoint.putObject("goto_step");
 
         data.put("waypoint", waypoint);
 

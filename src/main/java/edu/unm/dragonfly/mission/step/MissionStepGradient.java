@@ -46,7 +46,7 @@ public class MissionStepGradient implements MissionStep {
         ObjectNode semaphore = mapper.createObjectNode();
 
         semaphore.put("msg_type", MissionStepType.GRADIENT.getMission_type());
-        ObjectNode data = semaphore.putObject("gradient");
+        ObjectNode data = semaphore.putObject("gradient_step");
 
         ArrayNode dronesArray = data.putArray("drones");
         drones.forEach(dronesArray::add);
