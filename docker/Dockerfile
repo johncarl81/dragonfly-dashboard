@@ -10,24 +10,17 @@ ENV WORKSPACE /workspace
 ENV MAVEN_VERSION 3.8.5
 
 # Install dependencies
-RUN apt-get -qq update && \
-    apt-get -qq upgrade
+RUN apt-get -qq update
+RUN apt-get -qq upgrade
 RUN apt-get --fix-missing update && sudo apt-get install -f
 RUN apt-get -qq install apt-utils build-essential vim
 RUN apt-get -qq install software-properties-common
 
-# Setup Java JDK pacakge repository
-RUN add-apt-repository ppa:linuxuprising/java && apt-get -qq update && \
-	echo "oracle-java17-installer-local shared/accepted-oracle-license-v1-2 select true" | debconf-set-selections
-RUN echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-RUN echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-
-RUN echo debconf shared/accepted-oracle-license-v1-2 select true | sudo debconf-set-selections
-RUN echo debconf shared/accepted-oracle-license-v1-2 seen true | sudo debconf-set-selections
+# Setup Java JDK package repository
+RUN add-apt-repository ppa:linuxuprising/java
 
 RUN echo debconf shared/accepted-oracle-license-v1-3 select true | sudo debconf-set-selections
 RUN echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-set-selections
-
 
 # Install Mavros, Java & ROS Bridge
 RUN apt-get -qq -y install ros-galactic-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-galactic-rosbridge-server libcanberra-gtk-module
@@ -54,7 +47,8 @@ RUN mkdir -p $WORKSPACE/gradle/wrapper
 ADD build.gradle $WORKSPACE
 ADD gradlew $WORKSPACE
 ADD gradle/wrapper/* $WORKSPACE/gradle/wrapper/
-RUN cd $WORKSPACE && ./gradlew clean
+RUN cd $WORKSPACE && \
+	./gradlew clean
 
 # Build and install java_rosbridge submodule
 COPY java_rosbridge $WORKSPACE/java_rosbridge
