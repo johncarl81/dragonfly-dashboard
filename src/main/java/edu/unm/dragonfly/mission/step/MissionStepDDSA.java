@@ -31,14 +31,14 @@ public class MissionStepDDSA implements MissionStep{
     public MissionStepDDSA(@JsonProperty("drone") List<String> drones,
                            @JsonProperty("waypoint") String waypoint,
                            @JsonProperty("radius") float radius,
-                           @JsonProperty("stepLength") float stepLength,
+                           @JsonProperty("step_length") float stepLength,
                            @JsonProperty("altitude") float altitude,
                            @JsonProperty("loops") int loops,
                            @JsonProperty("stacks") int stacks,
                            @JsonProperty("walk") Walk walk,
-                           @JsonProperty("waitTime") float waitTime,
-                           @JsonProperty("distanceThreshold") float distanceThreshold,
-                           @JsonProperty("uniqueAltitudes") boolean uniqueAltitudes) {
+                           @JsonProperty("wait_time") float waitTime,
+                           @JsonProperty("distance_threshold") float distanceThreshold,
+                           @JsonProperty("unique_altitudes") boolean uniqueAltitudes) {
         this.drones = drones;
         this.waypoint = waypoint;
         this.radius = radius;
@@ -112,10 +112,10 @@ public class MissionStepDDSA implements MissionStep{
 
         ddsa.put("msg_type", MissionStepType.DDSA.getMission_type());
 
-        ObjectNode data = ddsa.putObject("ddsa");
+        ObjectNode data = ddsa.putObject("ddsa_step");
         data.put("waypoint", waypoint);
         data.put("radius", radius);
-        data.put("stepLength", stepLength);
+        data.put("step_length", stepLength);
         data.put("walk", walk.id);
         data.put("swarm_size", drones.size());
         data.put("swarm_index", drones.indexOf(droneName));
@@ -126,8 +126,8 @@ public class MissionStepDDSA implements MissionStep{
         } else {
             data.put("altitude", altitude);
         }
-        data.put("waitTime", waitTime);
-        data.put("distanceThreshold", distanceThreshold);
+        data.put("wait_time", waitTime);
+        data.put("distance_threshold", distanceThreshold);
 
 
         return ddsa;

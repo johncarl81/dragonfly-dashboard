@@ -15,7 +15,7 @@ public class NavigateWaypoint {
     private final float distanceThreshold;
 
     @JsonCreator
-    public NavigateWaypoint(@JsonProperty("waypoint") Waypoint point, @JsonProperty("distanceThreshold") float distanceThreshold) {
+    public NavigateWaypoint(@JsonProperty("waypoint") Waypoint point, @JsonProperty("distance_threshold") float distanceThreshold) {
         this.point = point;
         this.distanceThreshold = distanceThreshold;
     }
@@ -54,10 +54,10 @@ public class NavigateWaypoint {
     public ObjectNode toROSJson(ObjectMapper mapper) {
         final ObjectNode objectNode = mapper.createObjectNode();
 
-        objectNode.put("distanceThreshold", distanceThreshold);
+        objectNode.put("distance_threshold", distanceThreshold);
         objectNode.put("longitude", point.getLongitude());
         objectNode.put("latitude", point.getLatitude());
-        objectNode.put("relativeAltitude", point.getAltitude());
+        objectNode.put("relative_altitude", point.getAltitude());
 
         return objectNode;
     }

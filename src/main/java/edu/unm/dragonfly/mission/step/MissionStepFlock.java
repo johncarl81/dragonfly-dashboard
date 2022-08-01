@@ -56,7 +56,7 @@ public class MissionStepFlock implements MissionStep {
         ObjectNode flock = mapper.createObjectNode();
 
         flock.put("msg_type", MissionStepType.FLOCK.getMission_type());
-        ObjectNode data = flock.putObject("flock");
+        ObjectNode data = flock.putObject("flock_step");
 
         data.put("x", x);
         data.put("y", y);

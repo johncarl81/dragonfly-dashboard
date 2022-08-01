@@ -10,15 +10,13 @@ import ros.msgs.std_msgs.Time;
  */
 @AutoValue
 public abstract class SimpleRequest {
-    @JsonProperty("command_time")
-    public abstract Time commandTime();
 
     @JsonCreator
-    public static SimpleRequest create(@JsonProperty("command_time") Time startTime) {
-        return new AutoValue_SimpleRequest(startTime);
+    public static SimpleRequest create() {
+        return new AutoValue_SimpleRequest();
     }
 
     public static SimpleRequest now() {
-        return create(Time.now());
+        return create();
     }
 }

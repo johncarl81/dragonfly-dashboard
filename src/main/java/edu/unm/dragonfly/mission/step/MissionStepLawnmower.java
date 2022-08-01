@@ -25,13 +25,13 @@ public class MissionStepLawnmower implements MissionStep {
     @JsonCreator
     public MissionStepLawnmower(@JsonProperty("boundaryName") String boundaryName,
                                 @JsonProperty("drone") String drone,
-                                @JsonProperty("stepLength") double stepLength,
+                                @JsonProperty("step_length") double stepLength,
                                 @JsonProperty("altitude") double altitude,
                                 @JsonProperty("stacks") int stacks,
-                                @JsonProperty("walkBoundary") boolean walkBoundary,
+                                @JsonProperty("walk_boundary") boolean walkBoundary,
                                 @JsonProperty("walk") int walk,
-                                @JsonProperty("waitTime") double waitTime,
-                                @JsonProperty("distanceThreshold") double distanceThreshold) {
+                                @JsonProperty("wait_time") double waitTime,
+                                @JsonProperty("distance_threshold") double distanceThreshold) {
         this.boundaryName = boundaryName;
         this.drone = drone;
         this.stepLength = stepLength;
@@ -94,16 +94,16 @@ public class MissionStepLawnmower implements MissionStep {
         ObjectNode lawnmower = mapper.createObjectNode();
 
         lawnmower.put("msg_type", MissionStepType.LAWNMOWER.getMission_type());
-        ObjectNode data = lawnmower.putObject("lawnmower");
+        ObjectNode data = lawnmower.putObject("lawnmower_step");
 
         data.put("boundary", boundaryName);
-        data.put("stepLength", stepLength);
-        data.put("walkBoundary", walkBoundary);
+        data.put("step_length", stepLength);
+        data.put("walk_boundary", walkBoundary);
         data.put("walk", walk);
         data.put("stacks", stacks);
         data.put("altitude", altitude);
-        data.put("waitTime", waitTime);
-        data.put("distanceThreshold", distanceThreshold);
+        data.put("wait_time", waitTime);
+        data.put("distance_threshold", distanceThreshold);
 
         return lawnmower;
     }

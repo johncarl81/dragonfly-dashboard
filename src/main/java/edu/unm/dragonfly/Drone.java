@@ -4,6 +4,7 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.unm.dragonfly.msgs.DDSARequest;
 import edu.unm.dragonfly.msgs.DDSAWaypointsRequest;
+import edu.unm.dragonfly.msgs.DDSAWaypointsResponse;
 import edu.unm.dragonfly.msgs.LatLon;
 import edu.unm.dragonfly.msgs.LawnmowerRequest;
 import edu.unm.dragonfly.msgs.LawnmowerWaypointsRequest;
@@ -24,7 +25,6 @@ import io.reactivex.subjects.Subject;
 import ros.RosBridge;
 import ros.RosListenDelegate;
 import ros.msgs.std_msgs.PrimitiveMsg;
-import ros.msgs.std_msgs.Time;
 
 import java.util.List;
 import java.util.function.Function;
@@ -67,7 +67,6 @@ public class Drone {
 
     public void lawnmower(List<Point> boundaryPoints, float stepLength, float altitude, int stacks, boolean walkBoundary, int walk, float waitTime, float distanceThreshold) {
         LawnmowerRequest request = LawnmowerRequest.builder()
-                .commandTime(Time.now())
                 .boundary(boundaryPoints.stream().map(mapToLatLon()).collect(Collectors.toList()))
                 .stepLength(stepLength)
                 .walkBoundary(walkBoundary)
@@ -115,7 +114,6 @@ public class Drone {
 
     public void ddsa(float radius, float stepLength, float altitude, int loops, int stacks, int walk, float waitTime, float distanceThreshold) {
         DDSARequest request = DDSARequest.builder()
-                .commandTime(Time.now())
                 .radius(radius)
                 .stepLength(stepLength)
                 .stacks(stacks)
@@ -144,7 +142,7 @@ public class Drone {
         SingleSubject<List<Point>> result = SingleSubject.create();
 
         bridge.call("/" + name + "/build/ddsa", "dragonfly_messages/DDSAWaypoints", request,
-                new JsonRosListenerDelegate<>(LawnmowerWaypointsResponse.class,
+                new JsonRosListenerDelegate<>(DDSAWaypointsResponse.class,
                         value -> result.onSuccess(value.waypoints().stream().map(mapToPoint()).collect(Collectors.toList()))));
 
         return result;
@@ -152,7 +150,6 @@ public class Drone {
 
     public void navigate(List<Point> waypoints, float distanceThreshold) {
         NavigationRequest request = NavigationRequest.builder()
-                .commandTime(Time.now())
                 .waypoints(waypoints.stream().map(mapToLatLon()).collect(Collectors.toList()))
                 .waitTime(0)
                 .distanceThreshold(distanceThreshold)
@@ -253,5 +250,20 @@ public class Drone {
         public double getRelativeAltitude() {
             return relativeAltitude;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Drone drone = (Drone) o;
+
+        return name.equals(drone.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

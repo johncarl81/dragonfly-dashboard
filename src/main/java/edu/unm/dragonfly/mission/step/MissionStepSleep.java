@@ -44,7 +44,7 @@ public class MissionStepSleep implements MissionStep {
         ObjectNode sleep = mapper.createObjectNode();
 
         sleep.put("msg_type", MissionStepType.SLEEP.getMission_type());
-        ObjectNode data = sleep.putObject("sleep");
+        ObjectNode data = sleep.putObject("sleep_step");
 
         data.put("duration", duration);
 

@@ -45,7 +45,7 @@ public class MissionStepTakeoff implements MissionStep {
         ObjectNode takeoff = mapper.createObjectNode();
 
         takeoff.put("msg_type", MissionStepType.TAKEOFF.getMission_type());
-        ObjectNode data = takeoff.putObject("takeoff");
+        ObjectNode data = takeoff.putObject("takeoff_step");
 
         data.put("altitude", altitude);
 

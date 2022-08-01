@@ -1,4 +1,4 @@
-FROM ros:melodic
+FROM ros:galactic-ros-base
 
 ENV NVIDIA_VISIBLE_DEVICES \
     ${NVIDIA_VISIBLE_DEVICES:-all}
@@ -7,18 +7,23 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV WORKSPACE /workspace
-ENV MAVEN_VERSION 3.8.5
+ENV MAVEN_VERSION 3.8.6
 
 # Install dependencies
-RUN apt-get -qq update && \
-    apt-get -qq upgrade && \
-    apt-get -qq install apt-utils build-essential vim python-catkin-tools software-properties-common
+RUN apt-get -qq update
+RUN apt-get -qq upgrade
+RUN apt-get --fix-missing update && sudo apt-get install -f
+RUN apt-get -qq install apt-utils build-essential vim
+RUN apt-get -qq install software-properties-common
 
-# Setup Java JDK pacakge repository
-RUN add-apt-repository ppa:linuxuprising/java && apt-get -qq update && \
-	echo "oracle-java17-installer-local shared/accepted-oracle-license-v1-3 select true" | debconf-set-selections
+# Setup Java JDK package repository
+RUN add-apt-repository ppa:linuxuprising/java
 
-RUN apt-get -qq install ros-melodic-mavros ros-melodic-mavros-extras oracle-java17-installer oracle-java17-set-default openjfx unzip ros-melodic-rosbridge-server
+RUN echo debconf shared/accepted-oracle-license-v1-3 select true | sudo debconf-set-selections
+RUN echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-set-selections
+
+# Install Mavros, Java & ROS Bridge
+RUN apt-get -qq -y install ros-galactic-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-galactic-rosbridge-server libcanberra-gtk-module
 
 # Install maven
 RUN wget https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp
@@ -42,23 +47,22 @@ RUN mkdir -p $WORKSPACE/gradle/wrapper
 ADD build.gradle $WORKSPACE
 ADD gradlew $WORKSPACE
 ADD gradle/wrapper/* $WORKSPACE/gradle/wrapper/
-
-RUN cd $WORKSPACE && ./gradlew clean
-COPY . $WORKSPACE
+RUN cd $WORKSPACE && \
+	./gradlew clean
 
 # Build and install java_rosbridge submodule
+COPY java_rosbridge $WORKSPACE/java_rosbridge
 RUN cd $WORKSPACE/java_rosbridge && \
     mvn clean install
 
 # Install dragonfly infrastructure
-RUN source /opt/ros/melodic/setup.bash && \
+COPY dragonfly $WORKSPACE/dragonfly
+RUN source /opt/ros/galactic/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
-	rm -rf src/dragonfly_dashboard src/dragonfly_messages_java build devel && \
-	catkin_make && \
-	catkin_make install
+	colcon build
 
 # Install dragonfly desktop
-
+COPY . $WORKSPACE
 RUN cd $WORKSPACE && \
 	./gradlew build --parallel
 

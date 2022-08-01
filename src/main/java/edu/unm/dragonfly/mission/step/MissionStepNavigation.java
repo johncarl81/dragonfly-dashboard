@@ -23,8 +23,8 @@ public class MissionStepNavigation implements MissionStep {
     @JsonCreator
     public MissionStepNavigation(@JsonProperty("drone") String drone,
                                  @JsonProperty("waypoints") List<Waypoint> waypoints,
-                                 @JsonProperty("waitTime") double waitTime,
-                                 @JsonProperty("distanceThreshold") double distanceThreshold) {
+                                 @JsonProperty("wait_time") double waitTime,
+                                 @JsonProperty("distance_threshold") double distanceThreshold) {
         this.drone = drone;
         this.waypoints = waypoints;
         this.waitTime = waitTime;
@@ -62,7 +62,7 @@ public class MissionStepNavigation implements MissionStep {
         ObjectNode lawnmower = mapper.createObjectNode();
 
         lawnmower.put("msg_type", MissionStepType.NAVIGATION.getMission_type());
-        ObjectNode data = lawnmower.putObject("navigation");
+        ObjectNode data = lawnmower.putObject("navigation_step");
 
         ArrayNode waypointsArray = data.putArray("waypoints");
 
@@ -70,11 +70,11 @@ public class MissionStepNavigation implements MissionStep {
             ObjectNode jsonNode = waypointsArray.addObject();
             jsonNode.put("longitude", wp.getLongitude());
             jsonNode.put("latitude", wp.getLatitude());
-            jsonNode.put("relativeAltitude", wp.getAltitude());
+            jsonNode.put("relative_altitude", wp.getAltitude());
         }
 
-        data.put("waitTime", waitTime);
-        data.put("distanceThreshold", distanceThreshold);
+        data.put("wait_time", waitTime);
+        data.put("distance_threshold", distanceThreshold);
 
         return lawnmower;
     }
