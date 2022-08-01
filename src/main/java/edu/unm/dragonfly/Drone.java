@@ -251,4 +251,19 @@ public class Drone {
             return relativeAltitude;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Drone drone = (Drone) o;
+
+        return name.equals(drone.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

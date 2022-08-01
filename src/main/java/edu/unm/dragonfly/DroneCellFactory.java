@@ -1,9 +1,6 @@
 package edu.unm.dragonfly;
 
 import edu.unm.dragonfly.msgs.MavrosState;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
@@ -17,7 +14,7 @@ import java.util.Map;
 /**
  * @author John Ericksen
  */
-public class DroneCellFactory implements Callback<ListView<Drone>, ListCell<Drone>> {
+public class DroneCellFactory implements Callback<ListView<DroneStatus>, ListCell<DroneStatus>> {
 
     private enum StatusIcon {
         NONE("images/bullet_black.png"),
@@ -62,43 +59,32 @@ public class DroneCellFactory implements Callback<ListView<Drone>, ListCell<Dron
     }
 
     @Override
-    public ListCell<Drone> call(ListView<Drone> param) {
-        return new ListCell<Drone>() {
+    public ListCell<DroneStatus> call(ListView<DroneStatus> param) {
+        return new ListCell<>() {
             final Tooltip tooltip = new Tooltip();
             final ImageView imageView = new ImageView();
-            CompositeDisposable subscriptions = new CompositeDisposable();
             @Override
-            protected void updateItem(Drone drone, boolean empty) {
+            protected void updateItem(DroneStatus droneStatus, boolean empty) {
 
-                super.updateItem(drone, empty);
+                super.updateItem(droneStatus, empty);
 
-                if (drone == null || empty) {
+                if (droneStatus == null || empty) {
                     setGraphic(null);
                     setText(null);
                     setTooltip(null);
-                    subscriptions.dispose();
-                    subscriptions = new CompositeDisposable();
                 } else {
-                    final String name = drone.getName();
+                    String name = droneStatus.getDrone().getName();
+                    MavrosState.SystemStatus status = droneStatus.getStatus();
+
+                    setText(name + "(" + status.getName() + ")");
 
                     imageView.setFitHeight(16);
                     imageView.setFitWidth(16);
-
+                    imageView.setImage(new Image(StatusIcon.get(status).getIcon()));
                     setGraphic(imageView);
-                    setText(name);
-                    tooltip.setText(drone.toString());
-                    setTooltip(tooltip);
 
-                    subscriptions.add(drone.getStatus()
-                            .observeOn(JavaFxScheduler.platform())
-                            .subscribe(new Consumer<MavrosState.SystemStatus>() {
-                                @Override
-                                public void accept(MavrosState.SystemStatus systemStatus) {
-                                    imageView.setImage(new Image(StatusIcon.get(systemStatus).getIcon()));
-                                    setText(name + "(" + systemStatus.getName() + ")");
-                                    tooltip.setText(systemStatus.getDescription());
-                                }
-                            }));
+                    tooltip.setText(status.getDescription());
+                    setTooltip(tooltip);
                 }
             }
         };

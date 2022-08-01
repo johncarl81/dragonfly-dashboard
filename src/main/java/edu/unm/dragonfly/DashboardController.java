@@ -36,8 +36,11 @@ import edu.unm.dragonfly.msgs.Boundary;
 import edu.unm.dragonfly.msgs.SetupRequest;
 import edu.unm.dragonfly.tsp.TSP;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
@@ -74,6 +77,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -114,7 +118,7 @@ public class DashboardController {
     @FXML
     private Button center;
     @FXML
-    private ListView<Drone> drones;
+    private ListView<DroneStatus> drones;
     @FXML
     private ListView<Fixture> fixtures;
     @FXML
@@ -170,6 +174,7 @@ public class DashboardController {
     private String mapOverride;
 
     private final ObservableList<Drone> droneList = FXCollections.observableArrayList();
+    private final ObservableList<DroneStatus> droneStatusList = FXCollections.observableArrayList();
     private final ObservableList<String> logList = FXCollections.observableArrayList();
     private final ObservableList<MissionStep> missionList = FXCollections.observableArrayList();
     private final ObservableList<Fixture> fixtureList = FXCollections.observableArrayList();
@@ -290,7 +295,39 @@ public class DashboardController {
             }
         });
 
-        drones.setItems(droneList.sorted());
+        JavaFxObservable.emitOnChanged(droneList).flatMap(new io.reactivex.functions.Function<ObservableList<Drone>, ObservableSource<List<DroneStatus>>>() {
+
+            @Override
+            public ObservableSource<List<DroneStatus>> apply(ObservableList<Drone> drones) {
+
+                List<Observable<DroneStatus>> droneStatusStreams = drones.stream()
+                        .sorted(Comparator.comparing(Drone::getName))
+                        .map(drone -> drone.getStatus().map(status -> new DroneStatus(drone, status)))
+                        .collect(Collectors.toList());
+
+                return Observable.combineLatest(droneStatusStreams, new io.reactivex.functions.Function<Object[], List<DroneStatus>>() {
+                    @Override
+                    public List<DroneStatus> apply(Object[] input) {
+                        List<DroneStatus> statusList = new ArrayList<>();
+                        for(Object value : input) {
+                            statusList.add((DroneStatus) value);
+                        }
+                        return statusList;
+                    }
+                });
+            }
+        })
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(new Consumer<List<DroneStatus>>() {
+            @Override
+            public void accept(List<DroneStatus> droneStatuses) {
+                DroneStatus selectedItem = drones.getSelectionModel().getSelectedItem();
+                droneStatusList.setAll(droneStatuses);
+                drones.getSelectionModel().select(selectedItem);
+            }
+        });
+
+        drones.setItems(droneStatusList);
         drones.setCellFactory(new DroneCellFactory());
         fixtures.setItems(fixtureList.sorted());
         fixtures.setCellFactory(new FixtureIconCellFactory());
@@ -330,7 +367,7 @@ public class DashboardController {
         takeoff.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Drone selected = drones.getSelectionModel().getSelectedItem();
+                Drone selected = drones.getSelectionModel().getSelectedItem().getDrone();
                 selected.takeoff();
             }
         });
@@ -338,7 +375,7 @@ public class DashboardController {
         land.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Drone selected = drones.getSelectionModel().getSelectedItem();
+                Drone selected = drones.getSelectionModel().getSelectedItem().getDrone();
                 selected.land();
             }
         });
@@ -346,7 +383,7 @@ public class DashboardController {
         rtl.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Drone selected = drones.getSelectionModel().getSelectedItem();
+                Drone selected = drones.getSelectionModel().getSelectedItem().getDrone();
                 selected.rtl();
             }
         });
@@ -357,7 +394,7 @@ public class DashboardController {
                 TextInputDialog dialog = new TextInputDialog("Goto Waypoint");
                 dialog.setHeaderText("Add Drone");
 
-                Drone selected = drones.getSelectionModel().getSelectedItem();
+                Drone selected = drones.getSelectionModel().getSelectedItem().getDrone();
 
 
                 AddWaypointDialogFactory.createSelect(waypoints, selected, new AddWaypointDialogFactory.NavigateWaypointCallback(){
@@ -375,7 +412,7 @@ public class DashboardController {
         delete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                deleteDrone(drones.getSelectionModel().getSelectedItem());
+                deleteDrone(drones.getSelectionModel().getSelectedItem().getDrone());
                 drones.getSelectionModel().clearSelection();
             }
         });
@@ -383,7 +420,7 @@ public class DashboardController {
         center.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                centerDrone(drones.getSelectionModel().getSelectedItem());
+                centerDrone(drones.getSelectionModel().getSelectedItem().getDrone());
                 drones.getSelectionModel().clearSelection();
             }
         });
@@ -393,7 +430,7 @@ public class DashboardController {
             public void handle(ActionEvent event) {
                 if(!boundaries.isEmpty()) {
                     LawnmowerDialogFactory.create(boundaries, (boundaryName, stepLength, altitude, stacks, walkBoundary, walk, waitTime, distanceThreshold) -> {
-                        Drone selected = drones.getSelectionModel().getSelectedItem();
+                        Drone selected = drones.getSelectionModel().getSelectedItem().getDrone();
                         List<Point> selecteBoundaryPoints = boundaries.get(boundaryName).stream().map(Waypoint::toPoint).collect(Collectors.toList());
                         selected.getLawnmowerWaypoints(selecteBoundaryPoints, stepLength, altitude, stacks, walkBoundary, walk.id, waitTime)
                                 .observeOn(JavaFxScheduler.platform())
@@ -409,7 +446,7 @@ public class DashboardController {
             @Override
             public void handle(ActionEvent event) {
                 DDSADialogFactory.create((radius, stepLength, altitude, loops, stacks, walk, waitTime, distanceThreshold) -> {
-                    Drone selected = drones.getSelectionModel().getSelectedItem();
+                    Drone selected = drones.getSelectionModel().getSelectedItem().getDrone();
                     selected.getDDSAWaypoints(radius, stepLength, altitude, loops, stacks, walk.id, waitTime)
                             .observeOn(JavaFxScheduler.platform())
                             .subscribe(waypoints -> draw(waypoints));
@@ -424,7 +461,7 @@ public class DashboardController {
             @Override
             public void handle(ActionEvent event) {
                 if (!boundaries.isEmpty()) {
-                    Drone selectedDrone = drones.getSelectionModel().getSelectedItem();
+                    Drone selectedDrone = drones.getSelectionModel().getSelectedItem().getDrone();
                     RandomPathDialogFactory.create(boundaries, (boundaryName, minAltitude, maxAltitude, size, waitTime, distanceThreshold) -> {
                         Observable.fromCallable(new Callable<List<ProjectedPoint>>() {
                             @Override
@@ -456,7 +493,7 @@ public class DashboardController {
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                drones.getSelectionModel().getSelectedItem().cancel();
+                drones.getSelectionModel().getSelectedItem().getDrone().cancel();
                 drones.getSelectionModel().clearSelection();
             }
         });
@@ -469,9 +506,9 @@ public class DashboardController {
         missionStart.setOnAction(event -> startMission());
         missionClear.setOnAction(event -> clearMission());
 
-        drones.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Drone>() {
+        drones.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<DroneStatus>() {
             @Override
-            public void changed(ObservableValue observable, Drone oldValue, Drone newValue) {
+            public void changed(ObservableValue observable, DroneStatus oldValue, DroneStatus newValue) {
                 boolean selected = newValue != null;
                 takeoff.setDisable(!selected);
                 land.setDisable(!selected);
