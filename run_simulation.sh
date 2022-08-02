@@ -21,8 +21,8 @@ docker run -it \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --env="XAUTHORITY=$XAUTH" \
     --volume="$XAUTH:$XAUTH" \
+    --runtime=nvidia \
     --privileged \
     --network ros-net \
     --mount type=bind,source="$(pwd)"/missions,target=/workspace/missions \
-    dragonfly-dashboard:latest \
-    /bin/sh -c 'cd /workspace; ./gradlew run'
+    dragonfly-dashboard:latest
