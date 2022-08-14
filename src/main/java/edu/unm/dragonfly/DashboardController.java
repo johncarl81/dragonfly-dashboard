@@ -295,26 +295,29 @@ public class DashboardController {
             }
         });
 
-        JavaFxObservable.emitOnChanged(droneList).flatMap(new io.reactivex.functions.Function<ObservableList<Drone>, ObservableSource<List<DroneStatus>>>() {
+        JavaFxObservable.emitOnChanged(droneList).switchMap(new io.reactivex.functions.Function<ObservableList<Drone>, ObservableSource<List<DroneStatus>>>() {
 
             @Override
             public ObservableSource<List<DroneStatus>> apply(ObservableList<Drone> drones) {
+                if(drones.isEmpty()) {
+                    return Observable.just(Collections.emptyList());
+                } else {
+                    List<Observable<DroneStatus>> droneStatusStreams = drones.stream()
+                            .sorted(Comparator.comparing(Drone::getName))
+                            .map(drone -> drone.getStatus().map(status -> new DroneStatus(drone, status)))
+                            .collect(Collectors.toList());
 
-                List<Observable<DroneStatus>> droneStatusStreams = drones.stream()
-                        .sorted(Comparator.comparing(Drone::getName))
-                        .map(drone -> drone.getStatus().map(status -> new DroneStatus(drone, status)))
-                        .collect(Collectors.toList());
-
-                return Observable.combineLatest(droneStatusStreams, new io.reactivex.functions.Function<Object[], List<DroneStatus>>() {
-                    @Override
-                    public List<DroneStatus> apply(Object[] input) {
-                        List<DroneStatus> statusList = new ArrayList<>();
-                        for(Object value : input) {
-                            statusList.add((DroneStatus) value);
+                    return Observable.combineLatest(droneStatusStreams, new io.reactivex.functions.Function<Object[], List<DroneStatus>>() {
+                        @Override
+                        public List<DroneStatus> apply(Object[] input) {
+                            List<DroneStatus> statusList = new ArrayList<>();
+                            for (Object value : input) {
+                                statusList.add((DroneStatus) value);
+                            }
+                            return statusList;
                         }
-                        return statusList;
-                    }
-                });
+                    });
+                }
             }
         })
                 .observeOn(JavaFxScheduler.platform())
