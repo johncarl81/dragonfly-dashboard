@@ -21,6 +21,9 @@ public class MissionStepLawnmower implements MissionStep {
     private final double altitude;
     private final double waitTime;
     private final double distanceThreshold;
+    private final boolean co2Limit;
+    private final double co2Threshold;
+    private final double co2LimitMargin;
 
     @JsonCreator
     public MissionStepLawnmower(@JsonProperty("boundaryName") String boundaryName,
@@ -31,7 +34,10 @@ public class MissionStepLawnmower implements MissionStep {
                                 @JsonProperty("walk_boundary") boolean walkBoundary,
                                 @JsonProperty("walk") int walk,
                                 @JsonProperty("wait_time") double waitTime,
-                                @JsonProperty("distance_threshold") double distanceThreshold) {
+                                @JsonProperty("distance_threshold") double distanceThreshold,
+                                @JsonProperty("co2_limit") boolean co2Limit,
+                                @JsonProperty("co2_threshold")  double co2Threshold,
+                                @JsonProperty("co2_limit_margin")  double co2LimitMargin) {
         this.boundaryName = boundaryName;
         this.drone = drone;
         this.stepLength = stepLength;
@@ -41,6 +47,9 @@ public class MissionStepLawnmower implements MissionStep {
         this.altitude = altitude;
         this.waitTime = waitTime;
         this.distanceThreshold = distanceThreshold;
+        this.co2Limit = co2Limit;
+        this.co2Threshold = co2Threshold;
+        this.co2LimitMargin = co2LimitMargin;
     }
 
 
@@ -79,6 +88,18 @@ public class MissionStepLawnmower implements MissionStep {
         return distanceThreshold;
     }
 
+    public boolean isCo2Limit() {
+        return co2Limit;
+    }
+
+    public double getCo2Threshold() {
+        return co2Threshold;
+    }
+
+    public double getCo2LimitMargin() {
+        return co2LimitMargin;
+    }
+
     @Override
     public boolean references(Fixture fixture) {
         return fixture instanceof BoundaryFixture && fixture.getName().equals(boundaryName);
@@ -104,6 +125,9 @@ public class MissionStepLawnmower implements MissionStep {
         data.put("altitude", altitude);
         data.put("wait_time", waitTime);
         data.put("distance_threshold", distanceThreshold);
+        data.put("co2_limit", co2Limit);
+        data.put("co2_threshold", co2Threshold);
+        data.put("co2_limit_margin", co2LimitMargin);
 
         return lawnmower;
     }
@@ -122,6 +146,9 @@ public class MissionStepLawnmower implements MissionStep {
         if (Double.compare(that.altitude, altitude) != 0) return false;
         if (Double.compare(that.waitTime, waitTime) != 0) return false;
         if (Double.compare(that.distanceThreshold, distanceThreshold) != 0) return false;
+        if (co2Limit != that.co2Limit) return false;
+        if (Double.compare(that.co2Threshold, co2Threshold) != 0) return false;
+        if (Double.compare(that.co2LimitMargin, co2LimitMargin) != 0) return false;
         if (boundaryName != null ? !boundaryName.equals(that.boundaryName) : that.boundaryName != null) return false;
         return drone != null ? drone.equals(that.drone) : that.drone == null;
     }
@@ -143,6 +170,11 @@ public class MissionStepLawnmower implements MissionStep {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(distanceThreshold);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (co2Limit ? 1 : 0);
+        temp = Double.doubleToLongBits(co2Threshold);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(co2LimitMargin);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -158,6 +190,9 @@ public class MissionStepLawnmower implements MissionStep {
                 ", altitude=" + altitude +
                 ", waitTime=" + waitTime +
                 ", distanceThreshold=" + distanceThreshold +
+                ", co2Limit=" + co2Limit +
+                ", co2Threshold=" + co2Threshold +
+                ", co2LimitMargin=" + co2LimitMargin +
                 '}';
     }
 }

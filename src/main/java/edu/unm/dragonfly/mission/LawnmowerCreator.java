@@ -25,6 +25,9 @@ public class LawnmowerCreator implements MissionStepCreator {
     private ComboBox<LawnmowerDialogFactory.Walk> walkComboBox;
     private TextField waitTimeField;
     private TextField distanceThreshold;
+    private CheckBox co2Limit;
+    private TextField co2Threshold;
+    private TextField co2LimitMargin;
 
     public LawnmowerCreator(List<String> drones, List<String> boundaries) {
         this.droneSelection = new ComboBox<>(FXCollections.observableList(drones));
@@ -42,6 +45,9 @@ public class LawnmowerCreator implements MissionStepCreator {
         walkComboBox.getItems().addAll(LawnmowerDialogFactory.Walk.values());
         waitTimeField = new TextField();
         distanceThreshold = new TextField();
+        co2Limit = new CheckBox();
+        co2Threshold = new TextField();
+        co2LimitMargin = new TextField();
 
         // Set Defaults
         stepLengthField.setText("1");
@@ -51,6 +57,9 @@ public class LawnmowerCreator implements MissionStepCreator {
         walkComboBox.getSelectionModel().select(LawnmowerDialogFactory.Walk.RANGE);
         waitTimeField.setText("0");
         distanceThreshold.setText("1");
+        co2Limit.setSelected(true);
+        co2Threshold.setText("425");
+        co2LimitMargin.setText("5");
 
         GridUtil.builder(grid).increment()
                 .add("Drone:", droneSelection)
@@ -61,7 +70,10 @@ public class LawnmowerCreator implements MissionStepCreator {
                 .add("Walk Boundary:", walkBoundaryField)
                 .add("Walk:", walkComboBox)
                 .add("Wait Time:", waitTimeField)
-                .add("Distance Threshold:", distanceThreshold);
+                .add("Distance Threshold:", distanceThreshold)
+                .add("CO2 Limit:", co2Limit)
+                .add("CO2 Threshold:", co2Threshold)
+                .add("CO2 Limit Margin:", co2LimitMargin);;
     }
 
     @Override
@@ -69,12 +81,15 @@ public class LawnmowerCreator implements MissionStepCreator {
         return new MissionStepLawnmower(
                 boundarySelection.getSelectionModel().getSelectedItem(),
                 droneSelection.getSelectionModel().getSelectedItem(),
-                Float.parseFloat(stepLengthField.getText()),
-                Float.parseFloat(altitudeField.getText()),
+                Double.parseDouble(stepLengthField.getText()),
+                Double.parseDouble(altitudeField.getText()),
                 Integer.parseInt(stacksField.getText()),
                 walkBoundaryField.isSelected(),
                 walkComboBox.getSelectionModel().getSelectedItem().id,
-                Float.parseFloat(waitTimeField.getText()),
-                Float.parseFloat(distanceThreshold.getText()));
+                Double.parseDouble(waitTimeField.getText()),
+                Double.parseDouble(distanceThreshold.getText()),
+                co2Limit.isSelected(),
+                Double.parseDouble(co2Threshold.getText()),
+                Double.parseDouble(co2LimitMargin.getText()));
     }
 }
