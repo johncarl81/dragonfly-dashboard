@@ -43,6 +43,7 @@ public class MissionStepDialogFactory {
             put(MissionStepType.FLOCK, new FlockCreator(drones));
             put(MissionStepType.GRADIENT, new GradientCreator(drones));
             put(MissionStepType.CURTAIN, new CurtainCreator(drones, waypoints));
+            put(MissionStepType.PUMP, new PumpCreator(drones));
         }};
 
         Dialog<ButtonType> dialog = new Dialog<>();

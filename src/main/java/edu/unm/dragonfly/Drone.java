@@ -13,6 +13,8 @@ import edu.unm.dragonfly.msgs.MavrosState;
 import edu.unm.dragonfly.msgs.NavSatFix;
 import edu.unm.dragonfly.msgs.NavigationRequest;
 import edu.unm.dragonfly.msgs.PoseStamped;
+import edu.unm.dragonfly.msgs.PumpRequest;
+import edu.unm.dragonfly.msgs.PumpResponse;
 import edu.unm.dragonfly.msgs.Response;
 import edu.unm.dragonfly.msgs.SetupRequest;
 import edu.unm.dragonfly.msgs.SimpleRequest;
@@ -156,6 +158,11 @@ public class Drone {
                 .build();
 
         bridge.call("/" + name + "/command/navigate", "dragonfly_messages/Navigation", request, noop());
+    }
+
+    public void pump(int pumpNum) {
+        bridge.call("/" + name + "/pump", "dragonfly_messages/Pump", PumpRequest.create(pumpNum),
+                new JsonRosListenerDelegate<>(PumpResponse.class, value -> {}));
     }
 
     private RosListenDelegate noop() {

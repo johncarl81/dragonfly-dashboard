@@ -3,7 +3,6 @@ package edu.unm.dragonfly.msgs;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
-import ros.msgs.std_msgs.Time;
 
 /**
  * @author John Ericksen

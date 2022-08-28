@@ -138,6 +138,8 @@ public class DashboardController {
     @FXML
     private Button random;
     @FXML
+    private Button pump;
+    @FXML
     private Button cancel;
     @FXML
     private Button waypoint;
@@ -349,6 +351,7 @@ public class DashboardController {
         lawnmower.setDisable(true);
         ddsa.setDisable(true);
         random.setDisable(true);
+        pump.setDisable(true);
         cancel.setDisable(true);
         deleteFixture.setDisable(true);
         centerFixture.setDisable(true);
@@ -491,6 +494,15 @@ public class DashboardController {
             }
         });
 
+        pump.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Drone selectedDrone = drones.getSelectionModel().getSelectedItem().getDrone();
+                PumpDialogFactory.create((pumpNum) -> selectedDrone.pump(pumpNum));
+                drones.getSelectionModel().clearSelection();
+            }
+        });
+
 
 
         cancel.setOnAction(new EventHandler<ActionEvent>() {
@@ -522,6 +534,7 @@ public class DashboardController {
                 lawnmower.setDisable(!(selected && !boundaries.isEmpty()));
                 ddsa.setDisable(!selected);
                 random.setDisable(!(selected && !boundaries.isEmpty()));
+                pump.setDisable(!selected);
                 cancel.setDisable(!selected);
             }
         });

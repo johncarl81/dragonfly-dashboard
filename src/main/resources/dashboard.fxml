@@ -35,6 +35,7 @@
                             <Button fx:id="lawnmower" text="Lawnmower"/>
                             <Button fx:id="ddsa" text="DDSA"/>
                             <Button fx:id="random" text="Random"/>
+                            <Button fx:id="pump" text="Pump"/>
                             <Button fx:id="cancel" text="Cancel"/>
                         </FlowPane>
                         <GridPane>
