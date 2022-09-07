@@ -27,6 +27,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
         @JsonSubTypes.Type(value = MissionStepGradient.class, name = "Gradient"),
         @JsonSubTypes.Type(value = MissionStepCurtain.class, name = "Curtain"),
         @JsonSubTypes.Type(value = MissionStepPump.class, name = "Pump"),
+        @JsonSubTypes.Type(value = MissionStepCalibration.class, name = "Calibration"),
 })
 public interface MissionStep {
     boolean appliesTo(String name);

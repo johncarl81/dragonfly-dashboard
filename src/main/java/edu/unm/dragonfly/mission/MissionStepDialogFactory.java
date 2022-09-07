@@ -42,6 +42,7 @@ public class MissionStepDialogFactory {
             put(MissionStepType.NAVIGATION, new RandomPointCreator(drones, boundaries));
             put(MissionStepType.FLOCK, new FlockCreator(drones));
             put(MissionStepType.GRADIENT, new GradientCreator(drones));
+            put(MissionStepType.CALIBRATION, new CalibrationCreator(drones));
             put(MissionStepType.CURTAIN, new CurtainCreator(drones, waypoints));
             put(MissionStepType.PUMP, new PumpCreator(drones));
         }};
