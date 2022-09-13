@@ -18,7 +18,8 @@ public enum MissionStepType {
     FLOCK(10, "Flock"),
     GRADIENT(11, "Gradient"),
     CURTAIN(12, "Curtain"),
-    PUMP(13, "Pump");
+    PUMP(13, "Pump"),
+    CALIBRATION(14, "Calibration");
 
     private final int mission_type;
     private final String name;
