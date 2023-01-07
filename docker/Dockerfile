@@ -1,4 +1,4 @@
-FROM ros:galactic-ros-base
+FROM ros:humble-ros-base
 
 ENV NVIDIA_VISIBLE_DEVICES \
     ${NVIDIA_VISIBLE_DEVICES:-all}
@@ -7,7 +7,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV WORKSPACE /workspace
-ENV MAVEN_VERSION 3.8.6
+ENV MAVEN_VERSION 3.8.7
 
 # Install dependencies
 RUN apt-get -qq update
@@ -23,7 +23,7 @@ RUN echo debconf shared/accepted-oracle-license-v1-3 select true | sudo debconf-
 RUN echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-set-selections
 
 # Install Mavros, Java & ROS Bridge
-RUN apt-get -qq -y install ros-galactic-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-galactic-rosbridge-server libcanberra-gtk-module
+RUN apt-get -qq -y install ros-humble-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-humble-rosbridge-server libcanberra-gtk-module
 
 # Install maven
 RUN wget https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp
@@ -57,7 +57,7 @@ RUN cd $WORKSPACE/java_rosbridge && \
 
 # Install dragonfly infrastructure
 COPY dragonfly $WORKSPACE/dragonfly
-RUN source /opt/ros/galactic/setup.bash && \
+RUN source /opt/ros/humble/setup.bash && \
 	cd $WORKSPACE/dragonfly && \
 	colcon build
 
