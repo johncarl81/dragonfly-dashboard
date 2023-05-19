@@ -30,7 +30,7 @@ public class MissionStepDialogFactory {
 
     public static void create(CreateMissionStep callback, List<String> drones, List<String> waypoints, Map<String, List<Waypoint>> boundaries) {
 
-        Map<MissionStepType, MissionStepCreator> creators = new EnumMap<MissionStepType, MissionStepCreator>(MissionStepType.class){{
+        Map<MissionStepType, MissionStepCreator> creators = new EnumMap<>(MissionStepType.class){{
             put(MissionStepType.TAKEOFF, new TakeoffCreator(drones));
             put(MissionStepType.SLEEP, new SleepCreator(drones));
             put(MissionStepType.LAND, new LandCreator(drones));
@@ -45,6 +45,7 @@ public class MissionStepDialogFactory {
             put(MissionStepType.CALIBRATION, new CalibrationCreator(drones));
             put(MissionStepType.CURTAIN, new CurtainCreator(drones, waypoints));
             put(MissionStepType.PUMP, new PumpCreator(drones));
+            put(MissionStepType.SKETCH, new SketchCreator(drones));
         }};
 
         Dialog<ButtonType> dialog = new Dialog<>();

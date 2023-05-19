@@ -19,7 +19,8 @@ public enum MissionStepType {
     GRADIENT(11, "Gradient"),
     CURTAIN(12, "Curtain"),
     PUMP(13, "Pump"),
-    CALIBRATION(14, "Calibration");
+    CALIBRATION(14, "Calibration"),
+    SKETCH(15, "Sketch"),;
 
     private final int mission_type;
     private final String name;
