@@ -33,6 +33,8 @@ import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
 import edu.unm.dragonfly.msgs.Boundary;
+import edu.unm.dragonfly.msgs.NavSatFix;
+import edu.unm.dragonfly.msgs.PositionVector;
 import edu.unm.dragonfly.msgs.SetupRequest;
 import edu.unm.dragonfly.tsp.TSP;
 import io.reactivex.Observable;
@@ -52,6 +54,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -99,6 +102,7 @@ public class DashboardController {
             "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer";
     private static final int ALPHA_RED = 0x33FF0000;
     private static final int RED = 0xFFFF0000;
+    private static final int GREEN = 0xFF00FF00;
     private static final Random RAND = new Random(System.currentTimeMillis());
 
     @FXML
@@ -186,6 +190,7 @@ public class DashboardController {
     private final GraphicsOverlay pathOverlay = new GraphicsOverlay();
     private final GraphicsOverlay waypointOverlay = new GraphicsOverlay();
     private final GraphicsOverlay boundaryOverlay = new GraphicsOverlay();
+    private final GraphicsOverlay sketchOverlay = new GraphicsOverlay();
     private final List<Point> boundaryPoints = new ArrayList<>();
     private CoordinateSelectionMode mode = CoordinateSelectionMode.DRAW;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
@@ -766,6 +771,25 @@ public class DashboardController {
         waypointOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.RELATIVE);
         sceneView.getGraphicsOverlays().add(boundaryOverlay);
         boundaryOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
+        sceneView.getGraphicsOverlays().add(sketchOverlay);
+        sketchOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
+
+        bridge.subscribe("/dragonfly/sketch", "dragonfly_messages/PositionVector",
+                new JsonRosListenerDelegate<>(PositionVector.class, new JsonRosListenerDelegate.Receiver<PositionVector>(){
+
+                    @Override
+                    public void receive(PositionVector value) {
+                        if (value.center() != null && value.center().longitude() != 0) {
+                            sketchOverlay.getGraphics().clear();
+                            System.out.println("Got value: " + value);
+                            Point point = new Point(value.center().longitude(), value.center().latitude());
+                            SimpleMarkerSymbol markerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CIRCLE, RED, 1);
+                            Graphic center = new Graphic(point, markerSymbol);
+
+                            sketchOverlay.getGraphics().add(center);
+                        }
+                    }
+                }));
 
         sceneView.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override

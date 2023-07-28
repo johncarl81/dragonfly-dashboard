@@ -21,8 +21,7 @@ docker run -it \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --env="XAUTHORITY=$XAUTH" \
     --volume="$XAUTH:$XAUTH" \
-    --runtime=nvidia \
-    --privileged \
+    --gpus all \
     --network ros-net \
     --mount type=bind,source="$(pwd)"/missions,target=/workspace/missions \
     dragonfly-dashboard:latest
