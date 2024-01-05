@@ -7,7 +7,7 @@
     "altitude" : 9.0
   }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly3" ],
+    "drones" : [ "dragonfly5" ],
     "altitude" : 10.0
   }, {
     "@type" : "Takeoff",
@@ -19,15 +19,15 @@
     "waypoint" : "df2.home"
   }, {
     "@type" : "Waypoint",
-    "drone" : "dragonfly3",
-    "waypoint" : "df3.home"
+    "drone" : "dragonfly5",
+    "waypoint" : "df5.home"
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly1",
     "waypoint" : "df1.home"
   }, {
     "@type" : "Semaphore",
-    "drones" : [ "dragonfly2", "dragonfly3", "dragonfly1" ],
+    "drones" : [ "dragonfly2", "dragonfly5", "dragonfly1" ],
     "id" : "c9d32fdc-aafb-4397-8c78-0dd13b5152b4"
   }, {
     "@type" : "Flock",
@@ -37,7 +37,7 @@
     "y" : -6.0
   }, {
     "@type" : "Flock",
-    "drone" : "dragonfly3",
+    "drone" : "dragonfly5",
     "leader" : "dragonfly2",
     "x" : 6.0,
     "y" : -6.0
@@ -48,7 +48,7 @@
   }, {
     "@type" : "Gradient",
     "target" : "dragonfly2",
-    "drones" : [ "dragonfly2", "dragonfly3", "dragonfly1" ]
+    "drones" : [ "dragonfly2", "dragonfly5", "dragonfly1" ]
   } ],
   "waypoints" : {
     "df1.home" : {
@@ -67,7 +67,7 @@
       },
       "distanceThreshold" : 1.5
     },
-    "df3.home" : {
+    "df5.home" : {
       "waypoint" : {
         "longitude" : -106.59625244140625,
         "latitude" : 35.194114685058594,
@@ -77,6 +77,22 @@
     }
   },
   "boundaries" : {
-    "boundary" : [ ]
-  }
+      "rtl boundary" : [ {
+        "longitude" : -106.59715332484474,
+        "latitude" : 35.193873806532835,
+        "altitude" : 1539.2660695789382
+      }, {
+        "longitude" : -106.59612358527684,
+        "latitude" : 35.193592785361275,
+        "altitude" : 1539.3689697422087
+      }, {
+        "longitude" : -106.59536790642183,
+        "latitude" : 35.19528034385767,
+        "altitude" : 1539.0008051041514
+      }, {
+        "longitude" : -106.59668575389298,
+        "latitude" : 35.195581487993174,
+        "altitude" : 1539.6222820142284
+      } ]
+    }
 }
