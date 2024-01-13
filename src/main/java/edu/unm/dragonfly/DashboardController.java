@@ -32,10 +32,7 @@ import edu.unm.dragonfly.mission.PointUtil;
 import edu.unm.dragonfly.mission.Waypoint;
 import edu.unm.dragonfly.mission.step.MissionStart;
 import edu.unm.dragonfly.mission.step.MissionStep;
-import edu.unm.dragonfly.msgs.Boundary;
-import edu.unm.dragonfly.msgs.NavSatFix;
-import edu.unm.dragonfly.msgs.PositionVector;
-import edu.unm.dragonfly.msgs.SetupRequest;
+import edu.unm.dragonfly.msgs.*;
 import edu.unm.dragonfly.tsp.TSP;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -126,6 +123,8 @@ public class DashboardController {
     @FXML
     private ListView<Fixture> fixtures;
     @FXML
+    private ListView<NamedPlume> plumesListView;
+    @FXML
     private ListView<String> log;
     @FXML
     private ListView<MissionStep> mission;
@@ -169,6 +168,12 @@ public class DashboardController {
     private Button missionStart;
     @FXML
     private Button missionClear;
+    @FXML
+    private Button addPlume;
+    @FXML
+    private Button deletePlume;
+    @FXML
+    private Button setupPlumes;
 
     @Inject
     private RosBridge bridge;
@@ -184,6 +189,7 @@ public class DashboardController {
     private final ObservableList<String> logList = FXCollections.observableArrayList();
     private final ObservableList<MissionStep> missionList = FXCollections.observableArrayList();
     private final ObservableList<Fixture> fixtureList = FXCollections.observableArrayList();
+    private final ObservableList<NamedPlume> plumeList = FXCollections.observableArrayList();
     private final GraphicsOverlay droneOverlay = new GraphicsOverlay();
     private final GraphicsOverlay droneShadowOverlay = new GraphicsOverlay();
     private final GraphicsOverlay drawBoundaryOverlay = new GraphicsOverlay();
@@ -195,6 +201,7 @@ public class DashboardController {
     private CoordinateSelectionMode mode = CoordinateSelectionMode.DRAW;
     private final Map<String, NavigateWaypoint> waypoints = new HashMap<>();
     private final Map<String, List<Waypoint>> boundaries = new HashMap<>();
+    private final Map<String, Plume> plumes = new HashMap<>();
     SceneView sceneView;
     private boolean localMap = false;
     private boolean zoomedToFirst = false;
@@ -341,6 +348,8 @@ public class DashboardController {
         drones.setCellFactory(new DroneCellFactory());
         fixtures.setItems(fixtureList.sorted());
         fixtures.setCellFactory(new FixtureIconCellFactory());
+        plumesListView.setItems(plumeList);
+        plumesListView.setCellFactory(new PlumeCellFactory());
         log.setItems(logList);
         log.setCellFactory(new TooltipCellFactory<>());
         mission.setItems(missionList);
@@ -519,6 +528,7 @@ public class DashboardController {
         });
 
         setupDrones.setOnAction(event -> setupDrones());
+        setupPlumes.setOnAction(event -> setupPlumes());
         missionAdd.setOnAction(event -> addMissionStepDialog());
         missionLoad.setOnAction(event -> loadMissionFromFile());
         missionSave.setOnAction(event -> saveMissionToFile());
@@ -572,6 +582,33 @@ public class DashboardController {
             }
         });
 
+        plumesListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<NamedPlume>() {
+            @Override
+            public void changed(ObservableValue observable, NamedPlume oldValue, NamedPlume newValue) {
+                deletePlume.setDisable(newValue == null);
+            }
+        });
+
+        addPlume.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                PlumeDialog.create(waypoints, new PlumeDialog.PlumeFactoryCallback() {
+                    @Override
+                    public void call(String name, Plume plume) {
+                        plumes.put(name, plume);
+                        updatePlumes();
+                    }
+                });
+            }
+        });
+
+        deletePlume.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                NamedPlume selectedItem = plumesListView.getSelectionModel().getSelectedItem();
+                selectedItem.delete();
+            }
+        });
 
         PublishSubject<String> nameSubject = PublishSubject.create();
         bridge.subscribe(SubscriptionRequestMsg.generate("/dragonfly/announce")
@@ -641,12 +678,7 @@ public class DashboardController {
     }
 
     private void addMissionStepDialog() {
-        MissionStepDialogFactory.create(new MissionStepDialogFactory.CreateMissionStep() {
-            @Override
-            public void call(MissionStep step) {
-                missionList.add(step);
-            }
-        }, droneList.stream().map(Drone::getName).sorted().collect(Collectors.toList()),
+        MissionStepDialogFactory.create(missionList::add, droneList.stream().map(Drone::getName).sorted().collect(Collectors.toList()),
                 new ArrayList<>(waypoints.keySet()), boundaries);
     }
 
@@ -660,13 +692,24 @@ public class DashboardController {
             try {
                 MissionDataHolder holder = mapper.readValue(openFile, MissionDataHolder.class);
                 missionList.clear();
-                missionList.addAll(holder.getSteps());
+                if (holder.getSteps() != null) {
+                    missionList.addAll(holder.getSteps());
+                }
 
-                waypoints.putAll(holder.getWaypoints());
-                updateWaypointOverlay();
+                if (holder.getWaypoints() != null) {
+                    waypoints.putAll(holder.getWaypoints());
+                    updateWaypointOverlay();
+                }
 
-                boundaries.putAll(holder.getBoundaries());
-                updateBoundaryOverlay();
+                if (holder.getBoundaries() != null) {
+                    boundaries.putAll(holder.getBoundaries());
+                    updateBoundaryOverlay();
+                }
+
+                if (holder.getPlumes() != null) {
+                    plumes.putAll(holder.getPlumes());
+                    updatePlumes();
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -681,7 +724,7 @@ public class DashboardController {
             ObjectMapper mapper = new ObjectMapper();
 
             try {
-                mapper.writerWithDefaultPrettyPrinter().writeValue(saveFile, new MissionDataHolder(missionList, waypoints, boundaries));
+                mapper.writerWithDefaultPrettyPrinter().writeValue(saveFile, new MissionDataHolder(missionList, waypoints, boundaries, plumes));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -702,6 +745,13 @@ public class DashboardController {
             drone.setup(SetupRequest.create(1000 + (i * rtlFactor * 100),
                     maxAltitudeInteger,
                     boundary));
+        }
+    }
+
+    private void setupPlumes() {
+        for(int i = 0; i < droneList.size(); i++) {
+            Drone drone = droneList.get(i);
+            drone.setupPlumes(SetupPlumesRequest.create(new ArrayList<>(plumes.values())));
         }
     }
 
@@ -774,7 +824,7 @@ public class DashboardController {
         sceneView.getGraphicsOverlays().add(sketchOverlay);
         sketchOverlay.getSceneProperties().setSurfacePlacement(LayerSceneProperties.SurfacePlacement.DRAPED_FLAT);
 
-        bridge.subscribe("/dragonfly/sketch", "dragonfly_messages/PositionVector",
+        /*bridge.subscribe("/dragonfly/sketch", "dragonfly_messages/PositionVector",
                 new JsonRosListenerDelegate<>(PositionVector.class, new JsonRosListenerDelegate.Receiver<PositionVector>(){
 
                     @Override
@@ -789,7 +839,7 @@ public class DashboardController {
                             sketchOverlay.getGraphics().add(center);
                         }
                     }
-                }));
+                }));*/
 
         sceneView.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
@@ -905,6 +955,15 @@ public class DashboardController {
         for(Map.Entry<String, List<Waypoint>> entry : boundaries.entrySet()) {
             final String name = entry.getKey();
             fixtureList.add(new BoundaryFixture(entry.getKey(), entry.getValue(), () -> {boundaries.remove(name); updateBoundaryOverlay();}));
+        }
+    }
+
+    private void updatePlumes() {
+        plumeList.clear();
+
+        for (Map.Entry<String, Plume> plumeEntry : plumes.entrySet()) {
+            final String name = plumeEntry.getKey();
+            plumeList.add(new NamedPlume(name, plumeEntry.getValue(), () -> {plumes.remove(name); updatePlumes();}));
         }
     }
 
