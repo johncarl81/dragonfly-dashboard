@@ -15,42 +15,37 @@ import java.util.List;
  */
 public class SketchCreator implements MissionStepCreator {
 
-    private final ComboBox<String> droneSelection;
+    private final ComboBox<String> leaderSelection;
     private final ComboBox<String> partnerSelection;
     private TextField offset;
     private TextField threshold;
-    private CheckBox leader;
 
     public SketchCreator(List<String> drones) {
-        this.droneSelection = new ComboBox<>(FXCollections.observableList(drones));
+        this.leaderSelection = new ComboBox<>(FXCollections.observableList(drones));
         this.partnerSelection = new ComboBox<>(FXCollections.observableList(drones));
     }
 
     @Override
     public void create(GridPane grid) {
 
-        leader = new CheckBox();
         offset = new TextField();
         threshold = new TextField();
 
         offset.setText("10");
         threshold.setText("425");
-        leader.setSelected(false);
 
         GridUtil.builder(grid).increment()
-                .add("Drone:", droneSelection)
+                .add("Leader:", leaderSelection)
                 .add("Partner:", partnerSelection)
                 .add("ε offset:", offset)
-                .add("Threshold:", threshold)
-                .add("Leader:", leader);
+                .add("Threshold:", threshold);
     }
 
     @Override
     public MissionStep build() {
-        return new MissionStepSketch(droneSelection.getSelectionModel().getSelectedItem(),
+        return new MissionStepSketch(leaderSelection.getSelectionModel().getSelectedItem(),
                 partnerSelection.getSelectionModel().getSelectedItem(),
                 Double.parseDouble(offset.getText()),
-                Double.parseDouble(threshold.getText()),
-                leader.isSelected());
+                Double.parseDouble(threshold.getText()));
     }
 }

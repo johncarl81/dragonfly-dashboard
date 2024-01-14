@@ -12,40 +12,20 @@ import edu.unm.dragonfly.Fixture;
  */
 public class MissionStepSketch implements MissionStep {
 
-    private final String drone;
+    private final String leader;
     private final String partner;
     private final double offset;
     private final double threshold;
-    private final boolean leader;
 
     @JsonCreator
-    public MissionStepSketch(@JsonProperty("drone") String drone,
+    public MissionStepSketch(@JsonProperty("leader") String leader,
                              @JsonProperty("partner") String partner,
                              @JsonProperty("offset") double offset,
-                             @JsonProperty("threshold") double threshold,
-                             @JsonProperty("leader") boolean leader) {
-        this.drone = drone;
+                             @JsonProperty("threshold") double threshold) {
+        this.leader = leader;
         this.partner = partner;
         this.offset = offset;
         this.threshold = threshold;
-        this.leader = leader;
-    }
-
-
-    public String getDrone() {
-        return drone;
-    }
-
-    public String getPartner() {
-        return partner;
-    }
-
-    public double getOffset() {
-        return offset;
-    }
-
-    public boolean isLeader() {
-        return leader;
     }
 
     @Override
@@ -55,7 +35,7 @@ public class MissionStepSketch implements MissionStep {
 
     @Override
     public boolean appliesTo(String name) {
-        return this.drone.equals(name);
+        return this.leader.equals(name) || this.partner.equals(name);
     }
 
     @Override
@@ -67,8 +47,13 @@ public class MissionStepSketch implements MissionStep {
 
         data.put("offset", offset);
         data.put("threshold", threshold);
-        data.put("partner", partner);
-        data.put("leader", leader);
+        boolean leaderDrone = leader.equals(droneName);
+        data.put("leader", leaderDrone);
+        if (leaderDrone) {
+            data.put("partner", partner);
+        } else {
+            data.put("partner", leader);
+        }
 
         return flock;
     }
@@ -78,11 +63,10 @@ public class MissionStepSketch implements MissionStep {
     @Override
     public String toString() {
         return "Sketch{" +
-                "drone='" + drone + '\'' +
+                "leader='" + leader + '\'' +
                 ", partner='" + partner + '\'' +
                 ", offset=" + offset +
                 ", threshold=" + threshold +
-                ", leader=" + leader +
                 '}';
     }
 }

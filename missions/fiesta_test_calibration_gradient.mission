@@ -1,0 +1,88 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "1"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "2"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly3",
+    "waypoint" : "3"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "id" : "ee402d0d-eb29-4ae5-974c-0f5e28e8bbea"
+  }, {
+    "@type" : "Calibration",
+    "target" : "dragonfly2",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ]
+  }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly2" ],
+    "duration" : 60.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "start"
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly1",
+    "leader" : "dragonfly2",
+    "x" : -10.0,
+    "y" : -10.0
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly3",
+    "leader" : "dragonfly2",
+    "x" : 10.0,
+    "y" : -10.0
+  }, {
+    "@type" : "Gradient",
+    "target" : "dragonfly2",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ]
+  } ],
+  "waypoints" : {
+    "1" : {
+      "waypoint" : {
+        "longitude" : -106.59632110595703,
+        "latitude" : 35.19438934326172,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "2" : {
+      "waypoint" : {
+        "longitude" : -106.59615325927734,
+        "latitude" : 35.19439697265625,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "3" : {
+      "waypoint" : {
+        "longitude" : -106.5959701538086,
+        "latitude" : 35.194419860839844,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "start" : {
+      "waypoint" : {
+        "longitude" : -106.59651947021484,
+        "latitude" : 35.19420623779297,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : { }
+}

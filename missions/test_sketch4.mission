@@ -1,0 +1,59 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "a"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "b"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "6b9038ad-ec78-4087-87f8-dd33b4d958fa"
+  }, {
+    "@type" : "Sketch",
+    "drone" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "leader" : true
+  }, {
+    "@type" : "Sketch",
+    "drone" : "dragonfly2",
+    "partner" : "dragonfly1",
+    "offset" : 10.0,
+    "leader" : false
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1", "dragonfly2" ]
+  } ],
+  "waypoints" : {
+    "p" : {
+      "waypoint" : {
+        "longitude" : -106.59625,
+        "latitude" : 35.19465,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "a" : {
+      "waypoint" : {
+        "longitude" : -106.59585,
+        "latitude" : 35.191,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "b" : {
+      "waypoint" : {
+        "longitude" : -106.5960,
+        "latitude" : 35.191,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : { }
+}
