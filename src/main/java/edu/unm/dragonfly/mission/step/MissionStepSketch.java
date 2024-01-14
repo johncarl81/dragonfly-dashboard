@@ -15,14 +15,19 @@ public class MissionStepSketch implements MissionStep {
     private final String drone;
     private final String partner;
     private final double offset;
+    private final double threshold;
     private final boolean leader;
 
     @JsonCreator
-    public MissionStepSketch(@JsonProperty("drone") String drone, @JsonProperty("partner") String partner, @JsonProperty("offset") double offset,
+    public MissionStepSketch(@JsonProperty("drone") String drone,
+                             @JsonProperty("partner") String partner,
+                             @JsonProperty("offset") double offset,
+                             @JsonProperty("threshold") double threshold,
                              @JsonProperty("leader") boolean leader) {
         this.drone = drone;
         this.partner = partner;
         this.offset = offset;
+        this.threshold = threshold;
         this.leader = leader;
     }
 
@@ -61,6 +66,7 @@ public class MissionStepSketch implements MissionStep {
         ObjectNode data = flock.putObject("sketch_step");
 
         data.put("offset", offset);
+        data.put("threshold", threshold);
         data.put("partner", partner);
         data.put("leader", leader);
 
@@ -75,6 +81,7 @@ public class MissionStepSketch implements MissionStep {
                 "drone='" + drone + '\'' +
                 ", partner='" + partner + '\'' +
                 ", offset=" + offset +
+                ", threshold=" + threshold +
                 ", leader=" + leader +
                 '}';
     }

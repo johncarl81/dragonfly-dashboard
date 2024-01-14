@@ -28,6 +28,7 @@
     "drone" : "dragonfly2",
     "partner" : "dragonfly1",
     "offset" : 10.0,
+    "threshold" : 425,
     "leader" : false
   } ],
   "waypoints" : {
