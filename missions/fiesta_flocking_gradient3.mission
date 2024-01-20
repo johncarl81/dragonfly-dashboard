@@ -76,13 +76,13 @@
       "distanceThreshold" : 1.0
     },
     "plume" : {
-      "waypoint" : {
-        "longitude" : -106.59574890136719,
-        "latitude" : 35.196903228759766,
-        "altitude" : 10.0
-      },
-      "distanceThreshold" : 1.0
-    }
+	  "waypoint" : {
+		"longitude" : -106.5972,
+		"latitude" : 35.1973,
+		"altitude" : 10.0
+	  },
+	  "distanceThreshold" : 1.0
+	}
   },
   "boundaries" : {
     "rtl boundary" : [ {
@@ -106,14 +106,14 @@
   "plumes" : {
     "plume" : {
       "source" : {
-        "latitude" : 35.196903228759766,
-        "longitude" : -106.59574890136719,
+		"latitude" : 35.1973,
+		"longitude" : -106.5972,
         "relative_altitude" : 10.0
       },
-      "q" : 5000.0,
+      "q" : 80000,
       "k" : 2.0,
-      "u" : 1.0,
-      "wind_direction" : 0.0
+      "u" : 0.2,
+      "wind_direction" : -30
     }
   }
 }
