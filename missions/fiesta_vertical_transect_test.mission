@@ -1,0 +1,28 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "VerticalTransect",
+    "drone" : "dragonfly1",
+    "waypoint" : "a"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : {
+    "a" : {
+      "waypoint" : {
+        "longitude" : -106.59603118896484,
+        "latitude" : 35.19527816772461,
+        "altitude" : 40.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : { },
+  "plumes" : { }
+}

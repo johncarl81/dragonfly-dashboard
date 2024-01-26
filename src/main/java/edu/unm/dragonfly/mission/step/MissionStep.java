@@ -1,12 +1,11 @@
 package edu.unm.dragonfly.mission.step;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.unm.dragonfly.Fixture;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.*;
+import edu.unm.dragonfly.*;
 
-import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.*;
 
 /**
  * @author John Ericksen
@@ -29,6 +28,7 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
         @JsonSubTypes.Type(value = MissionStepPump.class, name = "Pump"),
         @JsonSubTypes.Type(value = MissionStepCalibration.class, name = "Calibration"),
         @JsonSubTypes.Type(value = MissionStepSketch.class, name = "Sketch"),
+        @JsonSubTypes.Type(value = MissionStepVerticalTransect.class, name = "VerticalTransect"),
 })
 public interface MissionStep {
     boolean appliesTo(String name);

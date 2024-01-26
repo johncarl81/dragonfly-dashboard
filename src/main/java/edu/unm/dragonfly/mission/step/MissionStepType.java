@@ -20,7 +20,8 @@ public enum MissionStepType {
     CURTAIN(12, "Curtain"),
     PUMP(13, "Pump"),
     CALIBRATION(14, "Calibration"),
-    SKETCH(15, "Sketch"),;
+    SKETCH(15, "Sketch"),
+    VERTICAL_TRANSECT(16, "Vertical Transect");
 
     private final int mission_type;
     private final String name;
