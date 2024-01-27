@@ -1,11 +1,10 @@
 package edu.unm.dragonfly.mission.step;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.unm.dragonfly.Fixture;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.*;
+import edu.unm.dragonfly.*;
 
 /**
  * @author John Ericksen
@@ -26,6 +25,22 @@ public class MissionStepSketch implements MissionStep {
         this.partner = partner;
         this.offset = offset;
         this.threshold = threshold;
+    }
+
+    public String getLeader() {
+        return leader;
+    }
+
+    public String getPartner() {
+        return partner;
+    }
+
+    public double getOffset() {
+        return offset;
+    }
+
+    public double getThreshold() {
+        return threshold;
     }
 
     @Override
@@ -57,8 +72,6 @@ public class MissionStepSketch implements MissionStep {
 
         return flock;
     }
-
-
 
     @Override
     public String toString() {
