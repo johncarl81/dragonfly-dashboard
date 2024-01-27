@@ -18,7 +18,11 @@
     "drones" : [ "dragonfly1", "dragonfly2" ],
     "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
   }, {
-    "@type" : "Sketch"
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "threshold" : 465
   } ],
   "waypoints" : {
     "df2.home" : {
