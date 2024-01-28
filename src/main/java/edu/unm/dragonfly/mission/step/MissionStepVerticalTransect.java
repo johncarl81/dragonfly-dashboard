@@ -60,6 +60,14 @@ public class MissionStepVerticalTransect implements MissionStep {
         return waypoint;
     }
 
+    public double getMinimumAltitude() {
+        return minimumAltitude;
+    }
+
+    public double getMaximumAltitude() {
+        return maximumAltitude;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

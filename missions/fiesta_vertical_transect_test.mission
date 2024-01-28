@@ -8,7 +8,9 @@
   }, {
     "@type" : "VerticalTransect",
     "drone" : "dragonfly1",
-    "waypoint" : "a"
+    "waypoint" : "a",
+    "minimumAltitude": 30.0,
+    "maximumAltitude": 90.0
   }, {
     "@type" : "RTL",
     "drones" : [ "dragonfly1" ]
