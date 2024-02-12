@@ -44,7 +44,7 @@ public class MissionDataHolderTest {
         steps.add(new MissionStepTakeoff(Arrays.asList("one", "two"), 3.1415));
         steps.add(new MissionStepSleep(Arrays.asList("one"), 42));
         steps.add(new MissionStepLand(Arrays.asList("two")));
-        steps.add(new MissionStepGoto("three", "waypoint 1"));
+        steps.add(new MissionStepGoto("three", "waypoint 1", true, 1, 500));
         steps.add(new MissionStepRTL(Arrays.asList("one")));
         steps.add(new MissionStepSemaphore(Arrays.asList("one")));
         steps.add(new MissionStepDDSA(Arrays.asList("four"), "test", 1, 2, 3, 4, 5, Walk.RANGE, 10, 20, true));
