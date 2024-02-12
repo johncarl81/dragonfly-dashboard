@@ -16,6 +16,7 @@ import edu.unm.dragonfly.mission.step.MissionStepRTL;
 import edu.unm.dragonfly.mission.step.MissionStepSemaphore;
 import edu.unm.dragonfly.mission.step.MissionStepSleep;
 import edu.unm.dragonfly.mission.step.MissionStepTakeoff;
+import edu.unm.dragonfly.msgs.*;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -68,7 +69,10 @@ public class MissionDataHolderTest {
         boundaryList.add(new Waypoint(4, 2, 3));
         boundaries.put("boundary", boundaryList);
 
-        MissionDataHolder holder = new MissionDataHolder(steps, waypoints, boundaries);
+        Map<String, Plume> plumes = new HashMap<>();
+        plumes.put("one", Plume.create(LatLon.builder().latitude(1).longitude(2).relativeAltitude(3).build(), 4, 5, 6, 7));
+
+        MissionDataHolder holder = new MissionDataHolder(steps, waypoints, boundaries, plumes);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         mapper.writeValue(outputStream, holder);
@@ -78,5 +82,6 @@ public class MissionDataHolderTest {
         assertEquals(steps, result.getSteps());
         assertEquals(waypoints, result.getWaypoints());
         assertEquals(boundaries, result.getBoundaries());
+        assertEquals(plumes, result.getPlumes());
     }
 }

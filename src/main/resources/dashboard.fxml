@@ -49,6 +49,16 @@
                         </GridPane>
                     </VBox>
                 </TitledPane>
+                <TitledPane text="Virtual Plumes" expanded="false">
+                    <VBox prefWidth="300.0">
+                        <ListView fx:id="plumesListView" prefHeight="240" minHeight="60"/>
+                        <FlowPane hgap="2">
+                            <Button fx:id="addPlume" text="Add" />
+                            <Button fx:id="deletePlume" text="Remove" />
+                        </FlowPane>
+                        <Button fx:id="setupPlumes" text="Setup"/>
+                    </VBox>
+                </TitledPane>
                 <TitledPane text="Fixtures">
                     <VBox prefWidth="300.0">
                         <ListView fx:id="fixtures" prefHeight="240" minHeight="60"/>

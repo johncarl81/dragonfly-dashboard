@@ -2,22 +2,7 @@ package edu.unm.dragonfly;
 
 import com.esri.arcgisruntime.geometry.Point;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.unm.dragonfly.msgs.DDSARequest;
-import edu.unm.dragonfly.msgs.DDSAWaypointsRequest;
-import edu.unm.dragonfly.msgs.DDSAWaypointsResponse;
-import edu.unm.dragonfly.msgs.LatLon;
-import edu.unm.dragonfly.msgs.LawnmowerRequest;
-import edu.unm.dragonfly.msgs.LawnmowerWaypointsRequest;
-import edu.unm.dragonfly.msgs.LawnmowerWaypointsResponse;
-import edu.unm.dragonfly.msgs.MavrosState;
-import edu.unm.dragonfly.msgs.NavSatFix;
-import edu.unm.dragonfly.msgs.NavigationRequest;
-import edu.unm.dragonfly.msgs.PoseStamped;
-import edu.unm.dragonfly.msgs.PumpRequest;
-import edu.unm.dragonfly.msgs.PumpResponse;
-import edu.unm.dragonfly.msgs.Response;
-import edu.unm.dragonfly.msgs.SetupRequest;
-import edu.unm.dragonfly.msgs.SimpleRequest;
+import edu.unm.dragonfly.msgs.*;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.BehaviorSubject;
@@ -233,6 +218,11 @@ public class Drone {
     public void setup(SetupRequest setupData) {
         bridge.call("/" + name + "/command/setup", "dragonfly_messages/Setup", setupData,
                 (data, stringRep) -> System.out.println("Setup sent to " + name));
+    }
+
+    public void setupPlumes(SetupPlumesRequest setupRequest) {
+        bridge.call("/" + name + "/virtualco2/setup", "dragonfly_messages/SetupPlumes", setupRequest,
+                (data, stringRep) -> System.out.println("Setup plume sent to " + name));
     }
 
     public static class LatLonRelativeAltitude {

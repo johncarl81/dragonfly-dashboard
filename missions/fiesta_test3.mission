@@ -1,0 +1,148 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "DDSA",
+    "waypoint" : "2",
+    "radius" : 1.0,
+    "altitude" : 10.0,
+    "loops" : 1,
+    "stacks" : 1,
+    "walk" : "RANGE",
+    "drones" : [ "dragonfly1" ],
+    "stepLength" : 1.0,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0,
+    "uniqueAltitudes" : true
+  }, {
+    "@type" : "Lawnmower",
+    "boundaryName" : "test",
+    "drone" : "dragonfly1",
+    "altitude" : 10.0,
+    "stacks" : 1,
+    "walk" : 2,
+    "stepLength" : 10.0,
+    "walkBoundary" : true,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0
+  }, {
+    "@type" : "Navigation",
+    "drone" : "dragonfly1",
+    "waypoints" : [ {
+      "longitude" : -106.59603791429757,
+      "latitude" : 35.195157750526285,
+      "altitude" : 19.80471802701303
+    }, {
+      "longitude" : -106.59606553679683,
+      "latitude" : 35.195186272516,
+      "altitude" : 11.702015886993246
+    }, {
+      "longitude" : -106.59599903797147,
+      "latitude" : 35.195164371485184,
+      "altitude" : 10.217088851772726
+    }, {
+      "longitude" : -106.59589294341485,
+      "latitude" : 35.19517810792154,
+      "altitude" : 12.919193995733103
+    }, {
+      "longitude" : -106.5958661509485,
+      "latitude" : 35.19516532348475,
+      "altitude" : 13.542214294256437
+    }, {
+      "longitude" : -106.5958537730409,
+      "latitude" : 35.19519532440549,
+      "altitude" : 15.995569558465839
+    }, {
+      "longitude" : -106.5958335825228,
+      "latitude" : 35.19525154861549,
+      "altitude" : 12.523512071136718
+    }, {
+      "longitude" : -106.59595043704034,
+      "latitude" : 35.19525841039707,
+      "altitude" : 18.944947424078244
+    }, {
+      "longitude" : -106.59605840753673,
+      "latitude" : 35.19528805658183,
+      "altitude" : 16.189563774271036
+    }, {
+      "longitude" : -106.59592403100648,
+      "latitude" : 35.195121869252134,
+      "altitude" : 17.91077329708566
+    } ],
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0
+  }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly1" ],
+    "duration" : 10.0
+  }, {
+    "@type" : "Curtain",
+    "drone" : "dragonfly1",
+    "waypointStart" : "1",
+    "waypointEnd" : "2",
+    "altitude" : 10.0,
+    "stacks" : 1,
+    "distanceThreshold" : 1.0
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : {
+    "1" : {
+      "waypoint" : {
+        "longitude" : -106.59600067138672,
+        "latitude" : 35.19514465332031,
+        "altitude" : 90.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "2" : {
+      "waypoint" : {
+        "longitude" : -106.59603881835938,
+        "latitude" : 35.195098876953125,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "test" : [ {
+      "longitude" : -106.59612333729982,
+      "latitude" : 35.19518684142279,
+      "altitude" : 1539.9482877682894
+    }, {
+      "longitude" : -106.59589067718012,
+      "latitude" : 35.19507789090905,
+      "altitude" : 1539.7278634896502
+    }, {
+      "longitude" : -106.59582058618776,
+      "latitude" : 35.19526818624047,
+      "altitude" : 1539.6457253964618
+    }, {
+      "longitude" : -106.59607816784174,
+      "latitude" : 35.195415728840224,
+      "altitude" : 1539.948816280812
+    } ],
+    "rtl boundary" : [ {
+      "longitude" : -106.59653884433534,
+      "latitude" : 35.19478040152071,
+      "altitude" : 1539.6456724274904
+    }, {
+      "longitude" : -106.59588288920483,
+      "latitude" : 35.19457657980024,
+      "altitude" : 1539.2704433621839
+    }, {
+      "longitude" : -106.59542167851946,
+      "latitude" : 35.19560794778973,
+      "altitude" : 1539.0576590839773
+    }, {
+      "longitude" : -106.59609141217823,
+      "latitude" : 35.195846758478226,
+      "altitude" : 1539.9617616040632
+    } ]
+  }
+}

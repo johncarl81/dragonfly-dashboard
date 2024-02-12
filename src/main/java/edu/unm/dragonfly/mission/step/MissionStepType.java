@@ -16,10 +16,13 @@ public enum MissionStepType {
     LAWNMOWER(8, "Lawnmower"),
     NAVIGATION(9, "Random"),
     FLOCK(10, "Flock"),
+    FLOCK_STOP(17, "Flock Stop"),
     GRADIENT(11, "Gradient"),
     CURTAIN(12, "Curtain"),
     PUMP(13, "Pump"),
-    CALIBRATION(14, "Calibration");
+    CALIBRATION(14, "Calibration"),
+    SKETCH(15, "Sketch"),
+    VERTICAL_TRANSECT(16, "Vertical Transect");
 
     private final int mission_type;
     private final String name;

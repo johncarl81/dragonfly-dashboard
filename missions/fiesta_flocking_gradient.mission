@@ -33,6 +33,12 @@
     "leader" : "dragonfly3",
     "x" : 6.0,
     "y" : -6.0
+  }, {
+    "@type" : "FlockStop",
+    "drone" : "dragonfly2"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ]
   } ],
   "waypoints" : {
     "df2.home" : {

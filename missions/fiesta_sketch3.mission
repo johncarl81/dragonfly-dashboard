@@ -1,0 +1,104 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "altitude" : 20.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "threshold" : 465
+  } ],
+  "waypoints" : {
+    "df2.home" : {
+      "waypoint" : {
+        "longitude" : -106.5958,
+        "latitude" : 35.1953,
+        "altitude" : 22.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df1.home" : {
+      "waypoint" : {
+        "longitude" : -106.5959,
+        "latitude" : 35.1953,
+        "altitude" : 20.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume2" : {
+      "waypoint" : {
+        "longitude" : -106.5961,
+        "latitude" : 35.1971,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume1" : {
+      "waypoint" : {
+        "longitude" : -106.5974,
+        "latitude" : 35.1969,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -106.59574477672717,
+      "latitude" : 35.194688735491326,
+      "altitude" : 1539.1499254703522
+    }, {
+      "longitude" : -106.59468273647863,
+      "latitude" : 35.19707591010068,
+      "altitude" : 1539.5353469671682
+    }, {
+      "longitude" : -106.5988273719743,
+      "latitude" : 35.19825608234856,
+      "altitude" : 1537.2626972002909
+    }, {
+      "longitude" : -106.59978684206823,
+      "latitude" : 35.19618731180586,
+      "altitude" : 1537.6989278336987
+    } ]
+  },
+  "plumes" : {
+    "plume2" : {
+      "source" : {
+        "latitude" : 35.1971,
+        "longitude" : -106.5961,
+        "relative_altitude" : 10.0
+      },
+      "q" : 50000.0,
+      "k" : 2.0,
+      "u" : 0.2,
+      "wind_direction" : -30.0
+    },
+    "plume1" : {
+      "source" : {
+        "latitude" : 35.1969,
+        "longitude" : -106.5974,
+        "relative_altitude" : 10.0
+      },
+      "q" : 80000.0,
+      "k" : 2.0,
+      "u" : 0.2,
+      "wind_direction" : -30.0
+    }
+  }
+}

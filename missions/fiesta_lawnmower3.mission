@@ -1,0 +1,43 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Lawnmower",
+    "boundaryName" : "boundary",
+    "drone" : "dragonfly1",
+    "altitude" : 10.0,
+    "stacks" : 1,
+    "walk" : 2,
+    "stepLength" : 5.0,
+    "walkBoundary" : false,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : { },
+  "boundaries" : {
+    "boundary" : [ {
+      "longitude" : -106.59681149915262,
+      "latitude" : 35.194138918591484,
+      "altitude" : 1538.7748639695346
+    }, {
+      "longitude" : -106.59613432496214,
+      "latitude" : 35.19393641476217,
+      "altitude" : 1539.5947173964232
+    }, {
+      "longitude" : -106.59571092755473,
+      "latitude" : 35.19493558183578,
+      "altitude" : 1539.313425869681
+    }, {
+      "longitude" : -106.59638299194317,
+      "latitude" : 35.19513821746646,
+      "altitude" : 1540.0957415429875
+    } ]
+  }
+}

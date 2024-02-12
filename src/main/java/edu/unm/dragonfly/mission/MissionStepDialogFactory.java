@@ -1,23 +1,13 @@
 package edu.unm.dragonfly.mission;
 
-import edu.unm.dragonfly.mission.step.MissionStep;
-import edu.unm.dragonfly.mission.step.MissionStepType;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import edu.unm.dragonfly.mission.step.*;
+import javafx.beans.value.*;
+import javafx.collections.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * @author John Ericksen
@@ -30,7 +20,7 @@ public class MissionStepDialogFactory {
 
     public static void create(CreateMissionStep callback, List<String> drones, List<String> waypoints, Map<String, List<Waypoint>> boundaries) {
 
-        Map<MissionStepType, MissionStepCreator> creators = new EnumMap<MissionStepType, MissionStepCreator>(MissionStepType.class){{
+        Map<MissionStepType, MissionStepCreator> creators = new EnumMap<>(MissionStepType.class){{
             put(MissionStepType.TAKEOFF, new TakeoffCreator(drones));
             put(MissionStepType.SLEEP, new SleepCreator(drones));
             put(MissionStepType.LAND, new LandCreator(drones));
@@ -41,10 +31,13 @@ public class MissionStepDialogFactory {
             put(MissionStepType.LAWNMOWER, new LawnmowerCreator(drones, boundaries.keySet().stream().sorted().collect(Collectors.toList())));
             put(MissionStepType.NAVIGATION, new RandomPointCreator(drones, boundaries));
             put(MissionStepType.FLOCK, new FlockCreator(drones));
+            put(MissionStepType.FLOCK_STOP, new FlockStopCreator(drones));
             put(MissionStepType.GRADIENT, new GradientCreator(drones));
             put(MissionStepType.CALIBRATION, new CalibrationCreator(drones));
             put(MissionStepType.CURTAIN, new CurtainCreator(drones, waypoints));
             put(MissionStepType.PUMP, new PumpCreator(drones));
+            put(MissionStepType.SKETCH, new SketchCreator(drones));
+            put(MissionStepType.VERTICAL_TRANSECT, new VerticalTransectCreator(drones, waypoints));
         }};
 
         Dialog<ButtonType> dialog = new Dialog<>();
