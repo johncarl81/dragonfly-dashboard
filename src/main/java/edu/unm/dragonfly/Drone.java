@@ -233,7 +233,7 @@ public class Drone {
         public LatLonRelativeAltitude(double latitude, double longitude, double relativeAltitude) {
             this.latitude = latitude;
             this.longitude = longitude;
-            this.relativeAltitude = relativeAltitude;
+            this.relativeAltitude = relativeAltitude > 0 ? relativeAltitude : 0;
         }
 
         public double getLatitude() {
