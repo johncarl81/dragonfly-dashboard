@@ -26,6 +26,7 @@ RUN echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-se
 RUN apt-get -qq -y install ros-galactic-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-galactic-rosbridge-server libcanberra-gtk-module
 
 # Fix DURABLE subscription overreach in rosbridge
+# See https://github.com/RobotWebTools/rosbridge_suite/issues/769
 RUN sed -i '115s/RELIABLE/BEST_EFFORT/' /opt/ros/galactic/lib/python3.8/site-packages/rosbridge_library/internal/subscribers.py
 
 # Install maven
