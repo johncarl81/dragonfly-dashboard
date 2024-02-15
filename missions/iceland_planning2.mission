@@ -1,0 +1,83 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  } ],
+  "waypoints" : {
+    "eruption" : {
+      "waypoint" : {
+        "longitude" : -22.20402,
+        "latitude" : 63.9187,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "t0" : {
+      "waypoint" : {
+        "longitude" : -22.211864471435547,
+        "latitude" : 63.919227600097656,
+        "altitude" : 500.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "t1" : {
+      "waypoint" : {
+        "longitude" : -22.198177337646484,
+        "latitude" : 63.92022705078125,
+        "altitude" : 500.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "t2" : {
+      "waypoint" : {
+        "longitude" : -22.204605102539062,
+        "latitude" : 63.91694641113281,
+        "altitude" : 500.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "t3" : {
+      "waypoint" : {
+        "longitude" : -22.20624351501465,
+        "latitude" : 63.9228630065918,
+        "altitude" : 500.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "patch" : [ {
+      "longitude" : -22.202064931479146,
+      "latitude" : 63.91665662904295,
+      "altitude" : 192.37561098765582
+    }, {
+      "longitude" : -22.19411655918861,
+      "latitude" : 63.922037757444755,
+      "altitude" : 212.23597630672157
+    }, {
+      "longitude" : -22.209725893058742,
+      "latitude" : 63.92521480752734,
+      "altitude" : 219.50771961454302
+    }, {
+      "longitude" : -22.214631426446044,
+      "latitude" : 63.919196230008346,
+      "altitude" : 231.17786907125264
+    } ],
+    "rtl boundary" : [ {
+      "longitude" : -22.217289823056955,
+      "latitude" : 63.911816171339396,
+      "altitude" : 202.92924319114536
+    }, {
+      "longitude" : -22.18356731289125,
+      "latitude" : 63.91624634264025,
+      "altitude" : 185.8706562332809
+    }, {
+      "longitude" : -22.192323353564124,
+      "latitude" : 63.930399795330096,
+      "altitude" : 192.55672328267246
+    }, {
+      "longitude" : -22.236063634100244,
+      "latitude" : 63.92328095654497,
+      "altitude" : 240.81039784289896
+    } ]
+  }
+}

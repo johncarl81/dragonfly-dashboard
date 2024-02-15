@@ -1,0 +1,74 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  } ],
+  "waypoints" : {
+    "a" : {
+      "waypoint" : {
+        "longitude" : -18.879825592041016,
+        "latitude" : 63.515419006347656,
+        "altitude" : 100.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "river_c" : {
+      "waypoint" : {
+        "longitude" : -18.852807998657227,
+        "latitude" : 63.543514251708984,
+        "altitude" : 100.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "b" : {
+      "waypoint" : {
+        "longitude" : -18.820390701293945,
+        "latitude" : 63.51317596435547,
+        "altitude" : 100.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "river_b" : {
+      "waypoint" : {
+        "longitude" : -18.832849502563477,
+        "latitude" : 63.536502838134766,
+        "altitude" : 100.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "home" : {
+      "waypoint" : {
+        "longitude" : -18.866315841674805,
+        "latitude" : 63.51519012451172,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "river_a" : {
+      "waypoint" : {
+        "longitude" : -18.840566635131836,
+        "latitude" : 63.51380920410156,
+        "altitude" : 100.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -18.88359376047903,
+      "latitude" : 63.51072242355079,
+      "altitude" : 143.0411805557087
+    }, {
+      "longitude" : -18.801441123302162,
+      "latitude" : 63.50665849747234,
+      "altitude" : 122.55951838474721
+    }, {
+      "longitude" : -18.80804266025272,
+      "latitude" : 63.54587316866076,
+      "altitude" : 194.56710968259722
+    }, {
+      "longitude" : -18.87650603431305,
+      "latitude" : 63.551804710749735,
+      "altitude" : 344.8563707275316
+    } ]
+  }
+}

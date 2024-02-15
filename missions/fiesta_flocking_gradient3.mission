@@ -7,7 +7,7 @@
     "altitude" : 9.0
   }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly5" ],
+    "drones" : [ "dragonfly4" ],
     "altitude" : 10.0
   }, {
     "@type" : "Takeoff",
@@ -16,18 +16,27 @@
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly2",
-    "waypoint" : "df2.home"
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
   }, {
     "@type" : "Waypoint",
-    "drone" : "dragonfly5",
-    "waypoint" : "df5.home"
+    "drone" : "dragonfly4",
+    "waypoint" : "df5.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly1",
-    "waypoint" : "df1.home"
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
   }, {
     "@type" : "Semaphore",
-    "drones" : [ "dragonfly2", "dragonfly5", "dragonfly1" ],
+    "drones" : [ "dragonfly2", "dragonfly4", "dragonfly1" ],
     "id" : "c9d32fdc-aafb-4397-8c78-0dd13b5152b4"
   }, {
     "@type" : "Flock",
@@ -37,7 +46,7 @@
     "y" : -6.0
   }, {
     "@type" : "Flock",
-    "drone" : "dragonfly5",
+    "drone" : "dragonfly4",
     "leader" : "dragonfly2",
     "x" : 6.0,
     "y" : -6.0
@@ -48,28 +57,28 @@
   }, {
     "@type" : "Gradient",
     "target" : "dragonfly2",
-    "drones" : [ "dragonfly2", "dragonfly5", "dragonfly1" ]
+    "drones" : [ "dragonfly2", "dragonfly4", "dragonfly1" ]
   }, {
     "@type" : "FlockStop",
     "drone" : "dragonfly2"
   }, {
+       "@type" : "Sleep",
+       "drones" : [ "dragonfly1" ],
+       "duration" : 10.0
+     }, {
+       "@type" : "Sleep",
+       "drones" : [ "dragonfly4" ],
+       "duration" : 20.0
+     } , {
     "@type" : "RTL",
-    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ]
-  } ],
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly4" ]
+  }],
   "waypoints" : {
     "df2.home" : {
       "waypoint" : {
         "longitude" : -106.59563446044922,
         "latitude" : 35.19606399536133,
         "altitude" : 12.0
-      },
-      "distanceThreshold" : 1.0
-    },
-    "df5.home" : {
-      "waypoint" : {
-        "longitude" : -106.59546661376953,
-        "latitude" : 35.196044921875,
-        "altitude" : 14.0
       },
       "distanceThreshold" : 1.0
     },
@@ -81,45 +90,53 @@
       },
       "distanceThreshold" : 1.0
     },
+    "df5.home" : {
+      "waypoint" : {
+        "longitude" : -106.59546661376953,
+        "latitude" : 35.196044921875,
+        "altitude" : 14.0
+      },
+      "distanceThreshold" : 1.0
+    },
     "plume" : {
-	  "waypoint" : {
-		"longitude" : -106.5972,
-		"latitude" : 35.1973,
-		"altitude" : 10.0
-	  },
-	  "distanceThreshold" : 1.0
-	}
+      "waypoint" : {
+        "longitude" : -106.5972,
+        "latitude" : 35.1973,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
   },
   "boundaries" : {
     "rtl boundary" : [ {
-    	  "longitude" : -106.59560571790382,
-    	  "latitude" : 35.194970536767734,
-    	  "altitude" : 1539.1139186387882
-    	}, {
-    	  "longitude" : -106.59468168252396,
-    	  "latitude" : 35.19708285919182,
-    	  "altitude" : 1539.5757915200666
-    	}, {
-    	  "longitude" : -106.59740227218711,
-    	  "latitude" : 35.19779497905369,
-    	  "altitude" : 1537.0001422809437
-    	}, {
-    	  "longitude" : -106.59836367437691,
-    	  "latitude" : 35.19570830789695,
-    	  "altitude" : 1538.3026765575632
-    	} ]
+      "longitude" : -106.59560571790382,
+      "latitude" : 35.194970536767734,
+      "altitude" : 1539.1139186387882
+    }, {
+      "longitude" : -106.59468168252396,
+      "latitude" : 35.19708285919182,
+      "altitude" : 1539.5757915200666
+    }, {
+      "longitude" : -106.59740227218711,
+      "latitude" : 35.19779497905369,
+      "altitude" : 1537.0001422809437
+    }, {
+      "longitude" : -106.59836367437691,
+      "latitude" : 35.19570830789695,
+      "altitude" : 1538.3026765575632
+    } ]
   },
   "plumes" : {
     "plume" : {
       "source" : {
-		"latitude" : 35.1973,
-		"longitude" : -106.5972,
+        "latitude" : 35.1973,
+        "longitude" : -106.5972,
         "relative_altitude" : 10.0
       },
-      "q" : 80000,
+      "q" : 80000.0,
       "k" : 2.0,
       "u" : 0.2,
-      "wind_direction" : -30
+      "wind_direction" : -30.0
     }
   }
 }

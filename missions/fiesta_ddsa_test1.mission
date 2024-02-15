@@ -1,0 +1,54 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "DDSA",
+    "waypoint" : "a",
+    "radius" : 3.0,
+    "altitude" : 10.0,
+    "loops" : 5,
+    "stacks" : 1,
+    "walk" : "RANGE",
+    "drones" : [ "dragonfly1" ],
+    "stepLength" : 1.0,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0,
+    "uniqueAltitudes" : true
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : {
+    "a" : {
+      "waypoint" : {
+        "longitude" : -106.59646606445312,
+        "latitude" : 35.196353912353516,
+        "altitude" : 20.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -106.59838146410394,
+      "latitude" : 35.195769112772076,
+      "altitude" : 1538.1216080551967
+    }, {
+      "longitude" : -106.59559981314274,
+      "latitude" : 35.19494649719758,
+      "altitude" : 1539.2335647149011
+    }, {
+      "longitude" : -106.594673621671,
+      "latitude" : 35.19701959090768,
+      "altitude" : 1539.5153489988297
+    }, {
+      "longitude" : -106.5975306214317,
+      "latitude" : 35.19783205656723,
+      "altitude" : 1537.35036428459
+    } ]
+  }
+}

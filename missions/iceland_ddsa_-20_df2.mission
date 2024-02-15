@@ -1,0 +1,106 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly4" ],
+    "duration" : 300.0
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly4" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "rendevous"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "ddsa_center_est"
+  }, {
+    "@type" : "DDSA",
+    "waypoint" : "ddsa_center",
+    "radius" : 5.0,
+    "altitude" : -20.0,
+    "loops" : 10,
+    "stacks" : 1,
+    "walk" : "RANGE",
+    "drones" : [ "dragonfly4" ],
+    "stepLength" : 1.0,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0,
+    "uniqueAltitudes" : false
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly4" ]
+  } ],
+  "waypoints" : {
+    "tobias" : {
+      "waypoint" : {
+        "longitude" : -22.253990173339844,
+        "latitude" : 63.897735595703125,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "rendevous" : {
+      "waypoint" : {
+        "longitude" : -22.25075912475586,
+        "latitude" : 63.90054702758789,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "ddsa_center_est" : {
+      "waypoint" : {
+        "longitude" : -22.251996994018555,
+        "latitude" : 63.90000534057617,
+        "altitude" : -10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "original fissure" : {
+      "waypoint" : {
+        "longitude" : -22.24675941467285,
+        "latitude" : 63.9001350402832,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "ddsa_center" : {
+      "waypoint" : {
+        "longitude" : -22.251850128173828,
+        "latitude" : 63.899776458740234,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -22.255695713328144,
+      "latitude" : 63.90450531395153,
+      "altitude" : 245.83210602868348
+    }, {
+      "longitude" : -22.2591310299302,
+      "latitude" : 63.90120363434287,
+      "altitude" : 264.93339447211474
+    }, {
+      "longitude" : -22.25470070261694,
+      "latitude" : 63.89702195789194,
+      "altitude" : 221.079967264086
+    }, {
+      "longitude" : -22.246174478321215,
+      "latitude" : 63.89705563642401,
+      "altitude" : 173.36762643512338
+    }, {
+      "longitude" : -22.242023589122844,
+      "latitude" : 63.90156547149354,
+      "altitude" : 297.3700684029609
+    }, {
+      "longitude" : -22.24566473294327,
+      "latitude" : 63.90528167377247,
+      "altitude" : 200.72584853880107
+    } ]
+  }
+}

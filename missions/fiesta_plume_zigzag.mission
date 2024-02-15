@@ -1,0 +1,117 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "plume"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "a"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "b"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "c"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "d"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "e"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "f"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : {
+    "a" : {
+      "waypoint" : {
+        "longitude" : -106.59583282470703,
+        "latitude" : 35.19536590576172,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "b" : {
+      "waypoint" : {
+        "longitude" : -106.59566497802734,
+        "latitude" : 35.19557571411133,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "c" : {
+      "waypoint" : {
+        "longitude" : -106.59603118896484,
+        "latitude" : 35.19575119018555,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "d" : {
+      "waypoint" : {
+        "longitude" : -106.59558868408203,
+        "latitude" : 35.195919036865234,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "e" : {
+      "waypoint" : {
+        "longitude" : -106.5959243774414,
+        "latitude" : 35.1961669921875,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "f" : {
+      "waypoint" : {
+        "longitude" : -106.59554290771484,
+        "latitude" : 35.19615936279297,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume" : {
+      "waypoint" : {
+        "longitude" : -106.59578704833984,
+        "latitude" : 35.19607162475586,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -106.59547545647304,
+      "latitude" : 35.19485384028705,
+      "altitude" : 1539.193011877127
+    }, {
+      "longitude" : -106.59429107298024,
+      "latitude" : 35.19749546520885,
+      "altitude" : 1540.4292895542458
+    }, {
+      "longitude" : -106.59762639712845,
+      "latitude" : 35.198505613935765,
+      "altitude" : 1538.089804193005
+    }, {
+      "longitude" : -106.5990913296752,
+      "latitude" : 35.19570343587815,
+      "altitude" : 1537.329950910993
+    } ]
+  }
+}

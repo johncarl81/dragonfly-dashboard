@@ -1,0 +1,34 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  } ],
+  "waypoints" : {
+    "1" : {
+      "waypoint" : {
+        "longitude" : -20.948312759399414,
+        "latitude" : 64.07327270507812,
+        "altitude" : 40.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -20.949244441185563,
+      "latitude" : 64.07151392718032,
+      "altitude" : 101.2644619056955
+    }, {
+      "longitude" : -20.94480028241538,
+      "latitude" : 64.07242035576789,
+      "altitude" : 100.08214228693396
+    }, {
+      "longitude" : -20.946351175711612,
+      "latitude" : 64.07481795841144,
+      "altitude" : 126.07397144380957
+    }, {
+      "longitude" : -20.95132802679799,
+      "latitude" : 64.07437142391126,
+      "altitude" : 116.48340426944196
+    } ]
+  }
+}

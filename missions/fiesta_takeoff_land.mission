@@ -3,24 +3,38 @@
     "@type" : "Start"
   }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly1" ],
+    "drones" : [ "dragonfly1", "dragonfly2" ],
     "altitude" : 10.0
   }, {
-    "@type" : "VerticalTransect",
-    "drone" : "dragonfly1",
-    "waypoint" : "a",
-    "minimumAltitude" : 30.0,
-    "maximumAltitude" : 90.0
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "duration" : 10.0
   }, {
     "@type" : "RTL",
-    "drones" : [ "dragonfly1" ]
+    "drones" : [ "dragonfly1", "dragonfly2" ]
   } ],
   "waypoints" : {
-    "a" : {
+    "df2.home" : {
       "waypoint" : {
-        "longitude" : -106.59603118896484,
-        "latitude" : 35.19527816772461,
-        "altitude" : 40.0
+        "longitude" : -106.59561157226562,
+        "latitude" : 35.19599914550781,
+        "altitude" : 12.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df1.home" : {
+      "waypoint" : {
+        "longitude" : -106.59575653076172,
+        "latitude" : 35.19599914550781,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume" : {
+      "waypoint" : {
+        "longitude" : -106.59574890136719,
+        "latitude" : 35.196903228759766,
+        "altitude" : 10.0
       },
       "distanceThreshold" : 1.0
     }
@@ -47,14 +61,14 @@
   "plumes" : {
     "plume" : {
       "source" : {
-        "latitude" : 35.1973,
-        "longitude" : -106.5972,
+        "latitude" : 35.196903228759766,
+        "longitude" : -106.59574890136719,
         "relative_altitude" : 10.0
       },
-      "q" : 80000.0,
+      "q" : 5000.0,
       "k" : 2.0,
-      "u" : 0.2,
-      "wind_direction" : -30.0
+      "u" : 1.0,
+      "wind_direction" : 0.0
     }
   }
 }

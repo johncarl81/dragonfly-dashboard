@@ -1,0 +1,148 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly5" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Lawnmower",
+    "boundaryName" : "lawn",
+    "drone" : "dragonfly5",
+    "altitude" : 50.0,
+    "stacks" : 1,
+    "walk" : 2,
+    "stepLength" : 20.0,
+    "walkBoundary" : true,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0,
+    "co2Limit" : false,
+    "co2Threshold" : 425.0,
+    "co2LimitMargin" : 5.0
+  }, {
+    "@type" : "Curtain",
+    "drone" : "dragonfly5",
+    "altitude" : 30.0,
+    "stacks" : 2,
+    "waypointStart" : "a",
+    "waypointEnd" : "b",
+    "distanceThreshold" : 10.0,
+    "stackHeight" : 5.0,
+    "co2Limit" : false,
+    "co2Threshold" : 425.0,
+    "co2LimitMargin" : 5.0
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly5" ]
+  } ],
+  "waypoints" : {
+    "df2.home" : {
+      "waypoint" : {
+        "longitude" : -106.5958,
+        "latitude" : 35.1953,
+        "altitude" : 22.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "df1.home" : {
+      "waypoint" : {
+        "longitude" : -106.5959,
+        "latitude" : 35.1953,
+        "altitude" : 20.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "a" : {
+      "waypoint" : {
+        "longitude" : -106.59599304199219,
+        "latitude" : 35.19554901123047,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "b" : {
+      "waypoint" : {
+        "longitude" : -106.59537506103516,
+        "latitude" : 35.19683837890625,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume2" : {
+      "waypoint" : {
+        "longitude" : -106.5961,
+        "latitude" : 35.1971,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume1" : {
+      "waypoint" : {
+        "longitude" : -106.5974,
+        "latitude" : 35.1969,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -106.59574477672717,
+      "latitude" : 35.194688735491326,
+      "altitude" : 1539.1499254703522
+    }, {
+      "longitude" : -106.59468273647863,
+      "latitude" : 35.19707591010068,
+      "altitude" : 1539.5353469671682
+    }, {
+      "longitude" : -106.5988273719743,
+      "latitude" : 35.19825608234856,
+      "altitude" : 1537.2626972002909
+    }, {
+      "longitude" : -106.59978684206823,
+      "latitude" : 35.19618731180586,
+      "altitude" : 1537.6989278336987
+    } ],
+    "lawn" : [ {
+      "longitude" : -106.5958407370587,
+      "latitude" : 35.19511056804047,
+      "altitude" : 1539.6495979074389
+    }, {
+      "longitude" : -106.5950908252305,
+      "latitude" : 35.19700577701689,
+      "altitude" : 1539.7446992453188
+    }, {
+      "longitude" : -106.59740070487805,
+      "latitude" : 35.19763409622475,
+      "altitude" : 1537.395621147938
+    }, {
+      "longitude" : -106.59826033024086,
+      "latitude" : 35.19581550182794,
+      "altitude" : 1538.1291405130178
+    } ]
+  },
+  "plumes" : {
+    "plume2" : {
+      "source" : {
+        "latitude" : 35.1971,
+        "longitude" : -106.5961,
+        "relative_altitude" : 10.0
+      },
+      "q" : 50000.0,
+      "k" : 2.0,
+      "u" : 0.2,
+      "wind_direction" : -30.0
+    },
+    "plume1" : {
+      "source" : {
+        "latitude" : 35.1969,
+        "longitude" : -106.5974,
+        "relative_altitude" : 10.0
+      },
+      "q" : 80000.0,
+      "k" : 2.0,
+      "u" : 0.2,
+      "wind_direction" : -30.0
+    }
+  }
+}

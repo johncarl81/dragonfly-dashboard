@@ -1,0 +1,77 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Lawnmower",
+    "boundaryName" : "boundary",
+    "drone" : "dragonfly1",
+    "altitude" : 20.0,
+    "stacks" : 1,
+    "walk" : 2,
+    "stepLength" : 5.0,
+    "walkBoundary" : true,
+    "waitTime" : 0.0,
+    "distanceThreshold" : 1.0
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : { },
+  "boundaries" : {
+    "boundary" : [ {
+      "longitude" : -106.59656195441354,
+      "latitude" : 35.194440036242575,
+      "altitude" : 1539.1914565721527
+    }, {
+      "longitude" : -106.59608220230308,
+      "latitude" : 35.194302280111316,
+      "altitude" : 1539.5027483161539
+    }, {
+      "longitude" : -106.59588619473509,
+      "latitude" : 35.19481099713566,
+      "altitude" : 1539.3541590264067
+    }, {
+      "longitude" : -106.59637143572725,
+      "latitude" : 35.19491522946632,
+      "altitude" : 1539.8032805630937
+    } ],
+    "rtl bounary" : [ {
+      "longitude" : -106.59688515853365,
+      "latitude" : 35.19409399340571,
+      "altitude" : 1538.96479769703
+    }, {
+      "longitude" : -106.5960335774253,
+      "latitude" : 35.19386344684967,
+      "altitude" : 1539.4732818827033
+    }, {
+      "longitude" : -106.59556836125286,
+      "latitude" : 35.19495277517372,
+      "altitude" : 1539.1191596351564
+    }, {
+      "longitude" : -106.59642352638383,
+      "latitude" : 35.19519841370408,
+      "altitude" : 1540.051833271049
+    } ],
+    "rtl boundary" : [ {
+      "longitude" : -106.5968166066692,
+      "latitude" : 35.194246176538115,
+      "altitude" : 1538.694662829861
+    }, {
+      "longitude" : -106.59605875054868,
+      "latitude" : 35.19411764732842,
+      "altitude" : 1539.462857636623
+    }, {
+      "longitude" : -106.59574328073975,
+      "latitude" : 35.19493086470733,
+      "altitude" : 1539.2230603201315
+    }, {
+      "longitude" : -106.59637700245227,
+      "latitude" : 35.19512229993108,
+      "altitude" : 1540.1144575057551
+    } ]
+  }
+}

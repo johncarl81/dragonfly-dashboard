@@ -1,0 +1,77 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "home"
+  }, {
+    "@type" : "Curtain",
+    "drone" : "dragonfly1",
+    "altitude" : 10.0,
+    "stacks" : 10,
+    "waypointStart" : "a",
+    "waypointEnd" : "b",
+    "distanceThreshold" : 1.0,
+    "stackHeight" : 5.0,
+    "co2Limit" : false,
+    "co2Threshold" : 425.0,
+    "co2LimitMargin" : 5.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "home"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1" ]
+  } ],
+  "waypoints" : {
+    "a" : {
+      "waypoint" : {
+        "longitude" : -19.3746280670166,
+        "latitude" : 63.53044891357422,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "b" : {
+      "waypoint" : {
+        "longitude" : -19.377094268798828,
+        "latitude" : 63.531673431396484,
+        "altitude" : 10.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "home" : {
+      "waypoint" : {
+        "longitude" : -19.374553680419922,
+        "latitude" : 63.53014373779297,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -19.385200151875264,
+      "latitude" : 63.529720008649356,
+      "altitude" : 97.61916939914227
+    }, {
+      "longitude" : -19.37456311140911,
+      "latitude" : 63.52849831012434,
+      "altitude" : 91.73489962983876
+    }, {
+      "longitude" : -19.37089856941894,
+      "latitude" : 63.53291921650243,
+      "altitude" : 97.55503790080547
+    }, {
+      "longitude" : -19.381540374171504,
+      "latitude" : 63.534921803904545,
+      "altitude" : 102.64115357864648
+    } ]
+  }
+}

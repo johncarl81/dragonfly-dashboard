@@ -1,0 +1,87 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly5" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly5",
+    "waypoint" : "1"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly5" ]
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly1" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "2"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly5" ],
+    "id" : "408b966c-ac0f-4d37-b0b4-453464422b63"
+  }, {
+    "@type" : "Flock",
+    "drone" : "dragonfly1",
+    "leader" : "dragonfly5",
+    "x" : 15.0,
+    "y" : -15.0
+  }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly5" ],
+    "duration" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly5",
+    "waypoint" : "3"
+  } ],
+  "waypoints" : {
+    "1" : {
+      "waypoint" : {
+        "longitude" : -20.948312759399414,
+        "latitude" : 64.07327270507812,
+        "altitude" : 40.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "2" : {
+      "waypoint" : {
+        "longitude" : -20.94777488708496,
+        "latitude" : 64.0732192993164,
+        "altitude" : 40.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "3" : {
+      "waypoint" : {
+        "longitude" : -20.94754981994629,
+        "latitude" : 64.07332611083984,
+        "altitude" : 40.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -20.949244441185563,
+      "latitude" : 64.07151392718032,
+      "altitude" : 101.2644619056955
+    }, {
+      "longitude" : -20.94480028241538,
+      "latitude" : 64.07242035576789,
+      "altitude" : 100.08214228693396
+    }, {
+      "longitude" : -20.946351175711612,
+      "latitude" : 64.07481795841144,
+      "altitude" : 126.07397144380957
+    }, {
+      "longitude" : -20.95132802679799,
+      "latitude" : 64.07437142391126,
+      "altitude" : 116.48340426944196
+    } ]
+  }
+}

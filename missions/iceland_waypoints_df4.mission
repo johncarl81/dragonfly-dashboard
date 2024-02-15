@@ -1,0 +1,101 @@
+{
+  "steps" : [ {
+    "@type" : "Start"
+  }, {
+    "@type" : "Takeoff",
+    "drones" : [ "dragonfly4" ],
+    "altitude" : 10.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "home"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "1"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "2"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "3"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "4"
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "home"
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly4" ]
+  } ],
+  "waypoints" : {
+    "1" : {
+      "waypoint" : {
+        "longitude" : -22.232099533081055,
+        "latitude" : 63.88772964477539,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "2" : {
+      "waypoint" : {
+        "longitude" : -22.23094940185547,
+        "latitude" : 63.889827728271484,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "3" : {
+      "waypoint" : {
+        "longitude" : -22.227481842041016,
+        "latitude" : 63.889801025390625,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "4" : {
+      "waypoint" : {
+        "longitude" : -22.230106353759766,
+        "latitude" : 63.88677215576172,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "home" : {
+      "waypoint" : {
+        "longitude" : -22.229572296142578,
+        "latitude" : 63.886356353759766,
+        "altitude" : 30.0
+      },
+      "distanceThreshold" : 1.0
+    }
+  },
+  "boundaries" : {
+    "rtl boundary" : [ {
+      "longitude" : -22.237699237504945,
+      "latitude" : 63.884884550822704,
+      "altitude" : 146.26285661756992
+    }, {
+      "longitude" : -22.226779594354383,
+      "latitude" : 63.88328506654458,
+      "altitude" : 125.48962065111846
+    }, {
+      "longitude" : -22.22186705701934,
+      "latitude" : 63.88838032328839,
+      "altitude" : 131.25311046559364
+    }, {
+      "longitude" : -22.224119065922736,
+      "latitude" : 63.891640467157345,
+      "altitude" : 105.44319676887244
+    }, {
+      "longitude" : -22.23248509072406,
+      "latitude" : 63.89249445036661,
+      "altitude" : 99.5099295033142
+    } ]
+  }
+}

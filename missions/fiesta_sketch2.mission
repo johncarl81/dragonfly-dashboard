@@ -3,7 +3,7 @@
     "@type" : "Start"
   }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "drones" : [ "dragonfly1", "dragonfly4" ],
     "altitude" : 20.0
   }, {
     "@type" : "Waypoint",
@@ -11,16 +11,16 @@
     "waypoint" : "df1.home"
   }, {
     "@type" : "Waypoint",
-    "drone" : "dragonfly2",
+    "drone" : "dragonfly4",
     "waypoint" : "df2.home"
   }, {
     "@type" : "Semaphore",
-    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "drones" : [ "dragonfly1", "dragonfly4" ],
     "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
   }, {
     "@type" : "Sketch",
     "leader" : "dragonfly1",
-    "partner" : "dragonfly2",
+    "partner" : "dragonfly4",
     "offset" : 10.0,
     "threshold" : 450
   } ],
