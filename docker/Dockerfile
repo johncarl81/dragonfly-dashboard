@@ -25,6 +25,9 @@ RUN echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-se
 # Install Mavros, Java & ROS Bridge
 RUN apt-get -qq -y install ros-galactic-mavros oracle-java17-installer oracle-java17-set-default openjfx unzip ros-galactic-rosbridge-server libcanberra-gtk-module
 
+# Fix DURABLE subscription overreach in rosbridge
+RUN sed -i '115s/RELIABLE/BEST_EFFORT/' /opt/ros/galactic/lib/python3.8/site-packages/rosbridge_library/internal/subscribers.py
+
 # Install maven
 RUN wget https://downloads.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp
 RUN tar xf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /opt
