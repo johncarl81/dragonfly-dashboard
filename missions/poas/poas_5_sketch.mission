@@ -2,8 +2,12 @@
   "steps" : [ {
     "@type" : "Start"
   }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly2" ],
+    "duration" : 60.0
+  }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly1" ],
+    "drones" : [ "dragonfly1", "dragonfly2" ],
     "altitude" : 20.0
   }, {
     "@type" : "Waypoint",
@@ -12,10 +16,6 @@
     "runPump" : false,
     "pumpNum" : 0,
     "pumpThreshold" : 500.0
-  }, {
-    "@type" : "Sleep",
-    "drones" : [ "dragonfly2" ],
-    "duration" : 30.0
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly2",
@@ -31,11 +31,8 @@
     "@type" : "Sketch",
     "leader" : "dragonfly1",
     "partner" : "dragonfly2",
-    "offset" : 10.0,
-    "threshold" : 480.0
-  }, {
-    "@type" : "RTL",
-    "drones" : [ "dragonfly1" ]
+    "offset" : 20.0,
+    "threshold" : 430.0
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly2",
@@ -49,21 +46,29 @@
     "duration" : 60.0
   }, {
     "@type" : "RTL",
-    "drones" : [ "dragonfly2" ]
+    "drones" : [ "dragonfly1", "dragonfly2" ]
   } ],
   "waypoints" : {
     "df2.start" : {
       "waypoint" : {
-        "longitude" : -84.23118591308594,
-        "latitude" : 10.19168758392334,
-        "altitude" : 20.0
+        "longitude" : -84.232666015625,
+        "latitude" : 10.192200660705566,
+        "altitude" : 22.0
+      },
+      "distanceThreshold" : 1.0
+    },
+    "plume" : {
+      "waypoint" : {
+        "longitude" : -84.23242950439453,
+        "latitude" : 10.196806907653809,
+        "altitude" : 10.0
       },
       "distanceThreshold" : 1.0
     },
     "df1.start" : {
       "waypoint" : {
-        "longitude" : -84.23340606689453,
-        "latitude" : 10.19216251373291,
+        "longitude" : -84.2330093383789,
+        "latitude" : 10.192392349243164,
         "altitude" : 20.0
       },
       "distanceThreshold" : 1.0
@@ -88,5 +93,17 @@
       "altitude" : 2460.7546005314216
     } ]
   },
-  "plumes" : { }
+  "plumes" : {
+    "plume" : {
+      "source" : {
+        "latitude" : 10.196806907653809,
+        "longitude" : -84.23242950439453,
+        "relative_altitude" : 10.0
+      },
+      "q" : 5000.0,
+      "k" : 2.0,
+      "u" : 1.0,
+      "wind_direction" : 90.0
+    }
+  }
 }
