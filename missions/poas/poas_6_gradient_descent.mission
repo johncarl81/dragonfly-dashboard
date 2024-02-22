@@ -2,16 +2,20 @@
   "steps" : [ {
     "@type" : "Start"
   }, {
+    "@type" : "Calibration",
+    "target" : "dragonfly2",
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ]
+  }, {
     "@type" : "Sleep",
     "drones" : [ "dragonfly2" ],
     "duration" : 60.0
   }, {
     "@type" : "Sleep",
-    "drones" : [ "dragonfly3" ],
+    "drones" : [ "dragonfly5" ],
     "duration" : 120.0
   }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ],
     "altitude" : 20.0
   }, {
     "@type" : "Waypoint",
@@ -29,14 +33,14 @@
     "pumpThreshold" : 500.0
   }, {
     "@type" : "Waypoint",
-    "drone" : "dragonfly3",
+    "drone" : "dragonfly5",
     "waypoint" : "df5.start",
     "runPump" : false,
     "pumpNum" : 0,
     "pumpThreshold" : 500.0
   }, {
     "@type" : "Semaphore",
-    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ],
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ],
     "id" : "25884829-a8d1-4f3d-865a-c1941ee1ed58"
   }, {
     "@type" : "Flock",
@@ -46,7 +50,7 @@
     "y" : -20.0
   }, {
     "@type" : "Flock",
-    "drone" : "dragonfly3",
+    "drone" : "dragonfly5",
     "leader" : "dragonfly2",
     "x" : 20.0,
     "y" : -20.0
@@ -60,22 +64,22 @@
   }, {
     "@type" : "Gradient",
     "target" : "dragonfly2",
-    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ]
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ]
   }, {
-       "@type" : "FlockStop",
-       "drone" : "dragonfly2"
+    "@type" : "FlockStop",
+    "drone" : "dragonfly2"
   }, {
     "@type" : "Sleep",
     "drones" : [ "dragonfly2" ],
     "duration" : 60.0
   }, {
     "@type" : "Sleep",
-    "drones" : [ "dragonfly3" ],
+    "drones" : [ "dragonfly5" ],
     "duration" : 120.0
   }, {
     "@type" : "RTL",
-    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3" ]
-  } ],
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly5" ]
+  }],
   "waypoints" : {
     "df2.start" : {
       "waypoint" : {
