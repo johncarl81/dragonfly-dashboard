@@ -2,8 +2,16 @@
   "steps" : [ {
     "@type" : "Start"
   }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly3", "dragonfly4" ],
+    "duration" : 60.0
+  }, {
+    "@type" : "Sleep",
+    "drones" : [ "dragonfly5", "dragonfly6" ],
+    "duration" : 120.0
+  }, {
     "@type" : "Takeoff",
-    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3", "dragonfly4", "dragonfly5", "dragonfly6" ],
     "altitude" : 20.0
   }, {
     "@type" : "Waypoint",
@@ -15,11 +23,50 @@
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly2",
-    "waypoint" : "df2.home"
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly3",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly4",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly5",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly6",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
   }, {
     "@type" : "Semaphore",
     "drones" : [ "dragonfly1", "dragonfly2" ],
     "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly3", "dragonfly4" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf02"
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly5", "dragonfly6" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf03"
   }, {
     "@type" : "Sketch",
     "leader" : "dragonfly1",
@@ -27,8 +74,20 @@
     "offset" : 10.0,
     "threshold" : 450.0
   }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly3",
+    "partner" : "dragonfly4",
+    "offset" : 10.0,
+    "threshold" : 450.0
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly5",
+    "partner" : "dragonfly6",
+    "offset" : 10.0,
+    "threshold" : 450.0
+  }, {
     "@type" : "RTL",
-    "drones" : [ "dragonfly1", "dragonfly2" ]
+    "drones" : [ "dragonfly1", "dragonfly2", "dragonfly3", "dragonfly4", "dragonfly5", "dragonfly6" ]
   } ],
   "waypoints" : {
     "df2.home" : {
