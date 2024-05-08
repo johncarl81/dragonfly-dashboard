@@ -18,6 +18,7 @@ public class SketchCreator implements MissionStepCreator {
     private final ComboBox<String> leaderSelection;
     private final ComboBox<String> partnerSelection;
     private TextField offset;
+    private TextField lambdaValue;
     private TextField threshold;
 
     public SketchCreator(List<String> drones) {
@@ -30,14 +31,17 @@ public class SketchCreator implements MissionStepCreator {
 
         offset = new TextField();
         threshold = new TextField();
+        lambdaValue = new TextField();
 
         offset.setText("10");
         threshold.setText("425");
+        lambdaValue.setText("0.1");
 
         GridUtil.builder(grid).increment()
                 .add("Leader:", leaderSelection)
                 .add("Partner:", partnerSelection)
                 .add("ε offset:", offset)
+                .add("lambda:", lambdaValue)
                 .add("Threshold:", threshold);
     }
 
@@ -46,6 +50,7 @@ public class SketchCreator implements MissionStepCreator {
         return new MissionStepSketch(leaderSelection.getSelectionModel().getSelectedItem(),
                 partnerSelection.getSelectionModel().getSelectedItem(),
                 Double.parseDouble(offset.getText()),
+                Double.parseDouble(lambdaValue.getText()),
                 Double.parseDouble(threshold.getText()));
     }
 }

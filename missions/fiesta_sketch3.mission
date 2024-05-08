@@ -8,11 +8,17 @@
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly1",
-    "waypoint" : "df1.home"
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
   }, {
     "@type" : "Waypoint",
     "drone" : "dragonfly2",
-    "waypoint" : "df2.home"
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
   }, {
     "@type" : "Semaphore",
     "drones" : [ "dragonfly1", "dragonfly2" ],
@@ -22,7 +28,736 @@
     "leader" : "dragonfly1",
     "partner" : "dragonfly2",
     "offset" : 10.0,
-    "threshold" : 465
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly1",
+    "waypoint" : "df1.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Waypoint",
+    "drone" : "dragonfly2",
+    "waypoint" : "df2.home",
+    "runPump" : false,
+    "pumpNum" : 0,
+    "pumpThreshold" : 0.0
+  }, {
+    "@type" : "Semaphore",
+    "drones" : [ "dragonfly1", "dragonfly2" ],
+    "id" : "2c6fd712-2f64-4936-b399-99f4e927cf01"
+  }, {
+    "@type" : "Sketch",
+    "leader" : "dragonfly1",
+    "partner" : "dragonfly2",
+    "offset" : 10.0,
+    "lambdaValue" : 0.005,
+    "threshold" : 463.0
+  }, {
+    "@type" : "RTL",
+    "drones" : [ "dragonfly1", "dragonfly2" ]
   } ],
   "waypoints" : {
     "df2.home" : {
